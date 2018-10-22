@@ -2,9 +2,9 @@
 
 Hello & Welcome,
 
-I've consistently been turned off by most games I've played in my life, but especially when it comes to multiplayer and, "Online Interactive Worlds." I've been unhappy with MMOs, unhappy with sandbox builders and unhappy with apps on the appstore. My first step has been to create a barebones framework to test the limits of my abilities, as this is my first forray into C# and my first serious dive into programming altogether. 
+I've consistently been turned off by most games I've played, but especially when it comes to multiplayer and, "Online Interactive Worlds." I've been unhappy with MMOs, unhappy with sandbox builders and unhappy with apps on the appstore. My first step has been to create a barebones framework to test the limits of my abilities, as this is my first forray into C# and my first serious dive into programming altogether. 
 
-Thus far, I have met my pre-Alpha timeline and am trying to find the time to take the project into the BETA stage. Currently I'm looking into a P2P file transfer tutorial which I plan on integrating to make the tilemap and network features decentralized, and eventually adding some elements of nlockchain/cryptography for security, easy of use, efficiency, scalability and increased utility. 
+Thus far, I have met my pre-Alpha timeline and am trying to find the time to take the project into the BETA stage. Currently I'm looking into a P2P file transfer tutorial which I plan on integrating to make the tilemap and network features decentralized, and eventually adding some elements of blockchain/cryptography for security, easy of use, efficiency, scalability and increased utility. 
 
 One of the primary goals for this project is to create as close of a simulation of reality, with a realistic representation of an economy, at least as far as it services the game when I consider the way I'd like to play it. Part of this is to create a robust and tiered society. You can gather resources, build or craft things, but you could also start a group to get those things done faster. There is currently no active concept for the, "player," other than the METADATA for their actions. 
 
