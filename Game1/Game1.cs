@@ -112,15 +112,11 @@ namespace Game1
         
         public Rectangle[,] TileMap = new Rectangle[(int)(42 / tileScale), (int)(24 / tileScale)];
         
-        public static IPEndPoint Endpoint = new IPEndPoint(IPAddress.Parse("24.20.157.144"), 57000); // endpoint where server is listening
-        public static UdpClient Client = new UdpClient();
+        public static IPEndPoint ServerEndpoint = new IPEndPoint(IPAddress.Parse("24.20.157.144"), 57000); // endpoint where server is listening
+        public static Client Client = new Client();
         public static bool messageReceived = false;
+        public static string Username = "King Charles I";
 
-        public struct UdpState
-        {
-            public IPEndPoint Endpoint;
-            public UdpClient Client;
-        }
 
         public Game1()
         {
@@ -158,6 +154,19 @@ namespace Game1
             Player.player.DrawX = (int)((20 * displayWidth / 1920) / tileScale) * (int)(50 * tileScale) + (int)(25 * tileScale);
             Player.player.DrawY = (int)((10 * displayHeight / 1080) / tileScale) * (int)(50 * tileScale) + (int)(25 * tileScale);
             Object.Initialize();
+
+            try
+            {
+                Client.Connect(ServerEndpoint);
+            }
+            catch
+            {
+                Client.Connect(ServerEndpoint);
+            }
+
+            Client.Send(Encoding.Default.GetBytes(Username), Encoding.Default.GetBytes(Username).Count());
+            Console.Write($"Connection Established! {ServerEndpoint}\n");
+
             //ScaleTileMap();
 
             base.Initialize();
@@ -167,6 +176,8 @@ namespace Game1
         /// LoadContent will be called once per game and is the place to load
         /// all of your content.
         /// </summary>
+        /// 
+
         protected override void LoadContent()
         {
             // Create a new SpriteBatch, which can be used to draw textures.
@@ -191,6 +202,11 @@ namespace Game1
              * default snow i = 40
              * default ore i = 5
              */
+             
+            if (Client.isActive())
+            {
+
+            }
 
             for (int y = 0; y < 1000; y++)
             {
@@ -949,29 +965,12 @@ namespace Game1
             }
             else
             {
-                UdpState state = new UdpState();
-                state.Endpoint = Endpoint;
-                state.Client = Client;
-                string Username = "King Charles I";
-
-                try
-                {
-                    Client.Connect(Endpoint);
-                }
-                catch
-                {
-                    Client.Connect(Endpoint);
-                }
-
-                Client.Send(Encoding.Default.GetBytes(Username), Encoding.Default.GetBytes(Username).Count());
-                var receivedData = Client.Receive(ref Endpoint);
-                Console.Write($"Connection Established! {Endpoint}\n");
-
-                ReceiveData();
+                ReceiveDataLoad();
+                Client.Send(new byte[] { 1 }, 1);
 
                 while (!messageReceived)
                 {
-                    Thread.Sleep(500);
+                    Thread.Sleep(50);
                 }
 
                 messageReceived = false;
@@ -1836,7 +1835,7 @@ namespace Game1
 
         }
 
-        public static async Task ReceiveData()
+        public static async Task ReceiveDataLoad()
         {
             for (int i = 0; i < 20; i++)
             {
@@ -1864,7 +1863,7 @@ namespace Game1
         public static byte[] GrabPacket()
         {
             byte[] b = new byte[50000];
-            b = Client.Receive(ref Endpoint);
+            b = Client.Receive(ref ServerEndpoint);
             return b;
         }
     }
