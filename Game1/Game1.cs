@@ -1,8 +1,14 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Diagnostics;
 using System.IO;
+using System.Linq;
+using System.Net;
+using System.Net.Sockets;
 using System.Runtime.InteropServices;
-using System.Collections.Generic;
+using System.Text;
+using System.Threading;
+using System.Threading.Tasks;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
@@ -79,8 +85,9 @@ namespace Game1
         public static int displayWidth;
         public static int displayHeight;
         //private String[] informationToWriteLand;
-        private String[] informationToWriteBiome;
-        private String[] informationToWriteMod;
+        public static byte[] receivedBytes = new byte[50000];
+        public static String[] informationToWriteBiome;
+        public static String[] informationToWriteMod;
         private String[] informationToWritePlayerResources;
         private String[] informationToWritePlayerStats;
         private String[] informationToWritePlayerWorkers;
@@ -102,11 +109,19 @@ namespace Game1
         public static Rectangle buildRect6 = new Rectangle(950, 650, 50, 100);
         public static Rectangle buildRect7 = new Rectangle(1000, 650, 50, 100);
         public static Rectangle buildRect8 = new Rectangle(1050, 650, 100, 100);
-
-
+        
         public Rectangle[,] TileMap = new Rectangle[(int)(42 / tileScale), (int)(24 / tileScale)];
         
-        
+        public static IPEndPoint Endpoint = new IPEndPoint(IPAddress.Parse("24.20.157.144"), 57000); // endpoint where server is listening
+        public static UdpClient Client = new UdpClient();
+        public static bool messageReceived = false;
+
+        public struct UdpState
+        {
+            public IPEndPoint Endpoint;
+            public UdpClient Client;
+        }
+
         public Game1()
         {
             Content.RootDirectory = "Content";
@@ -746,7 +761,11 @@ namespace Game1
 
         void HandlerKeys()
         {
-            if (newState.IsKeyDown(Keys.LeftControl))
+            if (newState.IsKeyDown(Keys.LeftShift))
+            {
+                HandlerKeyShift();
+            }
+            else if (newState.IsKeyDown(Keys.LeftControl))
             {
                 HandlerKeyControl();
             }
@@ -829,6 +848,14 @@ namespace Game1
             }
         }
 
+        void HandlerKeyShift()
+        {
+            if (newState.IsKeyDown(Keys.L))
+            {
+                DataLoad(true);
+            }
+        }
+
         void HandlerKeyControl()
         {
             if (newState.IsKeyDown(Keys.S))
@@ -837,7 +864,7 @@ namespace Game1
             }
             else if (newState.IsKeyDown(Keys.L))
             {
-                DataLoad();
+                DataLoad(false);
             }
             else if (oldState.IsKeyUp(Keys.A) && newState.IsKeyDown(Keys.A))
             {
@@ -909,14 +936,47 @@ namespace Game1
             File.WriteAllLines("C:/Users/2/Desktop/test1workers.txt", informationToWritePlayerWorkers);
         }
 
-        void DataLoad()
+        void DataLoad(bool isServer)
         {
             //informationToWriteLand = new String[1000000];
             //informationToWriteLand = File.ReadAllLines("C:/Users/2/Desktop/test1land.txt"); // Change the file path here to where you want it.
             informationToWriteBiome = new String[1000000];
-            informationToWriteBiome = File.ReadAllLines("C:/Users/2/Desktop/test1biome.txt");
             informationToWriteMod = new String[1000000];
-            informationToWriteMod = File.ReadAllLines("C:/Users/2/Desktop/test1mod.txt");
+            if (!isServer)
+            {
+                informationToWriteBiome = File.ReadAllLines("C:/Users/2/Desktop/test1biome.txt");
+                informationToWriteMod = File.ReadAllLines("C:/Users/2/Desktop/test1mod.txt");
+            }
+            else
+            {
+                UdpState state = new UdpState();
+                state.Endpoint = Endpoint;
+                state.Client = Client;
+                string Username = "King Charles I";
+
+                try
+                {
+                    Client.Connect(Endpoint);
+                }
+                catch
+                {
+                    Client.Connect(Endpoint);
+                }
+
+                Client.Send(Encoding.Default.GetBytes(Username), Encoding.Default.GetBytes(Username).Count());
+                var receivedData = Client.Receive(ref Endpoint);
+                Console.Write($"Connection Established! {Endpoint}\n");
+
+                ReceiveData();
+
+                while (!messageReceived)
+                {
+                    Thread.Sleep(500);
+                }
+
+                messageReceived = false;
+                isServer = false;
+            }
             informationToWritePlayerResources = new String[1000];
             informationToWritePlayerResources = File.ReadAllLines("C:/Users/2/Desktop/test1resources.txt");
             informationToWritePlayerStats = new String[200];
@@ -1770,9 +1830,42 @@ namespace Game1
             random = i;
             return (i);
         }
+
         public void ConvertString(Land i)
         {
 
+        }
+
+        public static async Task ReceiveData()
+        {
+            for (int i = 0; i < 20; i++)
+            {
+                receivedBytes = await Task.Run(() => GrabPacket());
+                for (int ii = 0; ii < 50000; ii++)
+                {
+                    informationToWriteBiome[(i * 50000) + ii] = receivedBytes[ii].ToString();
+                }
+                Client.Send(new byte[] { 1 }, 1);
+            }
+
+            for (int i = 0; i < 20; i++)
+            {
+                receivedBytes = await Task.Run(() => GrabPacket());
+                for (int ii = 0; ii < 50000; ii++)
+                {
+                    informationToWriteMod[(i * 50000) + ii] = receivedBytes[ii].ToString();
+                }
+                Client.Send(new byte[] { 1 }, 1);
+            }
+
+            messageReceived = true;
+        }
+
+        public static byte[] GrabPacket()
+        {
+            byte[] b = new byte[50000];
+            b = Client.Receive(ref Endpoint);
+            return b;
         }
     }
 }
