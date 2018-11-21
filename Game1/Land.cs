@@ -36,7 +36,7 @@ namespace Game1
         public int biome { get; set; }
         //public int mod { get; set; }
         public int frame = 5;
-        public int[] depth = new int[] { 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 };
+        public int land = 0;
         public float? rotate = null;
         public bool IsActive = false;
         public bool IsOccupied = false;

@@ -15,6 +15,7 @@ namespace Game1
     {
         public List<int> Tree = new List<int>();
         public List<int> Deer = new List<int>();
+        public static Texture2D[,,] Tiles = new Texture2D[1000, 5, 10];
 
         public static void DrawObjects(Texture2D spr, Object obj, double scale, float rotate, Rectangle sourceRectangle)
         {

@@ -71,15 +71,10 @@ namespace Game1
         private int tilePointerX = 0;
         private int tilePointerY = 0;
         Random rnd = new Random();
+        static Random Random = new Random();
         public float random = 0;
         private double month;
-        private Land checkPosX;
-        private Land checkPosY;
-        private Land checkNegX;
-        private Land checkNegY;
-        private Land checkTile;
         private int counter;
-        private int biomeHolder = 0;
         private float angle = 0;
         private int gestureHolder;
         public static int displayWidth;
@@ -115,6 +110,8 @@ namespace Game1
         public static IPEndPoint ServerEndpoint = new IPEndPoint(IPAddress.Parse("24.20.157.144"), 57000); // endpoint where server is listening
         public static Client Client = new Client();
         public static bool messageReceived = false;
+        public static bool messageStarted = false;
+        public static bool messageCompleted = false;
         public static string Username = "King Charles I";
 
 
@@ -148,24 +145,12 @@ namespace Game1
             // TODO: Add your initialization logic here
             this.IsMouseVisible = true;
             TouchPanel.EnabledGestures = GestureType.Tap;
-            Player.player = new Player((int)((20 * displayWidth / 1920) / tileScale), (int)((10 * displayHeight / 1080) / tileScale), GenerateWorker());
+            Player.player = new Player((int)((20 * displayWidth / 1920) / tileScale), (int)((10 * displayHeight / 1080) / tileScale), Generate.Worker());
             Player.player.tileX = (int)((20 * displayWidth / 1920) / tileScale);
             Player.player.tileY = (int)((10 * displayHeight / 1080) / tileScale);
             Player.player.DrawX = (int)((20 * displayWidth / 1920) / tileScale) * (int)(50 * tileScale) + (int)(25 * tileScale);
             Player.player.DrawY = (int)((10 * displayHeight / 1080) / tileScale) * (int)(50 * tileScale) + (int)(25 * tileScale);
             Object.Initialize();
-
-            try
-            {
-                Client.Connect(ServerEndpoint);
-            }
-            catch
-            {
-                Client.Connect(ServerEndpoint);
-            }
-
-            Client.Send(Encoding.Default.GetBytes(Username), Encoding.Default.GetBytes(Username).Count());
-            Console.Write($"Connection Established! {ServerEndpoint}\n");
 
             //ScaleTileMap();
 
@@ -189,255 +174,13 @@ namespace Game1
 
             LoadSprites();
 
-            /*
-             * The following statements will populate the land values of the default array 1000 x 1000 
-             * as well as the tile cache array currently 400 x 250 which will
-             * support the tile scale .1 (10x) on most resolution scales
-             * ^^--pending optimization--^^
-             * a roll is done to determine some land values as well as if the tile will be a new biome
-             * and then check the previously drawn X & Y tiles for water or trees to increase clumping
-             * before going on to generate full biomes, to scale 
-             * the biomes are then expanded on with more complex near-by random tile generation 
-             * done through multiple rescans of the default global land array for definition
-             * default snow i = 40
-             * default ore i = 5
-             */
-             
-            if (Client.isActive())
-            {
-
-            }
-
-            for (int y = 0; y < 1000; y++)
-            {
-                for (int x = 0; x < 1000; x++)
-                {
-                    month = rnd.Next(0, 10000);
-
-                    //////////////////////////////////////
-                    // Instantiate On-Screen Land Tiles //
-                    //////////////////////////////////////
-
-                    if (x < 400 && y < 250)
-                    {
-                        tileArray[x, y] = new Land(0, 0, 0);
-                    }
-
-                    /////////////////////////
-                    // New Biome Initiator //
-                    /////////////////////////
-
-                    if (month < 5) { biomeHolder = 0; }
-                    else { biomeHolder = 1; }
-
-                    /////////////////////////////////////////////////////////////
-                    // Randomly Generate and Instantiate Land Stored in Arrays //
-                    /////////////////////////////////////////////////////////////
-
-                    if (month <= 9390)
-                    {
-                        landArray[x, y] = new Land(1, biomeHolder, 0);
-                        landArray[x, y].depth[0] = 0;
-                    }
-                    else if (month > 9390 && month <= 9400)
-                    {
-                        landArray[x, y] = new Land(1, biomeHolder, 0);
-                        landArray[x, y].depth[0] = 2;
-                    }
-                    else if (month > 9400 && month <= 9800)
-                    {
-                        landArray[x, y] = new Land(1, biomeHolder, 0);
-                        landArray[x, y].depth[0] = 3;
-                    }
-                    else if (month > 9800 && month <= 9900)
-                    {
-                        landArray[x, y] = new Land(1, biomeHolder, 0);
-                        landArray[x, y].depth[0] = 4;
-                    }
-                    else if (month > 9900 && month <= 9995)
-                    {
-                        landArray[x, y] = new Land(1, biomeHolder, 0);
-                        landArray[x, y].depth[0] = 5;
-                    }
-                    else if (month > 9995)
-                    {
-                        landArray[x, y] = new Land(1, biomeHolder, 0);
-                        landArray[x, y].depth[0] = -6;
-                    }
-
-                    /////////////////////
-                    // Realistic Water //
-                    /////////////////////
-
-                    if (landArray[CheckMin(x - 1, 0), y].depth[0] == 2 && month < 5500)
-                    {
-                        landArray[x, y].depth[0] = 2;
-
-                    }
-                    else if (landArray[x, CheckMin(y - 1, 0)].depth[0] == 2 && month < 5500)
-                    {
-                        landArray[x, y].depth[0] = 2;
-                    }
-                    else if (landArray[x, CheckMin(y - 1, 0)].depth[0] == 2 && landArray[CheckMin(x - 1, 0), y].depth[0] == 2 && month < 9920)
-                    {
-                        landArray[x, y].depth[0] = 2;
-                    }
-
-                    ///////////////////////
-                    // Realistic Forests //
-                    ///////////////////////
-
-                    if (landArray[CheckMin(x - 1, 0), y].depth[0] == 5 && month < 3500)
-                    {
-                        landArray[x, y].depth[0] = 5;
-                    }
-                    else if (landArray[x, CheckMin(y - 1, 0)].depth[0] == 5 && month < 3500)
-                    {
-                        landArray[x, y].depth[0] = 5;
-                    }
-                    else if (landArray[x, CheckMin(y - 1, 0)].depth[0] == 5 && landArray[CheckMin(x - 1, 0), y].depth[0] == 5 && month < 9600)
-                    {
-                        landArray[x, y].depth[0] = 5;
-                    }
-
-                }
-            }
-
-            /////////////////////
-            // Generate Biomes //
-            /////////////////////
-
-            for (int y = 0; y < 1000; y++)
-            {
-                for (int x = 0; x < 1000; x++)
-                {
-                    if (landArray[x, y].biome == 0)
-                    {
-                        month = rnd.Next(2, 3);
-                        if (month == 2)
-                        {
-                            landArray[x, y].biome = 2;
-                        }
-                        GenerateBiome(x - 1, y - 1, (int)month);
-                    }
-                    if (landArray[x, y].depth[0] == -6)
-                    {
-                        landArray[x, y].depth[0] = 6;
-                        GenerateMod(x - 1, y - 1, 6);
-                    }
-                }
-            }
-
-            /////////////////////////////////////
-            // Expanded Snow || Default i < 50 //
-            /////////////////////////////////////
-
-            for (int i = 0; i < 50; i++)
-            {
-                for (int y = 0; y < 1000; y++)
-                {
-                    for (int x = 0; x < 1000; x++)
-                    {
-                        checkTile = landArray[x, y];
-                        checkPosX = landArray[CheckMax(x + 1, 999), y];
-                        checkPosY = landArray[x, CheckMax(y + 1, 999)];
-                        checkNegX = landArray[CheckMin(x - 1, 0), y];
-                        checkNegY = landArray[x, CheckMin(y - 1, 0)];
-                        if (checkTile.biome != 2)
-                        {
-                            month = rnd.Next(0, 1000);
-                            if (checkNegX.biome == 2)
-                            {
-                                month = month * 1.25;
-                            }
-                            if (checkNegY.biome == 2)
-                            {
-                                month = month * 1.25;
-                            }
-                            if (checkPosX.biome == 2)
-                            {
-                                month = month * 1.25;
-                            }
-                            if (checkPosY.biome == 2)
-                            {
-                                month = month * 1.25;
-                            }
-                            if (month > 1120)
-                            {
-                                landArray[x, y].biome = 2;
-                            }
-                        }
-                    }
-                }
-            }
-
-            ////////////////////////////////////
-            // Sparse Nodes || Default i < 5 //
-            ////////////////////////////////////
-
-            for (int i = 0; i < 5; i++)
-            {
-                for (int y = 0; y < 1000; y++)
-                {
-                    for (int x = 0; x < 1000; x++)
-                    {
-                        checkTile = landArray[x, y];
-                        checkPosX = landArray[CheckMax(x + 1, 999), y];
-                        checkPosY = landArray[x, CheckMax(y + 1, 999)];
-                        checkNegX = landArray[CheckMin(x - 1, 0), y];
-                        checkNegY = landArray[x, CheckMin(y - 1, 0)];
-                        if (landArray[x, y].biome != 3)
-                        {
-                            month = rnd.Next(0, 1000);
-                            if (landArray[CheckMin(x - 1, 0), y].depth[0] == 6 && month > 650)
-                            {
-                                landArray[x, y].depth[0] = 6;
-                            }
-                            if (landArray[x, CheckMin(y - 1, 0)].depth[0] == 6 && month > 650)
-                            {
-                                landArray[x, y].depth[0] = 6;
-                            }
-                            if (landArray[CheckMax(x + 1, 999), y].depth[0] == 6 && month > 650)
-                            {
-                                landArray[x, y].depth[0] = 6;
-                            }
-                            if (landArray[x, CheckMax(y + 1, 999)].depth[0] == 6 && month > 650)
-                            {
-                                landArray[x, y].depth[0] = 6;
-                            }
-                        }
-                        if (checkTile.depth[0] != 5 && checkTile.depth[0] != 2)
-                        {
-                            month = rnd.Next(0, 1000);
-                            if (checkNegX.depth[0] == 5)
-                            {
-                                month = month * 1.5;
-                            }
-                            if (checkNegY.depth[0] == 5)
-                            {
-                                month = month * 1.5;
-                            }
-                            if (checkPosX.depth[0] == 5)
-                            {
-                                month = month * 1.5;
-                            }
-                            if (checkPosY.depth[0] == 5)
-                            {
-                                month = month * 1.5;
-                            }
-                            if (month > 1050)
-                            {
-                                checkTile.depth[0] = 5;
-                            }
-                        }
-                    }
-                }
-            }
-
+            Generate.All(landArray);
         }
 
         void LoadSprites()
         {
+
+            ////
 
             /////////////////////////
             // Cache Sprite Assets //
@@ -481,6 +224,39 @@ namespace Game1
             WallWoodBackLeft = Content.Load<Texture2D>("WallWoodBackLeft");
             WallWoodBackRight = Content.Load<Texture2D>("WallWoodBackRight");
 
+            DrawingBoard.Tiles[1, 1, 5] = land;
+            DrawingBoard.Tiles[1, 2, 5] = snow;
+            DrawingBoard.Tiles[2, 1, 5] = water;
+            DrawingBoard.Tiles[2, 2, 5] = water;
+            DrawingBoard.Tiles[3, 1, 5] = bush;
+            DrawingBoard.Tiles[3, 2, 5] = snowBush;
+            DrawingBoard.Tiles[4, 1, 5] = deer;
+            DrawingBoard.Tiles[4, 2, 5] = deer;
+            DrawingBoard.Tiles[5, 1, 0] = tree0;
+            DrawingBoard.Tiles[5, 1, 1] = tree1;
+            DrawingBoard.Tiles[5, 1, 2] = tree2;
+            DrawingBoard.Tiles[5, 1, 3] = tree3;
+            DrawingBoard.Tiles[5, 1, 4] = tree4;
+            DrawingBoard.Tiles[5, 1, 5] = tree5;
+            DrawingBoard.Tiles[5, 2, 5] = snowTree;
+            DrawingBoard.Tiles[6, 1, 5] = nodeStone;
+            DrawingBoard.Tiles[6, 2, 5] = nodeStone;
+            DrawingBoard.Tiles[101, 1, 5] = WallWoodHorizontal;
+            DrawingBoard.Tiles[101, 2, 5] = WallWoodHorizontal;
+            DrawingBoard.Tiles[102, 1, 5] = WallWoodVertical;
+            DrawingBoard.Tiles[102, 2, 5] = WallWoodVertical;
+            DrawingBoard.Tiles[103, 1, 5] = WallWoodCornerLeft;
+            DrawingBoard.Tiles[103, 2, 5] = WallWoodCornerLeft;
+            DrawingBoard.Tiles[104, 1, 5] = WallWoodCornerRight;
+            DrawingBoard.Tiles[104, 2, 5] = WallWoodCornerRight;
+            DrawingBoard.Tiles[105, 1, 5] = WallWoodBackLeft;
+            DrawingBoard.Tiles[105, 2, 5] = WallWoodBackLeft;
+            DrawingBoard.Tiles[106, 1, 5] = WallWoodBackRight;
+            DrawingBoard.Tiles[106, 2, 5] = WallWoodBackRight;
+            DrawingBoard.Tiles[201, 1, 5] = house_kame;
+            DrawingBoard.Tiles[201, 2, 5] = house_kame;
+            DrawingBoard.Tiles[202, 1, 5] = mine;
+            DrawingBoard.Tiles[202, 2, 5] = mine;
         }
 
         /// <summary>
@@ -569,7 +345,7 @@ namespace Game1
             if (month < 5 && Player.player.resources[10] > Player.Units.Count)
             {
                 // Units unit = new Units(0, 0, Player.Units.Count, GenerateWorker()); //
-                Player.Units.Add(new Units(0, 0, Player.Units.Count, GenerateWorker()));
+                Player.Units.Add(new Units(0, 0, Player.Units.Count, Generate.Worker()));
             }
             
             if (Units.Active.Count > 0)
@@ -604,15 +380,15 @@ namespace Game1
             unit.Rotation = (float)unit.LastMove * ((float)Math.PI / 2.0f);
             if (unit == Player.player)
             {
-                cameraLocationX = CheckMinMax(cameraLocationX + MovementXY[unit.LastMove, 0], 0, 1000);
-                cameraLocationY = CheckMinMax(cameraLocationY + MovementXY[unit.LastMove, 1], 0, 1000);
-                Player.player.X = CheckMinMax(Player.player.X + MovementXY[unit.LastMove, 0], 40, 960);
-                Player.player.Y = CheckMinMax(Player.player.Y + MovementXY[unit.LastMove, 1], 20, 980);
+                cameraLocationX = Check.Range(cameraLocationX + MovementXY[unit.LastMove, 0], 0, 1000);
+                cameraLocationY = Check.Range(cameraLocationY + MovementXY[unit.LastMove, 1], 0, 1000);
+                Player.player.X = Check.Range(Player.player.X + MovementXY[unit.LastMove, 0], 40, 960);
+                Player.player.Y = Check.Range(Player.player.Y + MovementXY[unit.LastMove, 1], 20, 980);
             }
             else
             {
-                unit.X = CheckMinMax(unit.X + MovementXY[unit.LastMove, 0], 0, 1000);
-                unit.Y = CheckMinMax(unit.Y + MovementXY[unit.LastMove, 1], 0, 1000);
+                unit.X = Check.Range(unit.X + MovementXY[unit.LastMove, 0], 0, 1000);
+                unit.Y = Check.Range(unit.Y + MovementXY[unit.LastMove, 1], 0, 1000);
             }
         }
 
@@ -632,7 +408,7 @@ namespace Game1
             {
                 if (gesture.Position.X > displayWidth * 3 / 4 && cameraLocationX < 1000 - (displayWidth / 50) / tileScale - 2 / tileScale)
                 {
-                    if (landArray[CheckMax(cameraLocationX + Player.player.tileX + 1, 1000), cameraLocationY + Player.player.tileY].depth[0] == 0)
+                    if (landArray[Check.Max(cameraLocationX + Player.player.tileX + 1, 1000), cameraLocationY + Player.player.tileY].land == 0)
                     {
                         cameraLocationX = cameraLocationX + 1;
                         Player.player.X++;
@@ -642,7 +418,7 @@ namespace Game1
                 }
                 if (gesture.Position.X < displayWidth * 1 / 4 && cameraLocationX > 0)
                 {
-                    if (landArray[CheckMin(cameraLocationX + Player.player.tileX - 1, 0), cameraLocationY + Player.player.tileY].depth[0] == 0)
+                    if (landArray[Check.Min(cameraLocationX + Player.player.tileX - 1, 0), cameraLocationY + Player.player.tileY].land == 0)
                     {
                         cameraLocationX = cameraLocationX - 1;
                         Player.player.X--;
@@ -652,7 +428,7 @@ namespace Game1
                 }
                 if (gesture.Position.Y > displayHeight * 3 / 4 && cameraLocationY < 1000 - (displayHeight / 50) / tileScale - 2 / tileScale)
                 {
-                    if (landArray[cameraLocationX + Player.player.tileX, CheckMax(cameraLocationY + Player.player.tileY + 1, 1000)].depth[0] == 0)
+                    if (landArray[cameraLocationX + Player.player.tileX, Check.Max(cameraLocationY + Player.player.tileY + 1, 1000)].land == 0)
                     {
                         cameraLocationY = cameraLocationY + 1;
                         Player.player.Y++;
@@ -662,7 +438,7 @@ namespace Game1
                 }
                 if (gesture.Position.Y < displayHeight * 1 / 4 && cameraLocationY > 0)
                 {
-                    if (landArray[cameraLocationX + Player.player.tileX, CheckMin(cameraLocationY + Player.player.tileY - 1, 0)].depth[0] == 0)
+                    if (landArray[cameraLocationX + Player.player.tileX, Check.Min(cameraLocationY + Player.player.tileY - 1, 0)].land == 0)
                     {
                         cameraLocationY = cameraLocationY - 1;
                         Player.player.Y--;
@@ -787,7 +563,7 @@ namespace Game1
             }
             else if (oldState.IsKeyUp(Keys.Space) && newState.IsKeyDown(Keys.Space))
             {
-                if (landArray[cameraLocationX + Player.player.tileX + MovementXY[Player.player.LastMove, 0], cameraLocationY + Player.player.tileY + MovementXY[Player.player.LastMove, 1]].depth[0] == 202)
+                if (landArray[cameraLocationX + Player.player.tileX + MovementXY[Player.player.LastMove, 0], cameraLocationY + Player.player.tileY + MovementXY[Player.player.LastMove, 1]].land == 202)
                 {
                     Player.player.depth++;
                 }
@@ -855,7 +631,7 @@ namespace Game1
                     {
                         Player.player.LastMove = keyCheck + 1;
                         Player.player.Rotation = (float)Player.player.LastMove * ((float)Math.PI / 2.0f);
-                        if (landArray[cameraLocationX + Player.player.tileX + MovementXY[Player.player.LastMove, 0], cameraLocationY + Player.player.tileY + MovementXY[Player.player.LastMove, 1]].depth[Player.player.depth] == 0)
+                        if (landArray[cameraLocationX + Player.player.tileX + MovementXY[Player.player.LastMove, 0], cameraLocationY + Player.player.tileY + MovementXY[Player.player.LastMove, 1]].land == 0)
                         {
                             Movement(Player.player);
                         }
@@ -921,7 +697,7 @@ namespace Game1
                 {
                     //informationToWriteLand[counter + x] = landArray[x, y].land.ToString();
                     informationToWriteBiome[counter + x] = landArray[x, y].biome.ToString();
-                    informationToWriteMod[counter + x] = landArray[x, y].depth[0].ToString();
+                    informationToWriteMod[counter + x] = landArray[x, y].land.ToString();
                     if (counter == 0)
                     {
                         informationToWritePlayerResources[x] = Player.player.resources[x].ToString();
@@ -965,15 +741,31 @@ namespace Game1
             }
             else
             {
-                ReceiveDataLoad();
-                Client.Send(new byte[] { 1 }, 1);
+                messageCompleted = false;
 
-                while (!messageReceived)
+                Client.Send(new byte[] { 10, 1 }, 2);
+                ReceiveDataLoad();
+
+                Stopwatch stopwatch = new Stopwatch();
+                stopwatch.Start();
+
+                while (!messageStarted)
+                {
+                    if (stopwatch.ElapsedMilliseconds > 1000)
+                    {
+                        Client.Send(new byte[] { 10, 1 }, 2);
+                        stopwatch.Restart();
+                    }
+                }
+                stopwatch.Reset();
+
+                while (!messageCompleted)
                 {
                     Thread.Sleep(50);
                 }
 
-                messageReceived = false;
+                messageStarted = false;
+                messageCompleted = false;
                 isServer = false;
             }
             informationToWritePlayerResources = new String[1000];
@@ -988,10 +780,10 @@ namespace Game1
                 {
                     //landArray[x, y].land = Int32.Parse(informationToWriteLand[counter + x]);
                     landArray[x, y].biome = Int32.Parse(informationToWriteBiome[counter + x]);
-                    landArray[x, y].depth[0] = Int32.Parse(informationToWriteMod[counter + x]);
+                    landArray[x, y].land = Int32.Parse(informationToWriteMod[counter + x]);
                     landArray[x, y].IsActive = false;
-                    if (landArray[x, y].depth[0] == 4) { landArray[x, y].rotate = 0; }
-                    else if (landArray[x, y].depth[0] == 5) { landArray[x, y].frame = 5; }
+                    if (landArray[x, y].land == 4) { landArray[x, y].rotate = 0; }
+                    else if (landArray[x, y].land == 5) { landArray[x, y].frame = 5; }
                     else { landArray[x, y].rotate = null; }
                     if (counter == 0)
                     {
@@ -1030,10 +822,10 @@ namespace Game1
             DrawingBoard.DrawObjects(player, Player.player, tileScale, Player.player.Rotation, new Rectangle(0, 0, 50, 50));
             if (invOpen == true)
             {
-                DrawingBoard.DrawObjects(inventory, Object.objects[901], 5, 0, new Rectangle(0, 0, 122, 174));
+                DrawingBoard.DrawObjects(inventory, Object.InterfaceObjects[1], 5, 0, new Rectangle(0, 0, 122, 174));
                 if (newMouseState.RightButton == ButtonState.Pressed)
                 {
-                    DrawingBoard.DrawObjects(idCardBack, Object.objects[904], 1, 0, new Rectangle(0, 0, 1200, 732));
+                    DrawingBoard.DrawObjects(idCardBack, Object.InterfaceObjects[4], 1, 0, new Rectangle(0, 0, 1200, 732));
                     spriteBatch.DrawString(font, $"Gathering: {Player.player.stats[11]} ", new Vector2(370, 450), Color.Black);
                     spriteBatch.DrawString(font, $"Wood Cutting: {Player.player.stats[12]} ", new Vector2(370, 500), Color.Black);
                     spriteBatch.DrawString(font, $"Mining: {Player.player.stats[14]}", new Vector2(370, 550), Color.Black);
@@ -1047,7 +839,7 @@ namespace Game1
                 }
                 else
                 {
-                    DrawingBoard.DrawObjects(idCard, Object.objects[903], 1, 0, new Rectangle(0, 0, 1200, 732));
+                    DrawingBoard.DrawObjects(idCard, Object.InterfaceObjects[3], 1, 0, new Rectangle(0, 0, 1200, 732));
                     spriteBatch.DrawString(font, $"Experience: {Player.player.stats[0]}", new Vector2(50, 450), Color.DarkViolet);
                     spriteBatch.DrawString(font, $"Workers: {Player.Units.Count} / {Player.player.resources[10]}", new Vector2(50, 500), Color.Blue);
                     spriteBatch.DrawString(font, $"Gold: {Player.player.gold}", new Vector2(50, 550), Color.DarkGoldenrod);
@@ -1069,20 +861,20 @@ namespace Game1
             if (buildMenuOpen == true)
             {
                 Build.Run();
-                DrawingBoard.DrawObjects(buildMenu, Object.objects[902], 1, 0, new Rectangle(0, 0, 846, 535));
-                DrawingBoard.DrawObjects(house_kame, Object.objects[201], 1, 0, new Rectangle(0, 0, 100, 150));
-                DrawingBoard.DrawObjects(WallWoodHorizontal, Object.objects[101], 1, 0, new Rectangle(0, 0, 50, 100));
-                DrawingBoard.DrawObjects(WallWoodVertical, Object.objects[102], 1, 0, new Rectangle(0, 0, 50, 100));
-                DrawingBoard.DrawObjects(WallWoodCornerLeft, Object.objects[103], 1, 0, new Rectangle(0, 0, 50, 100));
-                DrawingBoard.DrawObjects(WallWoodCornerRight, Object.objects[104], 1, 0, new Rectangle(0, 0, 50, 100));
-                DrawingBoard.DrawObjects(WallWoodBackLeft, Object.objects[105], 1, 0, new Rectangle(0, 0, 50, 100));
-                DrawingBoard.DrawObjects(WallWoodBackRight, Object.objects[106], 1, 0, new Rectangle(0, 0, 50, 100));
-                DrawingBoard.DrawObjects(mine, Object.objects[202], 1, 0, new Rectangle(0, 0, 100, 100));
+                DrawingBoard.DrawObjects(buildMenu, Object.InterfaceObjects[2], 1, 0, new Rectangle(0, 0, 846, 535));
+                DrawingBoard.DrawObjects(house_kame, Object.Objects[201], 1, 0, new Rectangle(0, 0, 100, 150));
+                DrawingBoard.DrawObjects(WallWoodHorizontal, Object.Objects[101], 1, 0, new Rectangle(0, 0, 50, 100));
+                DrawingBoard.DrawObjects(WallWoodVertical, Object.Objects[102], 1, 0, new Rectangle(0, 0, 50, 100));
+                DrawingBoard.DrawObjects(WallWoodCornerLeft, Object.Objects[103], 1, 0, new Rectangle(0, 0, 50, 100));
+                DrawingBoard.DrawObjects(WallWoodCornerRight, Object.Objects[104], 1, 0, new Rectangle(0, 0, 50, 100));
+                DrawingBoard.DrawObjects(WallWoodBackLeft, Object.Objects[105], 1, 0, new Rectangle(0, 0, 50, 100));
+                DrawingBoard.DrawObjects(WallWoodBackRight, Object.Objects[106], 1, 0, new Rectangle(0, 0, 50, 100));
+                DrawingBoard.DrawObjects(mine, Object.Objects[202], 1, 0, new Rectangle(0, 0, 100, 100));
             }
             if (workerListOpen == true)
             {
                 int[] array = new int[10];
-                DrawingBoard.DrawObjects(workerList, Object.objects[905], 1, 0, new Rectangle(0, 0, 510, 825));
+                DrawingBoard.DrawObjects(workerList, Object.InterfaceObjects[5], 1, 0, new Rectangle(0, 0, 510, 825));
                 for (int i = 0; i < Player.Units.Count; i++)
                 {
                     array = Player.Units[i].stats;
@@ -1097,33 +889,6 @@ namespace Game1
             // DrawText(displayWidth.ToString(), 250, 250);
 
             base.Draw(gameTime);
-        }
-        
-        public void DrawText(/*string text, int width, int height*/)
-        {
-            if (actionPending == true)
-            {
-                spriteBatch.DrawString(font, $"{actionTimer.ElapsedMilliseconds/1000}", new Vector2(1000, 500), Color.Red);
-            }
-            if (cantBuild.IsRunning == true)
-            {
-                string output = "Not Enough Resources!";
-                Vector2 FontOrigin = font.MeasureString(output) / 2;
-                spriteBatch.DrawString(font, output, new Vector2(1000, 450), Color.Red, 0, FontOrigin, 1.0f, SpriteEffects.None, 0.5f);
-            }
-            spriteBatch.DrawString(font, $"{ Player.Units.Count }", new Vector2(50, 50), Color.DarkViolet);
-            spriteBatch.DrawString(font, $"{ Player.player.X }", new Vector2(50, 150), Color.DarkViolet);
-            spriteBatch.DrawString(font, $"{ Player.player.Y }", new Vector2(150, 150), Color.DarkViolet);
-            if (Units.Active.Count > 0)
-            {
-                int[] array = Units.Active[0].stats;
-                spriteBatch.DrawString(font, $"{ array[0] }", new Vector2(50, 100), Color.DarkViolet);
-                spriteBatch.DrawString(font, $"{ array[1] }", new Vector2(100, 100), Color.DarkViolet);
-                spriteBatch.DrawString(font, $"{ array[2] }", new Vector2(150, 100), Color.DarkViolet);
-                spriteBatch.DrawString(font, $"{ array[3] }", new Vector2(200, 100), Color.DarkViolet);
-                spriteBatch.DrawString(font, $"{ Units.Active[0].X }", new Vector2(50, 200), Color.DarkViolet);
-                spriteBatch.DrawString(font, $"{ Units.Active[0].Y }", new Vector2(150, 200), Color.DarkViolet);
-            }
         }
 
         /* DrawTiles;
@@ -1143,7 +908,7 @@ namespace Game1
             {
                 for (int x = 0; x < ((displayWidth / 50) / tileScale) + 2 / tileScale; x++)
                 {
-                    if (landArray[tempTilePointerX + x, tempTilePointerY + y].depth[Player.player.depth] == 2)// && tileArray[x, y].land != 2)
+                    if (landArray[tempTilePointerX + x, tempTilePointerY + y].land == 2)// && tileArray[x, y].land != 2)
                     {
                         spriteBatch.Draw(water, new Rectangle(x * (int)(50 * tileScale), y * (int)(50 * tileScale), (int)(50 * tileScale), (int)(50 * tileScale)), Color.White);
                     }
@@ -1173,46 +938,46 @@ namespace Game1
                 }
             }
 
-            for (int y = 0; y < ((displayHeight / 50) / tileScale) + 2/tileScale; y++)
+            for (int y = 0; y < ((displayHeight / 50) / tileScale) + 2 / tileScale; y++)
             {
-                for (int x = 0; x < ((displayWidth / 50) / tileScale) + 2/tileScale; x++)
+                for (int x = 0; x < ((displayWidth / 50) / tileScale) + 2 / tileScale; x++)
                 {
                     month = rnd.Next(0, 10000);
-                    if (month == 5 || month == 9995 && landArray[tempTilePointerX + x, tempTilePointerY + y].depth[0] == 5)
+                    if (month == 5 || month == 9995 && landArray[tempTilePointerX + x, tempTilePointerY + y].land == 5)
                     {
                         if (landArray[tempTilePointerX + x, tempTilePointerY + y].frame < 5 && month > 5000)
                         {
-                            landArray[tempTilePointerX + x, tempTilePointerY + y].frame = CheckMax(landArray[tempTilePointerX + x, tempTilePointerY + y].frame+1, 5);
-                            landArray[tempTilePointerX + x + 1, tempTilePointerY + y].frame = CheckMax(landArray[tempTilePointerX + x + 1, tempTilePointerY + y].frame+1, 5);
-                            landArray[tempTilePointerX + x, tempTilePointerY + y + 1].frame = CheckMax(landArray[tempTilePointerX + x, tempTilePointerY + y + 1].frame+1, 5);
+                            landArray[tempTilePointerX + x, tempTilePointerY + y].frame = Check.Max(landArray[tempTilePointerX + x, tempTilePointerY + y].frame + 1, 5);
+                            landArray[tempTilePointerX + x + 1, tempTilePointerY + y].frame = Check.Max(landArray[tempTilePointerX + x + 1, tempTilePointerY + y].frame + 1, 5);
+                            landArray[tempTilePointerX + x, tempTilePointerY + y + 1].frame = Check.Max(landArray[tempTilePointerX + x, tempTilePointerY + y + 1].frame + 1, 5);
                         }
                         else if (landArray[tempTilePointerX + x, tempTilePointerY + y].frame > 0 && month < 5000)
                         {
                             int rand = rnd.Next(3, 6);
                             for (int i = 1; i < rand; i++)
                             {
-                                landArray[tempTilePointerX + x, tempTilePointerY + y].frame = CheckMin(landArray[tempTilePointerX + x, tempTilePointerY + y].frame - 1, 0);
-                                landArray[tempTilePointerX + x + i, tempTilePointerY + y].frame = CheckMin(landArray[tempTilePointerX + x + i, tempTilePointerY + y].frame - 1, 0);
-                                landArray[tempTilePointerX + x, tempTilePointerY + y + i].frame = CheckMin(landArray[tempTilePointerX + x, tempTilePointerY + y + i].frame - 1, 0);
-                                landArray[tempTilePointerX + x + i, tempTilePointerY + y + i].frame = CheckMin(landArray[tempTilePointerX + x + i, tempTilePointerY + y + i].frame - 1, 0);
+                                landArray[tempTilePointerX + x, tempTilePointerY + y].frame = Check.Min(landArray[tempTilePointerX + x, tempTilePointerY + y].frame - 1, 0);
+                                landArray[tempTilePointerX + x + i, tempTilePointerY + y].frame = Check.Min(landArray[tempTilePointerX + x + i, tempTilePointerY + y].frame - 1, 0);
+                                landArray[tempTilePointerX + x, tempTilePointerY + y + i].frame = Check.Min(landArray[tempTilePointerX + x, tempTilePointerY + y + i].frame - 1, 0);
+                                landArray[tempTilePointerX + x + i, tempTilePointerY + y + i].frame = Check.Min(landArray[tempTilePointerX + x + i, tempTilePointerY + y + i].frame - 1, 0);
                             }
                         }
                     }
                     if (landArray[tempTilePointerX + x, tempTilePointerY + y].biome == 1)
                     {
-                        if (landArray[tempTilePointerX + x, tempTilePointerY + y].depth[Player.player.depth] == 3)// && tileArray[x, y].land != 3)
+                        if (landArray[tempTilePointerX + x, tempTilePointerY + y].land == 3)// && tileArray[x, y].land != 3)
                         {
                             spriteBatch.Draw(bush, new Rectangle(x * (int)(50 * tileScale), y * (int)(50 * tileScale), (int)(50 * tileScale), (int)(50 * tileScale)), Color.White);
                         }
-                        else if (landArray[tempTilePointerX + x, tempTilePointerY + y].depth[Player.player.depth] == 4)// && tileArray[x, y].land != 4)
+                        else if (landArray[tempTilePointerX + x, tempTilePointerY + y].land == 4)// && tileArray[x, y].land != 4)
                         {
                             Vector2 location = new Vector2(x * (int)(50 * tileScale) + (int)(25 * tileScale) + 1, y * (int)(50 * tileScale) + (int)(25 * tileScale) + 1);
                             Rectangle sourceRectangle = new Rectangle(0, 0, 50, 50);
                             Vector2 origin = new Vector2(25, 25);
-                            CreatureAI(Random(rnd.Next(0, 1000)), tempTilePointerX + x, tempTilePointerY + y);
+                            CreatureAI(rnd.Next(0, 1000), tempTilePointerX + x, tempTilePointerY + y);
                             spriteBatch.Draw(deer, location, sourceRectangle, Color.White, angle, origin, 1.0f * (float)tileScale, SpriteEffects.None, 1);
                         }
-                        else if (landArray[tempTilePointerX + x, tempTilePointerY + y].depth[Player.player.depth] == 5)// && tileArray[x, y].land != 5)
+                        else if (landArray[tempTilePointerX + x, tempTilePointerY + y].land == 5)// && tileArray[x, y].land != 5)
                         {
                             if (landArray[tempTilePointerX + x, tempTilePointerY + y].frame == 5)
                             {
@@ -1239,94 +1004,94 @@ namespace Game1
                                 spriteBatch.Draw(tree0, new Rectangle((x * (int)(50 * tileScale) - (int)(50 / 2 * tileScale)), (y - 1) * (int)(50 * tileScale), (int)(100 * tileScale), (int)(100 * tileScale)), Color.White);
                             }
                         }
-                        else if (landArray[tempTilePointerX + x, tempTilePointerY + y].depth[Player.player.depth] == 6)// && tileArray[x, y].land != 5)
+                        else if (landArray[tempTilePointerX + x, tempTilePointerY + y].land == 6)// && tileArray[x, y].land != 5)
                         {
                             spriteBatch.Draw(nodeStone, new Rectangle((x * (int)(50 * tileScale)), y * (int)(50 * tileScale), (int)(50 * tileScale), (int)(50 * tileScale)), Color.White);
                         }
-                        else if (landArray[tempTilePointerX + x, tempTilePointerY + y].depth[0] == 101)// && tileArray[x, y].land != 6)
+                        else if (landArray[tempTilePointerX + x, tempTilePointerY + y].land == 101)// && tileArray[x, y].land != 6)
                         {
                             spriteBatch.Draw(WallWoodHorizontal, new Rectangle(((x * (int)(50 * tileScale))), (y - 1) * (int)(50 * tileScale), (int)(50 * tileScale), (int)(100 * tileScale)), Color.White);
                         }
-                        else if (landArray[tempTilePointerX + x, tempTilePointerY + y].depth[0] == 102)// && tileArray[x, y].land != 6)
+                        else if (landArray[tempTilePointerX + x, tempTilePointerY + y].land == 102)// && tileArray[x, y].land != 6)
                         {
                             spriteBatch.Draw(WallWoodVertical, new Rectangle(((x * (int)(50 * tileScale))), (y - 1) * (int)(50 * tileScale), (int)(50 * tileScale), (int)(100 * tileScale)), Color.White);
                         }
-                        else if (landArray[tempTilePointerX + x, tempTilePointerY + y].depth[0] == 103)// && tileArray[x, y].land != 6)
+                        else if (landArray[tempTilePointerX + x, tempTilePointerY + y].land == 103)// && tileArray[x, y].land != 6)
                         {
                             spriteBatch.Draw(WallWoodCornerLeft, new Rectangle(((x * (int)(50 * tileScale))), (y - 1) * (int)(50 * tileScale), (int)(50 * tileScale), (int)(100 * tileScale)), Color.White);
                         }
-                        else if (landArray[tempTilePointerX + x, tempTilePointerY + y].depth[0] == 104)// && tileArray[x, y].land != 6)
+                        else if (landArray[tempTilePointerX + x, tempTilePointerY + y].land == 104)// && tileArray[x, y].land != 6)
                         {
                             spriteBatch.Draw(WallWoodCornerRight, new Rectangle(((x * (int)(50 * tileScale))), (y - 1) * (int)(50 * tileScale), (int)(50 * tileScale), (int)(100 * tileScale)), Color.White);
                         }
-                        else if (landArray[tempTilePointerX + x, tempTilePointerY + y].depth[0] == 105)// && tileArray[x, y].land != 6)
+                        else if (landArray[tempTilePointerX + x, tempTilePointerY + y].land == 105)// && tileArray[x, y].land != 6)
                         {
                             spriteBatch.Draw(WallWoodBackLeft, new Rectangle(((x * (int)(50 * tileScale))), (y - 1) * (int)(50 * tileScale), (int)(50 * tileScale), (int)(100 * tileScale)), Color.White);
                         }
-                        else if (landArray[tempTilePointerX + x, tempTilePointerY + y].depth[0] == 106)// && tileArray[x, y].land != 6)
+                        else if (landArray[tempTilePointerX + x, tempTilePointerY + y].land == 106)// && tileArray[x, y].land != 6)
                         {
                             spriteBatch.Draw(WallWoodBackRight, new Rectangle(((x * (int)(50 * tileScale))), (y - 1) * (int)(50 * tileScale), (int)(50 * tileScale), (int)(100 * tileScale)), Color.White);
                         }
-                        else if (landArray[tempTilePointerX + x, tempTilePointerY + y].depth[0] == 201)// && tileArray[x, y].land != 7)
+                        else if (landArray[tempTilePointerX + x, tempTilePointerY + y].land == 201)// && tileArray[x, y].land != 7)
                         {
                             spriteBatch.Draw(house_kame, new Rectangle((x - 1) * (int)(50 * tileScale), (y - 2) * (int)(50 * tileScale), (int)(100 * tileScale), (int)(150 * tileScale)), Color.White);
                         }
-                        else if (landArray[tempTilePointerX + x, tempTilePointerY + y].depth[0] == 202)// && tileArray[x, y].land != 7)
+                        else if (landArray[tempTilePointerX + x, tempTilePointerY + y].land == 202)// && tileArray[x, y].land != 7)
                         {
                             spriteBatch.Draw(mine, new Rectangle((x - 1) * (int)(50 * tileScale), (y - 1) * (int)(50 * tileScale), (int)(100 * tileScale), (int)(100 * tileScale)), Color.White);
                         }
                     }
                     else if (landArray[tempTilePointerX + x, tempTilePointerY + y].biome == 2)
                     {
-                        if (landArray[tempTilePointerX + x, tempTilePointerY + y].depth[Player.player.depth] == 3)// && tileArray[x, y].land != 3)
+                        if (landArray[tempTilePointerX + x, tempTilePointerY + y].land == 3)// && tileArray[x, y].land != 3)
                         {
                             spriteBatch.Draw(snowBush, new Rectangle(x * (int)(50 * tileScale), y * (int)(50 * tileScale), (int)(50 * tileScale), (int)(50 * tileScale)), Color.White);
                         }
-                        else if (landArray[tempTilePointerX + x, tempTilePointerY + y].depth[Player.player.depth] == 4)// && tileArray[x, y].land != 4)
+                        else if (landArray[tempTilePointerX + x, tempTilePointerY + y].land == 4)// && tileArray[x, y].land != 4)
                         {
                             Vector2 location = new Vector2(x * (int)(50 * tileScale) + (int)(25 * tileScale) + 1, y * (int)(50 * tileScale) + (int)(25 * tileScale) + 1);
                             Rectangle sourceRectangle = new Rectangle(0, 0, 50, 50);
                             Vector2 origin = new Vector2(25, 25);
-                            CreatureAI(Random(rnd.Next(0, 1000)), tempTilePointerX + x, tempTilePointerY + y);
+                            CreatureAI(rnd.Next(0, 1000), tempTilePointerX + x, tempTilePointerY + y);
                             spriteBatch.Draw(snowDeer, location, sourceRectangle, Color.White, angle, origin, 1.0f * (float)tileScale, SpriteEffects.None, 1);
                         }
-                        else if (landArray[tempTilePointerX + x, tempTilePointerY + y].depth[Player.player.depth] == 5)// && tileArray[x, y].land != 5)
+                        else if (landArray[tempTilePointerX + x, tempTilePointerY + y].land == 5)// && tileArray[x, y].land != 5)
                         {
                             spriteBatch.Draw(snowTree, new Rectangle((x * (int)(50 * tileScale) - (int)(50 / 2 * tileScale)), (y - 1) * (int)(50 * tileScale), (int)(100 * tileScale), (int)(100 * tileScale)), Color.White);
                         }
-                        else if (landArray[tempTilePointerX + x, tempTilePointerY + y].depth[Player.player.depth] == 6)// && tileArray[x, y].land != 5)
+                        else if (landArray[tempTilePointerX + x, tempTilePointerY + y].land == 6)// && tileArray[x, y].land != 5)
                         {
                             spriteBatch.Draw(nodeStone, new Rectangle((x * (int)(50 * tileScale)), y * (int)(50 * tileScale), (int)(50 * tileScale), (int)(50 * tileScale)), Color.White);
                         }
-                        else if (landArray[tempTilePointerX + x, tempTilePointerY + y].depth[0] == 101)// && tileArray[x, y].land != 6)
+                        else if (landArray[tempTilePointerX + x, tempTilePointerY + y].land == 101)// && tileArray[x, y].land != 6)
                         {
                             spriteBatch.Draw(WallWoodHorizontal, new Rectangle(((x * (int)(50 * tileScale))), (y - 1) * (int)(50 * tileScale), (int)(50 * tileScale), (int)(100 * tileScale)), Color.White);
                         }
-                        else if (landArray[tempTilePointerX + x, tempTilePointerY + y].depth[0] == 102)// && tileArray[x, y].land != 6)
+                        else if (landArray[tempTilePointerX + x, tempTilePointerY + y].land == 102)// && tileArray[x, y].land != 6)
                         {
                             spriteBatch.Draw(WallWoodVertical, new Rectangle(((x * (int)(50 * tileScale))), (y - 1) * (int)(50 * tileScale), (int)(50 * tileScale), (int)(100 * tileScale)), Color.White);
                         }
-                        else if (landArray[tempTilePointerX + x, tempTilePointerY + y].depth[0] == 103)// && tileArray[x, y].land != 6)
+                        else if (landArray[tempTilePointerX + x, tempTilePointerY + y].land == 103)// && tileArray[x, y].land != 6)
                         {
                             spriteBatch.Draw(WallWoodCornerLeft, new Rectangle(((x * (int)(50 * tileScale))), (y - 1) * (int)(50 * tileScale), (int)(50 * tileScale), (int)(100 * tileScale)), Color.White);
                         }
-                        else if (landArray[tempTilePointerX + x, tempTilePointerY + y].depth[0] == 104)// && tileArray[x, y].land != 6)
+                        else if (landArray[tempTilePointerX + x, tempTilePointerY + y].land == 104)// && tileArray[x, y].land != 6)
                         {
                             spriteBatch.Draw(WallWoodCornerRight, new Rectangle(((x * (int)(50 * tileScale))), (y - 1) * (int)(50 * tileScale), (int)(50 * tileScale), (int)(100 * tileScale)), Color.White);
                         }
-                        else if (landArray[tempTilePointerX + x, tempTilePointerY + y].depth[0] == 105)// && tileArray[x, y].land != 6)
+                        else if (landArray[tempTilePointerX + x, tempTilePointerY + y].land == 105)// && tileArray[x, y].land != 6)
                         {
                             spriteBatch.Draw(WallWoodBackLeft, new Rectangle(((x * (int)(50 * tileScale))), (y - 1) * (int)(50 * tileScale), (int)(50 * tileScale), (int)(100 * tileScale)), Color.White);
                         }
-                        else if (landArray[tempTilePointerX + x, tempTilePointerY + y].depth[0] == 106)// && tileArray[x, y].land != 6)
+                        else if (landArray[tempTilePointerX + x, tempTilePointerY + y].land == 106)// && tileArray[x, y].land != 6)
                         {
                             spriteBatch.Draw(WallWoodBackRight, new Rectangle(((x * (int)(50 * tileScale))), (y - 1) * (int)(50 * tileScale), (int)(50 * tileScale), (int)(100 * tileScale)), Color.White);
                         }
-                        else if (landArray[tempTilePointerX + x, tempTilePointerY + y].depth[0] == 201)// && tileArray[x, y].land != 7)
+                        else if (landArray[tempTilePointerX + x, tempTilePointerY + y].land == 201)// && tileArray[x, y].land != 7)
                         {
                             spriteBatch.Draw(house_kame, new Rectangle((x - 1) * (int)(50 * tileScale), (y - 2) * (int)(50 * tileScale), (int)(100 * tileScale), (int)(150 * tileScale)), Color.White);
                         }
-                        else if (landArray[tempTilePointerX + x, tempTilePointerY + y].depth[0] == 202)// && tileArray[x, y].land != 7)
+                        else if (landArray[tempTilePointerX + x, tempTilePointerY + y].land == 202)// && tileArray[x, y].land != 7)
                         {
                             spriteBatch.Draw(mine, new Rectangle((x - 1) * (int)(50 * tileScale), (y - 1) * (int)(50 * tileScale), (int)(100 * tileScale), (int)(100 * tileScale)), Color.White);
                         }
@@ -1346,94 +1111,36 @@ namespace Game1
             }
         }
 
-            /* GenerateBiome;
-             * Input Values: cameraLocationX, cameraLocationY, Land[].biome;
-             * Generates random biome scale depending on biome ID
-             * while making sure to stay within default array bounds
-             * by checking for array scale value which is this max i & ii in the function
-             * it will run a number of times i while less than the scale of biome
-             * and set tile biome values to the passed biome ID b until to scale
-             */ 
-
-        public void GenerateBiome(int tempCameraX, int tempCameraY, int d)
+        public void DrawText(/*string text, int width, int height*/)
         {
-            if (d == 2)
+            if (actionPending == true)
             {
-                month = rnd.Next(5, 17);
+                spriteBatch.DrawString(font, $"{actionTimer.ElapsedMilliseconds/1000}", new Vector2(1000, 500), Color.Red);
             }
-            if ((tempCameraX > month && tempCameraX < 1000 - month) && (tempCameraY > month && tempCameraY < 1000 - month))
+            if (cantBuild.IsRunning == true)
             {
-                for (int i = 0; i < month; i++)
-                {
-                    for (int ii = 0; ii < i * 2; ii++)
-                    {
-                        tempCameraX++;
-                        landArray[tempCameraX, tempCameraY].biome = d;
-                    }
-                    for (int ii = 0; ii < i * 2; ii++)
-                    {
-                        tempCameraY++;
-                        landArray[tempCameraX, tempCameraY].biome = d;
-                    }
-                    for (int ii = 0; ii < i * 2; ii++)
-                    {
-                        tempCameraX--;
-                        landArray[tempCameraX, tempCameraY].biome = d;
-                    }
-                    for (int ii = 0; ii < i * 2; ii++)
-                    {
-                        tempCameraY--;
-                        landArray[tempCameraX, tempCameraY].biome = d;
-                    }
-                    tempCameraX--;
-                    tempCameraY--;
-                }
+                string output = "Not Enough Resources!";
+                Vector2 FontOrigin = font.MeasureString(output) / 2;
+                spriteBatch.DrawString(font, output, new Vector2(1000, 450), Color.Red, 0, FontOrigin, 1.0f, SpriteEffects.None, 0.5f);
             }
-        }
-        public void GenerateMod(int tempCameraX, int tempCameraY, int d)
-        {
-            if (d == 6)
+            spriteBatch.DrawString(font, $"{ Player.Units.Count }", new Vector2(50, 50), Color.DarkViolet);
+            spriteBatch.DrawString(font, $"{ Player.player.X }", new Vector2(50, 150), Color.DarkViolet);
+            spriteBatch.DrawString(font, $"{ Player.player.Y }", new Vector2(150, 150), Color.DarkViolet);
+            if (Units.Active.Count > 0)
             {
-                month = rnd.Next(1, 5);
+                int[] array = Units.Active[0].stats;
+                spriteBatch.DrawString(font, $"{ array[0] }", new Vector2(50, 100), Color.DarkViolet);
+                spriteBatch.DrawString(font, $"{ array[1] }", new Vector2(100, 100), Color.DarkViolet);
+                spriteBatch.DrawString(font, $"{ array[2] }", new Vector2(150, 100), Color.DarkViolet);
+                spriteBatch.DrawString(font, $"{ array[3] }", new Vector2(200, 100), Color.DarkViolet);
+                spriteBatch.DrawString(font, $"{ Units.Active[0].X }", new Vector2(50, 200), Color.DarkViolet);
+                spriteBatch.DrawString(font, $"{ Units.Active[0].Y }", new Vector2(150, 200), Color.DarkViolet);
             }
-            if ((tempCameraX > month && tempCameraX < 1000 - month) && (tempCameraY > month && tempCameraY < 1000 - month))
-            {
-                for (int i = 0; i < month; i++)
-                {
-                    for (int ii = 0; ii < i * 2; ii++)
-                    {
-                        tempCameraX++;
-                        landArray[tempCameraX, tempCameraY].depth[0] = d;
-                    }
-                    for (int ii = 0; ii < i * 2; ii++)
-                    {
-                        tempCameraY++;
-                        landArray[tempCameraX, tempCameraY].depth[0] = d;
-                    }
-                    for (int ii = 0; ii < i * 2; ii++)
-                    {
-                        tempCameraX--;
-                        landArray[tempCameraX, tempCameraY].depth[0] = d;
-                    }
-                    for (int ii = 0; ii < i * 2; ii++)
-                    {
-                        tempCameraY--;
-                        landArray[tempCameraX, tempCameraY].depth[0] = d;
-                    }
-                    tempCameraX--;
-                    tempCameraY--;
-                }
-            }
-        }
-
-        public void ExpandBiome(int d)
-        {
-
         }
 
         public void Mine(int a)
         {
-            if (landArray[cameraLocationX + Player.player.tileX + MovementXY[Player.player.LastMove, 0], cameraLocationY + Player.player.tileY + MovementXY[Player.player.LastMove, 1]].depth[0] != 1)
+            if (landArray[cameraLocationX + Player.player.tileX + MovementXY[Player.player.LastMove, 0], cameraLocationY + Player.player.tileY + MovementXY[Player.player.LastMove, 1]].land != 1)
             {
                 if (a > 0)
                 {
@@ -1449,13 +1156,13 @@ namespace Game1
                     }
                     if (MovementXY[Player.player.LastMove, 0] > 0 || MovementXY[Player.player.LastMove, 1] > 0)
                     {
-                        TileManipulator(cameraLocationX + Player.player.tileX + (Object.objects[Math.Abs(a)].Width * MovementXY[Player.player.LastMove, 0]), cameraLocationY + Player.player.tileY + (Object.objects[Math.Abs(a)].Height * MovementXY[Player.player.LastMove, 1]), Object.objects[Math.Abs(a)].Width, Object.objects[Math.Abs(a)].Height, 1, true);
-                        landArray[cameraLocationX + Player.player.tileX + (Object.objects[Math.Abs(a)].Width * MovementXY[Player.player.LastMove, 0]), cameraLocationY + Player.player.tileY + (Object.objects[Math.Abs(a)].Height * MovementXY[Player.player.LastMove, 1])].depth[0] = Math.Abs(a);
+                        TileManipulator(cameraLocationX + Player.player.tileX + (Object.Objects[Math.Abs(a)].Width * MovementXY[Player.player.LastMove, 0]), cameraLocationY + Player.player.tileY + (Object.Objects[Math.Abs(a)].Height * MovementXY[Player.player.LastMove, 1]), Object.Objects[Math.Abs(a)].Width, Object.Objects[Math.Abs(a)].Height, 1, true);
+                        landArray[cameraLocationX + Player.player.tileX + (Object.Objects[Math.Abs(a)].Width * MovementXY[Player.player.LastMove, 0]), cameraLocationY + Player.player.tileY + (Object.Objects[Math.Abs(a)].Height * MovementXY[Player.player.LastMove, 1])].land = Math.Abs(a);
                     }
                     else
                     {
-                        TileManipulator(cameraLocationX + Player.player.tileX + MovementXY[Player.player.LastMove, 0], cameraLocationY + Player.player.tileY + MovementXY[Player.player.LastMove, 1], Object.objects[Math.Abs(a)].Width, Object.objects[Math.Abs(a)].Height, 1, true);
-                        landArray[cameraLocationX + Player.player.tileX + MovementXY[Player.player.LastMove, 0], cameraLocationY + Player.player.tileY + MovementXY[Player.player.LastMove, 1]].depth[0] = Math.Abs(a);
+                        TileManipulator(cameraLocationX + Player.player.tileX + MovementXY[Player.player.LastMove, 0], cameraLocationY + Player.player.tileY + MovementXY[Player.player.LastMove, 1], Object.Objects[Math.Abs(a)].Width, Object.Objects[Math.Abs(a)].Height, 1, true);
+                        landArray[cameraLocationX + Player.player.tileX + MovementXY[Player.player.LastMove, 0], cameraLocationY + Player.player.tileY + MovementXY[Player.player.LastMove, 1]].land = Math.Abs(a);
                     }
                 }
                 else // if (a == 0)
@@ -1478,8 +1185,8 @@ namespace Game1
                             unit.Rotation = 2 * (float)Math.PI / 2.0f;
                             unit.LastMove = 2;
                         }
-                        if (landArray[unit.X, unit.Y + 1].depth[0] < 3
-                            || landArray[unit.X, unit.Y + 1].depth[0] > 99)
+                        if (landArray[unit.X, unit.Y + 1].land < 3
+                            || landArray[unit.X, unit.Y + 1].land > 99)
                         {
                             landArray[unit.X, unit.Y].IsOccupied = false;
                             Movement(unit);
@@ -1503,8 +1210,8 @@ namespace Game1
                             unit.Rotation = 4 * (float)Math.PI / 2.0f;
                             unit.LastMove = 4;
                         }
-                        if (landArray[unit.X, unit.Y - 1].depth[0] < 3
-                            || landArray[unit.X, unit.Y - 1].depth[0] > 99)
+                        if (landArray[unit.X, unit.Y - 1].land < 3
+                            || landArray[unit.X, unit.Y - 1].land > 99)
                         {
                             landArray[unit.X, unit.Y].IsOccupied = false;
                             Movement(unit);
@@ -1528,8 +1235,8 @@ namespace Game1
                             unit.Rotation = (float)Math.PI / 2.0f;
                             unit.LastMove = 1;
                         }
-                        if (landArray[unit.X + 1, unit.Y].depth[0] < 3
-                            || landArray[unit.X + 1, unit.Y].depth[0] > 99)
+                        if (landArray[unit.X + 1, unit.Y].land < 3
+                            || landArray[unit.X + 1, unit.Y].land > 99)
                         {
                             landArray[unit.X, unit.Y].IsOccupied = false;
                             Movement(unit);
@@ -1553,8 +1260,8 @@ namespace Game1
                             unit.Rotation = 3 * (float)Math.PI / 2.0f;
                             unit.LastMove = 3;
                         }
-                        if (landArray[unit.X - 1, unit.Y].depth[0] < 3
-                            || landArray[unit.X - 1, unit.Y].depth[0] > 99)
+                        if (landArray[unit.X - 1, unit.Y].land < 3
+                            || landArray[unit.X - 1, unit.Y].land > 99)
                         {
                             landArray[unit.X, unit.Y].IsOccupied = false;
                             Movement(unit);
@@ -1580,7 +1287,7 @@ namespace Game1
                     {
                         x--;
                         y--;
-                        if (x > 0 && x < 1000 && y > 0 && y < 1000 && landArray[x, y].depth[0] > 2 && landArray[x, y].depth[0] < 100 && landArray[x, y].IsActive == false)
+                        if (x > 0 && x < 1000 && y > 0 && y < 1000 && landArray[x, y].land > 2 && landArray[x, y].land < 100 && landArray[x, y].IsActive == false)
                         {
                             unit.AutoX = x;
                             unit.AutoY = y;
@@ -1589,7 +1296,7 @@ namespace Game1
                         for (int c = 0; c < (a * 2); c++)
                         {
                             x++;
-                            if (x > 0 && x < 1000 && y > 0 && y < 1000 && landArray[x, y].depth[0] > 2 && landArray[x, y].depth[0] < 100 && landArray[x, y].IsActive == false)
+                            if (x > 0 && x < 1000 && y > 0 && y < 1000 && landArray[x, y].land > 2 && landArray[x, y].land < 100 && landArray[x, y].IsActive == false)
                             {
                                 unit.AutoX = x;
                                 unit.AutoY = y;
@@ -1599,7 +1306,7 @@ namespace Game1
                         for (int c = 0; c < (a * 2); c++)
                         {
                             y++;
-                            if (x > 0 && x < 1000 && y > 0 && y < 1000 && landArray[x, y].depth[0] > 2 && landArray[x, y].depth[0] < 100 && landArray[x, y].IsActive == false)
+                            if (x > 0 && x < 1000 && y > 0 && y < 1000 && landArray[x, y].land > 2 && landArray[x, y].land < 100 && landArray[x, y].IsActive == false)
                             {
                                 unit.AutoX = x;
                                 unit.AutoY = y;
@@ -1609,7 +1316,7 @@ namespace Game1
                         for (int c = 0; c < (a * 2); c++)
                         {
                             x--;
-                            if (x > 0 && x < 1000 && y > 0 && y < 1000 && landArray[x, y].depth[0] > 2 && landArray[x, y].depth[0] < 100 && landArray[x, y].IsActive == false)
+                            if (x > 0 && x < 1000 && y > 0 && y < 1000 && landArray[x, y].land > 2 && landArray[x, y].land < 100 && landArray[x, y].IsActive == false)
                             {
                                 unit.AutoX = x;
                                 unit.AutoY = y;
@@ -1619,7 +1326,7 @@ namespace Game1
                         for (int c = 0; c < (a * 2); c++)
                         {
                             y--;
-                            if (x > 0 && x < 1000 && y > 0 && y < 1000 && landArray[x, y].depth[0] > 2 && landArray[x, y].depth[0] < 100 && landArray[x, y].IsActive == false)
+                            if (x > 0 && x < 1000 && y > 0 && y < 1000 && landArray[x, y].land > 2 && landArray[x, y].land < 100 && landArray[x, y].IsActive == false)
                             {
                                 unit.AutoX = x;
                                 unit.AutoY = y;
@@ -1645,38 +1352,38 @@ namespace Game1
 
         public void Gather(int a, int b, Units unit)
         {
-            if (landArray[a, b].depth[0] != 0/* && landArray[a, b].mod != 1*/)
+            if (landArray[a, b].land != 0/* && landArray[a, b].mod != 1*/)
             {
                 unit.stats[0]++;
-                Player.player.resources[landArray[a, b].depth[0]]++;
-                if (landArray[a, b].depth[0] == 2 || landArray[a, b].depth[0] == 3)
+                Player.player.resources[landArray[a, b].land]++;
+                if (landArray[a, b].land == 2 || landArray[a, b].land == 3)
                 {
                     unit.stats[11]++;
                 }
-                else if (landArray[a, b].depth[0] == 4)
+                else if (landArray[a, b].land == 4)
                 {
                     unit.stats[18]++;
                     unit.stats[19]++;
                     unit.stats[20]++;
                     unit.stats[21]++;
                 }
-                else if (landArray[a, b].depth[0] == 5)
+                else if (landArray[a, b].land == 5)
                 {
                     unit.stats[12]++;
                 }
-                else if (landArray[a, b].depth[0] == 6)
+                else if (landArray[a, b].land == 6)
                 {
                     unit.stats[14]++;
                 }
-                else if (landArray[a, b].depth[0] > 6)
+                else if (landArray[a, b].land > 6)
                 {
                     unit.stats[17]++;
-                    if (landArray[a, b].depth[0] == 202)
+                    if (landArray[a, b].land == 202)
                     {
                         unit.depth = 1;
                     }
                 }
-                landArray[a, b].depth[0] = 0;
+                landArray[a, b].land = 0;
             }
         }
 
@@ -1688,13 +1395,13 @@ namespace Game1
                 {
                     for (int b = 0; b < width; b++)
                     {
-                        if (landArray[x - a, y - b].depth[0] != mod)
+                        if (landArray[x - a, y - b].land != mod)
                         {
-                            if (landArray[x - a, y - b].depth[0] != 0/* && landArray[x + a, y + b].mod != 1 */)
+                            if (landArray[x - a, y - b].land != 0/* && landArray[x + a, y + b].mod != 1 */)
                             {
                                 Gather(x - a, y - b, Player.player);
                             }
-                            landArray[x - a, y - b].depth[0] = mod;
+                            landArray[x - a, y - b].land = mod;
                         }
                     }
                 }
@@ -1706,13 +1413,13 @@ namespace Game1
                 {
                     for (int b = 0; b < width; b++)
                     {
-                        if (landArray[x + a, y + b].depth[0] != mod)
+                        if (landArray[x + a, y + b].land != mod)
                         {
-                            if (landArray[x + a, y + b].depth[0] != 0/* && landArray[x + a, y + b].mod != 1 */)
+                            if (landArray[x + a, y + b].land != 0/* && landArray[x + a, y + b].mod != 1 */)
                             {
                                 Gather(x + a, y + b, Player.player);
                             }
-                            landArray[x + a, y + b].depth[0] = mod;
+                            landArray[x + a, y + b].land = mod;
                         }
                     }
                 }
@@ -1733,51 +1440,39 @@ namespace Game1
             }
             else if (i < 20 && i >= 5)
             {
-                if (landArray[x, y].rotate == (float?)4 * Math.PI / 2.0f && landArray[x, CheckMax(y + 1, 1000)].depth[0] == 0)
+                if (landArray[x, y].rotate == (float?)4 * Math.PI / 2.0f && landArray[x, Check.Max(y + 1, 1000)].land == 0)
                 {
                     landArray[x, y + 1].rotate = landArray[x, y].rotate;
-                    landArray[x, y + 1].depth[0] = 4;// landArray[x, y].mod;
+                    landArray[x, y + 1].land = 4;// landArray[x, y].mod;
                     landArray[x, y].rotate = null;
-                    landArray[x, y].depth[0] = 0;
+                    landArray[x, y].land = 0;
                 }
-                else if (landArray[x, y].rotate == (float?)3 * Math.PI / 2.0f && landArray[CheckMax(x + 1, 1000), y].depth[0] == 0)
+                else if (landArray[x, y].rotate == (float?)3 * Math.PI / 2.0f && landArray[Check.Max(x + 1, 1000), y].land == 0)
                 {
                     landArray[x + 1, y].rotate = landArray[x, y].rotate;
-                    landArray[x + 1, y].depth[0] = 4;// landArray[x, y].mod;
+                    landArray[x + 1, y].land = 4;// landArray[x, y].mod;
                     landArray[x, y].rotate = null;
-                    landArray[x, y].depth[0] = 0;
+                    landArray[x, y].land = 0;
                 }
-                else if (landArray[x, y].rotate == (float?)2 * Math.PI / 2.0f && landArray[x, CheckMin(y - 1, 0)].depth[0] == 0)
+                else if (landArray[x, y].rotate == (float?)2 * Math.PI / 2.0f && landArray[x, Check.Min(y - 1, 0)].land == 0)
                 {
                     landArray[x, y - 1].rotate = landArray[x, y].rotate;
-                    landArray[x, y - 1].depth[0] = 4;// landArray[x, y].mod;
+                    landArray[x, y - 1].land = 4;// landArray[x, y].mod;
                     landArray[x, y].rotate = null;
-                    landArray[x, y].depth[0] = 0;
+                    landArray[x, y].land = 0;
                 }
-                else if (landArray[x, y].rotate == (float?)Math.PI / 2.0f && landArray[CheckMin(x - 1, 0), y].depth[0] == 0)
+                else if (landArray[x, y].rotate == (float?)Math.PI / 2.0f && landArray[Check.Min(x - 1, 0), y].land == 0)
                 {
                     landArray[x - 1, y].rotate = landArray[x, y].rotate;
-                    landArray[x - 1, y].depth[0] = 4;// landArray[x, y].mod;
+                    landArray[x - 1, y].land = 4;// landArray[x, y].mod;
                     landArray[x, y].rotate = null;
-                    landArray[x, y].depth[0] = 0;
+                    landArray[x, y].land = 0;
                 }
             }
             else if (i < 25 && i >= 20)
             {
 
             }
-        }
-
-        public int[] GenerateWorker()
-        {
-            int[] array = new int[200];
-            array[0] = 0;
-            for (int i = 1; i < 10; i++)
-            {
-                month = rnd.Next(0, 4);
-                array[i] = (int)month;
-            }
-            return(array);
         }
 
         // Call to rescale TileMap[] Rectangles to the current tileScale //
@@ -1797,66 +1492,57 @@ namespace Game1
         }
         */
 
-        // Check value against a minimum, if below return min //
-        public int CheckMin(int value, int min)
-        {
-            if (value < min)
-            {
-                value = min;
-            }
-            return (value);
-        }
-        // Check value against a maximum, if above return max //
-        public int CheckMax(int value, int max)
-        {
-            if (value > max)
-            {
-                value = max;
-            }
-            return (value);
-        }
-        // Could also be called "CheckRange" //
-        public int CheckMinMax(int value, int min, int max)
-        {
-            value = CheckMin(value, min);
-            value = CheckMax(value, max);
-            return (value);
-        }
-        // Cached value random for compatibility or expanded features, 
-        // currently seems unneccessary and appears to work when removed from current applications
-        public float Random(float i)
-        {
-            random = i;
-            return (i);
-        }
-
-        public void ConvertString(Land i)
-        {
-
-        }
-
         public static async Task ReceiveDataLoad()
         {
             for (int i = 0; i < 20; i++)
             {
-                receivedBytes = await Task.Run(() => GrabPacket());
+                messageReceived = false;
+
+                PacketWaiter();
+
+                messageStarted = true;
+                Client.Send(new byte[] { 2 }, 1);
+
+                while (!messageReceived)
+                {
+                    Thread.Sleep(50);
+                }
+
                 for (int ii = 0; ii < 50000; ii++)
                 {
                     informationToWriteBiome[(i * 50000) + ii] = receivedBytes[ii].ToString();
                 }
-                Client.Send(new byte[] { 1 }, 1);
+
+                messageReceived = false;
             }
 
             for (int i = 0; i < 20; i++)
             {
-                receivedBytes = await Task.Run(() => GrabPacket());
+                messageReceived = false;
+
+                PacketWaiter();
+
+                Client.Send(new byte[] { 2 }, 1);
+
+                while (!messageReceived)
+                {
+                    Thread.Sleep(50);
+                }
+
                 for (int ii = 0; ii < 50000; ii++)
                 {
                     informationToWriteMod[(i * 50000) + ii] = receivedBytes[ii].ToString();
                 }
-                Client.Send(new byte[] { 1 }, 1);
+
+                messageReceived = false;
             }
 
+            messageCompleted = true;
+        }
+
+        public static async Task PacketWaiter()
+        {
+            receivedBytes = await Task.Run(() => GrabPacket());
             messageReceived = true;
         }
 
