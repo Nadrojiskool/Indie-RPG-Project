@@ -7,11 +7,13 @@ using System.Threading.Tasks;
 
 namespace Game1
 {
-    public class Player : Units
+    public class Player : Unit
     {
         static public Player player;
         public int tileX { get; set; }
         public int tileY { get; set; }
+        public int DrawX { get; set; }
+        public int DrawY { get; set; }
         public int[] resources = new int[1000];
         /*
          * 0: Experience
@@ -41,7 +43,7 @@ namespace Game1
          */
         public int gold { get; set; }
         //public ArrayList Workers = new ArrayList();
-        public static List<Units> Units = new List<Units>();
+        public static List<Unit> Units = new List<Unit>();
         public int xp { get; set; }
 
         public Player (int x, int y, int[] array) : base(x, y, 0, array)

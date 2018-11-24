@@ -28,8 +28,6 @@ namespace Game1
         public string Name { get; set; }
         public int X { get; set; }
         public int Y { get; set; }
-        public int DrawX { get; set; }
-        public int DrawY { get; set; }
         public int Width { get; set; }
         public int Height { get; set; }
         //static public Object Inventory;
@@ -51,11 +49,12 @@ namespace Game1
 
         public static void Initialize()
         {
+            Objects[000] = new Object("Zero", 50, 50, 1, 1);
             Objects[001] = new Object("Land", 50, 50, 1, 1);
             Objects[002] = new Object("Water", 50, 50, 1, 1);
             Objects[003] = new Object("Bush", 50, 50, 1, 1);
             Objects[004] = new Object("Deer", 50, 50, 1, 1);
-            Objects[005] = new Object("Tree", 50, 100, 1, 1);
+            Objects[005] = new Object("Tree", 50, 50, 1, 1);
             Objects[006] = new Object("Rock", 50, 50, 1, 1);
             Objects[100] = new Object("Obelisk", 50, 100, 1, 1);
             Objects[101] = new Object("Wall Wood Horizontal", 50, 100, 1, 1);
@@ -66,11 +65,6 @@ namespace Game1
             Objects[106] = new Object("Wall Wood Back Right", 50, 100, 1, 1);
             Objects[201] = new Object("Kame House", 100, 150, 2, 2);
             Objects[202] = new Object("Mine", 100, 100, 2, 2);
-            InterfaceObjects[1] = new Object("Inventory", 1400, 200, 0, 0);
-            InterfaceObjects[2] = new Object("Build Menu", 537, 580, 0, 0);
-            InterfaceObjects[3] = new Object("ID Card", 50, 150, 0, 0);
-            InterfaceObjects[4] = new Object("ID Card Back", 50, 150, 0, 0);
-            InterfaceObjects[5] = new Object("Worker List", 50, 50, 0, 0);
         }
     }
 }
