@@ -19,13 +19,7 @@ namespace Game1
 {
     public class Game1 : Game
     {
-        public static int objland;
-        public static int objbiome;
-        public static int objframe;
-        public static int objx;
-        public static int objy;
-        public static int objwidth;
-        public static int objheight;
+        protected static bool MainMenuOpen = true;
         public static double tileScale = .5;
         public GraphicsDeviceManager graphics;
         public static SpriteBatch spriteBatch;
@@ -55,6 +49,7 @@ namespace Game1
         private Texture2D nodeCopper;
         private Texture2D nodeTin;
         private Texture2D nodeIron;
+        protected static Texture2D BGFinalFantasy;
         protected static Texture2D house_kame;
         protected static Texture2D mine;
         protected static Texture2D orbPillar;
@@ -114,14 +109,8 @@ namespace Game1
         
         public Rectangle[,] TileMap = new Rectangle[(int)(42 / tileScale), (int)(24 / tileScale)];
         
-        public static IPEndPoint ServerEndpoint = new IPEndPoint(IPAddress.Parse("24.20.157.144"), 57000); // endpoint where server is listening
-        public static UdpClient Client = new UdpClient(56000);
-        public static bool messageReceived = false;
-        public static bool messageStarted = false;
-        public static bool messageCompleted = false;
         public static string Username = "King Charles I";
-
-
+        
         public Game1()
         {
             Content.RootDirectory = "Content";
@@ -151,12 +140,22 @@ namespace Game1
         {
             this.IsMouseVisible = true;
             TouchPanel.EnabledGestures = GestureType.Tap;
+
             Player.player = new Player((int)((20 * displayWidth / 1920) / tileScale), (int)((10 * displayHeight / 1080) / tileScale), Generate.Worker());
             Player.player.tileX = (int)((20 * displayWidth / 1920) / tileScale);
             Player.player.tileY = (int)((10 * displayHeight / 1080) / tileScale);
             Player.player.DrawX = (int)((20 * displayWidth / 1920) / tileScale) * (int)(50 * tileScale) + (int)(25 * tileScale);
             Player.player.DrawY = (int)((10 * displayHeight / 1080) / tileScale) * (int)(50 * tileScale) + (int)(25 * tileScale);
+
             Object.Initialize();
+
+            Client.Net.UserList.Add(new Client.User("Bob", Client.Net.Endpoint));
+            Client.Job job = new Client.Job((byte)Client.Net.UserList[0].JobList.Count(), 5, Client.Net.UserList[0].Endpoint, Client.Net.Endpoint);
+            Console.WriteLine($"Starting Job ID {Client.Net.UserList[0].JobList.Count()}");
+            Client.Net.UserList[0].JobList.Add(job);
+            var t = Task.Run(() => Client.Net.JobManager(job));
+
+            t = Task.Run(() => Client.Net.Listener(Client.Net.Client));
 
             //ScaleTileMap();
 
@@ -176,8 +175,6 @@ namespace Game1
             //framerate = Content.Load<SpriteFont>("Framerate");
 
             LoadSprites();
-
-            Generate.All(landArray);
         }
 
         void LoadSprites()
@@ -213,6 +210,7 @@ namespace Game1
             nodeCopper = Content.Load<Texture2D>("NodeCopper");
             nodeTin = Content.Load<Texture2D>("NodeTin");
             nodeIron = Content.Load<Texture2D>("NodeIron");
+            BGFinalFantasy = Content.Load<Texture2D>("BGFinalFantasy");
             inventory = Content.Load<Texture2D>("Inventory");
             idCard = Content.Load<Texture2D>("IDCard");
             idCardBack = Content.Load<Texture2D>("IDCardBack");
@@ -419,9 +417,15 @@ namespace Game1
 
         void HandlerClick()
         {
-            if (invOpen == true) {
+            if (!invOpen && !buildMenuOpen && !MainMenuOpen)
+            {
+                int spellX = (newMouseState.X / (int)(50 * tileScale) + cameraLocationX) - 2;
+                int spellY = (newMouseState.Y / (int)(50 * tileScale) + cameraLocationY) - 2;
+                TileManipulator(spellX, spellY, 5, 5, 0, false);
+            }
+            if (invOpen) {
                 invOpen = false; }
-            else if (buildMenuOpen == true)
+            if (buildMenuOpen)
             {
                 if (buildRect1.Contains(newMouseState.X, newMouseState.Y) && Player.player.resources[5] >= 200) {
                     //Player.player.resources[5] = Player.player.resources[5] - 200;
@@ -451,27 +455,25 @@ namespace Game1
 
                 buildMenuOpen = false;
             }
-            else if (invOpen == false && buildMenuOpen == false)
-            {
-                int spellX = (newMouseState.X / (int)(50 * tileScale) + cameraLocationX) - 2;
-                int spellY = (newMouseState.Y / (int)(50 * tileScale) + cameraLocationY) - 2;
-                TileManipulator(spellX, spellY, 5, 5, 0, false);
-            }
         }
 
         void HandlerClickRight()
         {
-            if (invOpen == false && buildMenuOpen == false)
+            if (!invOpen && !buildMenuOpen && !MainMenuOpen)
             {
                 int spellX = (newMouseState.X / (int)(50 * tileScale) + cameraLocationX) - 2;
                 int spellY = (newMouseState.Y / (int)(50 * tileScale) + cameraLocationY) - 2;
                 TileManipulator(spellX, spellY, 5, 5, 5, false);
             }
-            if (invOpen == true)
+            if (MainMenuOpen)
+            {
+                var t = Task.Run(() => Generate.All());
+            }
+            if (invOpen)
             {
                 //invOpen = false;
             }
-            if (buildMenuOpen == true)
+            if (buildMenuOpen)
             {
                 /*if (buildRect1.Contains(newMouseState.X, newMouseState.Y))
                 {
@@ -483,7 +485,7 @@ namespace Game1
                 }*/
                 buildMenuOpen = false;
             }
-            if (workerListOpen == true)
+            if (workerListOpen)
             {
                 // NOTE TO SELF // ADD START BIAS // i.e. Workers favor mining in the direction placed
                 if (Unit.Active.Count < Player.Units.Count)
@@ -646,6 +648,7 @@ namespace Game1
             }
             else
             {
+                /*
                 messageCompleted = false;
 
                 Client.Send(new byte[] { 10, 1 }, 2);
@@ -668,6 +671,7 @@ namespace Game1
                 messageStarted = false;
                 messageCompleted = false;
                 isServer = false;
+                */
             }
             informationToWritePlayerResources = new String[1000];
             informationToWritePlayerResources = File.ReadAllLines("C:/Users/2/Desktop/test1resources.txt");
@@ -710,14 +714,19 @@ namespace Game1
                 counter = counter + 200;
             }
         }
-        
+
         /// <summary>
         /// This is called when the game should draw itself.
         /// </summary>
         /// <param name="gameTime">Provides a snapshot of timing values.</param>
         protected override void Draw(GameTime gameTime)
         {
-            Show.Interface();
+            spriteBatch.Begin();
+            if (MainMenuOpen) {
+                Show.MainMenu(); }
+            else {
+                Show.Interface(); }
+            spriteBatch.End();
 
             base.Draw(gameTime);
         }
@@ -1019,66 +1028,5 @@ namespace Game1
             }
         }
         */
-
-        public static async Task ReceiveDataLoad()
-        {
-            for (int i = 0; i < 20; i++)
-            {
-                messageReceived = false;
-
-                PacketWaiter();
-
-                messageStarted = true;
-                Client.Send(new byte[] { 2 }, 1);
-
-                while (!messageReceived)
-                {
-                    Thread.Sleep(50);
-                }
-
-                for (int ii = 0; ii < 50000; ii++)
-                {
-                    informationToWriteBiome[(i * 50000) + ii] = receivedBytes[ii].ToString();
-                }
-
-                messageReceived = false;
-            }
-
-            for (int i = 0; i < 20; i++)
-            {
-                messageReceived = false;
-
-                PacketWaiter();
-
-                Client.Send(new byte[] { 2 }, 1);
-
-                while (!messageReceived)
-                {
-                    Thread.Sleep(50);
-                }
-
-                for (int ii = 0; ii < 50000; ii++)
-                {
-                    informationToWriteMod[(i * 50000) + ii] = receivedBytes[ii].ToString();
-                }
-
-                messageReceived = false;
-            }
-
-            messageCompleted = true;
-        }
-
-        public static async Task PacketWaiter()
-        {
-            receivedBytes = await Task.Run(() => GrabPacket());
-            messageReceived = true;
-        }
-
-        public static byte[] GrabPacket()
-        {
-            byte[] b = new byte[50000];
-            b = Client.Receive(ref ServerEndpoint);
-            return b;
-        }
     }
 }

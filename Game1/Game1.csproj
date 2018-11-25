@@ -7,7 +7,7 @@
     <ProductVersion>8.0.30703</ProductVersion>
     <SchemaVersion>2.0</SchemaVersion>
     <ProjectGuid>{5D537B22-B7A0-4DDB-9C88-E7E91A65721E}</ProjectGuid>
-    <OutputType>WinExe</OutputType>
+    <OutputType>Exe</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
     <RootNamespace>Game1</RootNamespace>
     <AssemblyName>Game1</AssemblyName>
@@ -74,7 +74,9 @@
   <ItemGroup>
     <Compile Include="Check.cs" />
     <Compile Include="Archive.cs" />
-    <Compile Include="Net.cs" />
+    <Compile Include="Client\Job.cs" />
+    <Compile Include="Client\Net.cs" />
+    <Compile Include="Client\User.cs" />
     <Compile Include="Show.cs" />
     <Compile Include="DrawingBoard.cs" />
     <Compile Include="Game1.cs" />

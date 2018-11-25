@@ -33,22 +33,22 @@ namespace Game1
         //public int X;
         //public int Y;
         //public int land { get; set; }
-        public int biome { get; set; }
         //public int mod { get; set; }
         public int frame = 5;
+        public int biome = 0;
         public int land = 0;
         public float? rotate = null;
         public bool IsActive = false;
         public bool IsOccupied = false;
 
-        public Land(int l, int b, float r)//int x, int y, int m)
+        public Land()//int x, int y, int m)
         {
             //X = x;
             //Y = y;
             //land = l;
-            biome = b;
+            //biome = b;
             //mod = m;
-            rotate = (float?)r;
+            //rotate = (float?)r;
         }
 
     }

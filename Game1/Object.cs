@@ -54,7 +54,7 @@ namespace Game1
             Objects[002] = new Object("Water", 50, 50, 1, 1);
             Objects[003] = new Object("Bush", 50, 50, 1, 1);
             Objects[004] = new Object("Deer", 50, 50, 1, 1);
-            Objects[005] = new Object("Tree", 50, 50, 1, 1);
+            Objects[005] = new Object("Tree", 100, 100, 1, 1);
             Objects[006] = new Object("Rock", 50, 50, 1, 1);
             Objects[100] = new Object("Obelisk", 50, 100, 1, 1);
             Objects[101] = new Object("Wall Wood Horizontal", 50, 100, 1, 1);

@@ -1,24 +1,38 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Diagnostics;
+using System.IO;
 using System.Linq;
+using System.Net;
+using System.Net.Sockets;
+using System.Runtime.InteropServices;
 using System.Text;
+using System.Threading;
 using System.Threading.Tasks;
+using Microsoft.Xna.Framework;
+using Microsoft.Xna.Framework.Graphics;
+using Microsoft.Xna.Framework.Input;
+using Microsoft.Xna.Framework.Input.Touch;
+using System.Net.PeerToPeer;
 
 namespace Game1
 {
-    public class Generate
+    public class Generate : Game1
     {
-        public static Random Random = new Random();
+        static Random Random = new Random();
+        static SemaphoreSlim semaphoreSlim = new SemaphoreSlim(1, 1);
 
         public static void Biome()
         {
 
         }
+
         public static void Land()
         {
 
         }
-        public static Land[,] All(Land[,] landArray)
+
+        public static async Task All()
         {
             double rnd;
             byte biomeHolder;
@@ -61,32 +75,32 @@ namespace Game1
 
                     if (rnd <= 9390)
                     {
-                        landArray[x, y] = new Land(1, biomeHolder, 0);
+                        landArray[x, y].biome = biomeHolder;
                         landArray[x, y].land = 0;
                     }
                     else if (rnd > 9390 && rnd <= 9400)
                     {
-                        landArray[x, y] = new Land(1, biomeHolder, 0);
+                        landArray[x, y].biome = biomeHolder;
                         landArray[x, y].land = 2;
                     }
                     else if (rnd > 9400 && rnd <= 9800)
                     {
-                        landArray[x, y] = new Land(1, biomeHolder, 0);
+                        landArray[x, y].biome = biomeHolder;
                         landArray[x, y].land = 3;
                     }
                     else if (rnd > 9800 && rnd <= 9900)
                     {
-                        landArray[x, y] = new Land(1, biomeHolder, 0);
+                        landArray[x, y].biome = biomeHolder;
                         landArray[x, y].land = 4;
                     }
                     else if (rnd > 9900 && rnd <= 9995)
                     {
-                        landArray[x, y] = new Land(1, biomeHolder, 0);
+                        landArray[x, y].biome = biomeHolder;
                         landArray[x, y].land = 5;
                     }
                     else if (rnd > 9995)
                     {
-                        landArray[x, y] = new Land(1, biomeHolder, 0);
+                        landArray[x, y].biome = biomeHolder;
                         landArray[x, y].land = -6;
                     }
 
@@ -127,6 +141,8 @@ namespace Game1
 
                 }
             }
+
+            MainMenuOpen = false;
 
             /////////////////////
             // Generate Biomes //
@@ -259,8 +275,6 @@ namespace Game1
                     }
                 }
             }
-
-            return (landArray);
         }
 
 

@@ -23,8 +23,6 @@ namespace Game1
 
         public static void Interface()
         {
-            spriteBatch.Begin();
-
             Tiles();
 
             DrawingBoard.DrawObjects(player, new Vector2(
@@ -46,13 +44,13 @@ namespace Game1
             }
 
             Text();
-
-            spriteBatch.End();
         }
 
-        static void MainMenu()
+        public static void MainMenu()
         {
-
+            spriteBatch.Draw(BGFinalFantasy,
+                new Rectangle(0, 0, 1920, 1080),
+                Color.White);
         }
 
         /* DrawTiles;
@@ -112,13 +110,20 @@ namespace Game1
                             Color.White);
                     }
 
+                    float fl = 1.0f;
+                    Vector2 origin = new Vector2(0, 0);
+                    if (landArray[cameraLocationX + x, cameraLocationY + y].land == 5) {
+                        origin.X = -12;
+                        origin.Y = 8;
+                        fl = 2.0f; }
+
                     spriteBatch.Draw(texture,
                         new Vector2(
                             (x - ((obj.X / 50) - 1)) * ((int)(50 * tileScale)),
                             (y - ((obj.Y / 50) - 1)) * ((int)(50 * tileScale))),
                         new Rectangle(0, 0, obj.X, obj.Y),
-                        Color.White, 0, new Vector2(0, 0),
-                        1.0f * (float)tileScale, SpriteEffects.None, 1);
+                        Color.White, 0, origin,
+                        fl * (float)tileScale, SpriteEffects.None, 1);
                 }
             }
         }
@@ -135,13 +140,8 @@ namespace Game1
                 Vector2 FontOrigin = font.MeasureString(output) / 2;
                 spriteBatch.DrawString(font, output, new Vector2(1000, 450), Color.Red, 0, FontOrigin, 1.0f, SpriteEffects.None, 0.5f);
             }
-            spriteBatch.DrawString(font, $"{ objland }", new Vector2(50, 50), Color.DarkViolet);
-            spriteBatch.DrawString(font, $"{ objbiome }", new Vector2(50, 150), Color.DarkViolet);
-            spriteBatch.DrawString(font, $"{ objframe }", new Vector2(50, 200), Color.DarkViolet);
             spriteBatch.DrawString(font, $"{ Object.Objects[201].X }", new Vector2(50, 250), Color.DarkViolet);
             spriteBatch.DrawString(font, $"{ Object.Objects[201].Y }", new Vector2(50, 300), Color.DarkViolet);
-            spriteBatch.DrawString(font, $"{ objwidth }", new Vector2(50, 350), Color.DarkViolet);
-            spriteBatch.DrawString(font, $"{ objheight }", new Vector2(50, 400), Color.DarkViolet);
             if (Unit.Active.Count > 0)
             {
                 int[] array = Unit.Active[0].stats;
