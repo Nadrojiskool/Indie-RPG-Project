@@ -73,34 +73,31 @@ namespace Game1
                     // Randomly Generate and Instantiate Land Stored in Arrays //
                     /////////////////////////////////////////////////////////////
 
+                    landArray[x, y] = new Land();
+                    landArray[x, y].biome = biomeHolder;
+
                     if (rnd <= 9390)
                     {
-                        landArray[x, y].biome = biomeHolder;
                         landArray[x, y].land = 0;
                     }
                     else if (rnd > 9390 && rnd <= 9400)
                     {
-                        landArray[x, y].biome = biomeHolder;
                         landArray[x, y].land = 2;
                     }
                     else if (rnd > 9400 && rnd <= 9800)
                     {
-                        landArray[x, y].biome = biomeHolder;
                         landArray[x, y].land = 3;
                     }
                     else if (rnd > 9800 && rnd <= 9900)
                     {
-                        landArray[x, y].biome = biomeHolder;
                         landArray[x, y].land = 4;
                     }
                     else if (rnd > 9900 && rnd <= 9995)
                     {
-                        landArray[x, y].biome = biomeHolder;
                         landArray[x, y].land = 5;
                     }
                     else if (rnd > 9995)
                     {
-                        landArray[x, y].biome = biomeHolder;
                         landArray[x, y].land = -6;
                     }
 

@@ -56,14 +56,12 @@ namespace Game1.Client
                         {
                             System.Buffer.BlockCopy(b, 0, biome, count, b.Length);
                             count = count + b.Length;
-                            Console.WriteLine($"{count}");
                         }
                         count = 0;
                         foreach (byte[] b in job.LandList)
                         {
                             System.Buffer.BlockCopy(b, 0, land, count, b.Length);
                             count = count + b.Length;
-                            Console.WriteLine($"{count}");
                         }
 
                         for (int y = 0; y < 1000; y++)

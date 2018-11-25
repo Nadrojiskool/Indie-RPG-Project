@@ -150,12 +150,7 @@ namespace Game1
             Object.Initialize();
 
             Client.Net.UserList.Add(new Client.User("Bob", Client.Net.Endpoint));
-            Client.Job job = new Client.Job((byte)Client.Net.UserList[0].JobList.Count(), 5, Client.Net.UserList[0].Endpoint, Client.Net.Endpoint);
-            Console.WriteLine($"Starting Job ID {Client.Net.UserList[0].JobList.Count()}");
-            Client.Net.UserList[0].JobList.Add(job);
-            var t = Task.Run(() => Client.Net.JobManager(job));
-
-            t = Task.Run(() => Client.Net.Listener(Client.Net.Client));
+            var t = Task.Run(() => Client.Net.Listener(Client.Net.Client));
 
             //ScaleTileMap();
 
@@ -423,6 +418,13 @@ namespace Game1
                 int spellY = (newMouseState.Y / (int)(50 * tileScale) + cameraLocationY) - 2;
                 TileManipulator(spellX, spellY, 5, 5, 0, false);
             }
+            if (MainMenuOpen)
+            {
+                Client.Job job = new Client.Job((byte)Client.Net.UserList[0].JobList.Count(), 5, Client.Net.UserList[0].Endpoint, Client.Net.Endpoint);
+                Console.WriteLine($"Starting Job ID {Client.Net.UserList[0].JobList.Count()}");
+                Client.Net.UserList[0].JobList.Add(job);
+                var t = Task.Run(() => Client.Net.JobManager(job));
+            }
             if (invOpen) {
                 invOpen = false; }
             if (buildMenuOpen)
@@ -562,8 +564,13 @@ namespace Game1
 
         void HandlerKeyShift()
         {
-            if (newState.IsKeyDown(Keys.L)) {
-                DataLoad(true); }
+            if (newState.IsKeyDown(Keys.L))
+            {
+                Client.Job job = new Client.Job((byte)Client.Net.UserList[0].JobList.Count(), 5, Client.Net.UserList[0].Endpoint, Client.Net.Endpoint);
+                Console.WriteLine($"Starting Job ID {Client.Net.UserList[0].JobList.Count()}");
+                Client.Net.UserList[0].JobList.Add(job);
+                var t = Task.Run(() => Client.Net.JobManager(job));
+            }
         }
 
         void HandlerKeyControl()
@@ -571,7 +578,7 @@ namespace Game1
             if (newState.IsKeyDown(Keys.S)) {
                 DataSave(); }
             else if (newState.IsKeyDown(Keys.L)) {
-                DataLoad(false); }
+                DataLoad(); }
             else if (oldState.IsKeyUp(Keys.A) && newState.IsKeyDown(Keys.A))
             {
                 if (playerAuto == false) {
@@ -635,44 +642,14 @@ namespace Game1
             File.WriteAllLines("C:/Users/2/Desktop/test1workers.txt", informationToWritePlayerWorkers);
         }
 
-        void DataLoad(bool isServer)
+        void DataLoad()
         {
             //informationToWriteLand = new String[1000000];
             //informationToWriteLand = File.ReadAllLines("C:/Users/2/Desktop/test1land.txt"); // Change the file path here to where you want it.
             informationToWriteBiome = new String[1000000];
             informationToWriteMod = new String[1000000];
-            if (!isServer)
-            {
-                informationToWriteBiome = File.ReadAllLines("C:/Users/2/Desktop/test1biome.txt");
-                informationToWriteMod = File.ReadAllLines("C:/Users/2/Desktop/test1mod.txt");
-            }
-            else
-            {
-                /*
-                messageCompleted = false;
-
-                Client.Send(new byte[] { 10, 1 }, 2);
-                ReceiveDataLoad();
-
-                Stopwatch stopwatch = new Stopwatch();
-                stopwatch.Start();
-
-                while (!messageStarted)
-                {
-                    if (stopwatch.ElapsedMilliseconds > 1000) {
-                        Client.Send(new byte[] { 10, 1 }, 2);
-                        stopwatch.Restart(); }
-                }
-                stopwatch.Reset();
-
-                while (!messageCompleted) {
-                    Thread.Sleep(50); }
-
-                messageStarted = false;
-                messageCompleted = false;
-                isServer = false;
-                */
-            }
+            informationToWriteBiome = File.ReadAllLines("C:/Users/2/Desktop/test1biome.txt");
+            informationToWriteMod = File.ReadAllLines("C:/Users/2/Desktop/test1mod.txt");
             informationToWritePlayerResources = new String[1000];
             informationToWritePlayerResources = File.ReadAllLines("C:/Users/2/Desktop/test1resources.txt");
             informationToWritePlayerStats = new String[200];
