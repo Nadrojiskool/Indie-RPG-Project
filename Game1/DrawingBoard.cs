@@ -15,12 +15,11 @@ namespace Game1
     {
         public List<int> Tree = new List<int>();
         public List<int> Deer = new List<int>();
+        public static Texture2D[,,] Tiles = new Texture2D[1000, 5, 10];
 
-        public static void DrawObjects(Texture2D spr, Object obj, double scale, float rotate, Rectangle sourceRectangle)
+        public static void DrawObjects(Texture2D spr, Vector2 location, double scale, float rotate, Rectangle sourceRectangle)
         {
-            Vector2 location = new Vector2(obj.DrawX + 1, obj.DrawY + 1);
-            Vector2 origin = new Vector2(25, 25);
-            Game1.spriteBatch.Draw(spr, location, sourceRectangle, Color.White, rotate, origin, 1.0f*(float)scale, SpriteEffects.None, 1);
+            Game1.spriteBatch.Draw(spr, location, sourceRectangle, Color.White, rotate, new Vector2(25, 25), 1.0f*(float)scale, SpriteEffects.None, 1);
         }
     }
 }

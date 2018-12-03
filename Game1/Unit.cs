@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 
 namespace Game1
 {
-    public class Units : Object
+    public class Unit : Object
     {
         public int[] stats = new int[200];
         public int ID { get; set; }
@@ -18,9 +18,9 @@ namespace Game1
         public int depth { get; set; }
         public int AutoX { get; set; }
         public int AutoY { get; set; }
-        public static List<Units> Active = new List<Units>();
+        public static List<Unit> Active = new List<Unit>();
 
-        public Units(int x, int y, int id, int[] array) : base($"Worker {id}", x, y, 0, 0)
+        public Unit(int x, int y, int id, int[] array) : base($"Worker {id}", x, y, 0, 0)
         {
             this.X = x;
             this.Y = y;
