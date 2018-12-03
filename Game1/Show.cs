@@ -13,7 +13,6 @@ using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
 using Microsoft.Xna.Framework.Input.Touch;
-using System.Net.PeerToPeer;
 
 namespace Game1
 {
@@ -197,13 +196,13 @@ namespace Game1
         {
             DrawingBoard.DrawObjects(buildMenu, new Vector2(537, 580), 1, 0, new Rectangle(0, 0, 846, 535));
             DrawingBoard.DrawObjects(house_kame, new Vector2(600, 650), 1, 0, new Rectangle(0, 0, 100, 150));
-            DrawingBoard.DrawObjects(WallWoodHorizontal, new Vector2(537, 580), 1, 0, new Rectangle(0, 0, 50, 100));
-            DrawingBoard.DrawObjects(WallWoodVertical, new Vector2(537, 580), 1, 0, new Rectangle(0, 0, 50, 100));
-            DrawingBoard.DrawObjects(WallWoodCornerLeft, new Vector2(537, 580), 1, 0, new Rectangle(0, 0, 50, 100));
-            DrawingBoard.DrawObjects(WallWoodCornerRight, new Vector2(537, 580), 1, 0, new Rectangle(0, 0, 50, 100));
-            DrawingBoard.DrawObjects(WallWoodBackLeft, new Vector2(537, 580), 1, 0, new Rectangle(0, 0, 50, 100));
-            DrawingBoard.DrawObjects(WallWoodBackRight, new Vector2(537, 580), 1, 0, new Rectangle(0, 0, 50, 100));
-            DrawingBoard.DrawObjects(mine, new Vector2(537, 580), 1, 0, new Rectangle(0, 0, 100, 100));
+            DrawingBoard.DrawObjects(WallWoodHorizontal, new Vector2(750, 650), 1, 0, new Rectangle(0, 0, 50, 100));
+            DrawingBoard.DrawObjects(WallWoodVertical, new Vector2(800, 650), 1, 0, new Rectangle(0, 0, 50, 100));
+            DrawingBoard.DrawObjects(WallWoodCornerLeft, new Vector2(850, 650), 1, 0, new Rectangle(0, 0, 50, 100));
+            DrawingBoard.DrawObjects(WallWoodCornerRight, new Vector2(900, 650), 1, 0, new Rectangle(0, 0, 50, 100));
+            DrawingBoard.DrawObjects(WallWoodBackLeft, new Vector2(950, 650), 1, 0, new Rectangle(0, 0, 50, 100));
+            DrawingBoard.DrawObjects(WallWoodBackRight, new Vector2(1000, 650), 1, 0, new Rectangle(0, 0, 50, 100));
+            DrawingBoard.DrawObjects(mine, new Vector2(1050, 650), 1, 0, new Rectangle(0, 0, 100, 100));
 
         }
 

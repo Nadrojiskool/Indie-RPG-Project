@@ -13,23 +13,88 @@ using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
 using Microsoft.Xna.Framework.Input.Touch;
-using System.Net.PeerToPeer;
 
 namespace Game1
 {
     public class Generate : Game1
     {
         static Random Random = new Random();
-        static SemaphoreSlim semaphoreSlim = new SemaphoreSlim(1, 1);
 
-        public static void Biome()
+        /* Generate.Biome;
+         * Input Values: cameraLocationX, cameraLocationY, Land[].biome;
+         * Generates random biome scale depending on biome ID
+         * while making sure to stay within default array bounds
+         * by checking for array scale value which is this max i & ii in the function
+         * it will run a number of times i while less than the scale of biome
+         * and set tile biome values to the passed biome ID b until to scale
+         */
+
+        public static void Biome(int tempCameraX, int tempCameraY, int d, Land[,] landArray)
         {
+            double rnd = Random.Next(5, 17);
 
+            if ((tempCameraX > rnd && tempCameraX < 1000 - rnd) && (tempCameraY > rnd && tempCameraY < 1000 - rnd))
+            {
+                for (int i = 0; i < rnd; i++)
+                {
+                    for (int ii = 0; ii < i * 2; ii++)
+                    {
+                        tempCameraX++;
+                        landArray[tempCameraX, tempCameraY].biome = d;
+                    }
+                    for (int ii = 0; ii < i * 2; ii++)
+                    {
+                        tempCameraY++;
+                        landArray[tempCameraX, tempCameraY].biome = d;
+                    }
+                    for (int ii = 0; ii < i * 2; ii++)
+                    {
+                        tempCameraX--;
+                        landArray[tempCameraX, tempCameraY].biome = d;
+                    }
+                    for (int ii = 0; ii < i * 2; ii++)
+                    {
+                        tempCameraY--;
+                        landArray[tempCameraX, tempCameraY].biome = d;
+                    }
+                    tempCameraX--;
+                    tempCameraY--;
+                }
+            }
         }
 
-        public static void Land()
+        public static void Land(int tempCameraX, int tempCameraY, int d, Land[,] landArray)
         {
+            double rnd = Random.Next(1, 5);
 
+            if ((tempCameraX > rnd && tempCameraX < 1000 - rnd) && (tempCameraY > rnd && tempCameraY < 1000 - rnd))
+            {
+                for (int i = 0; i < rnd; i++)
+                {
+                    for (int ii = 0; ii < i * 2; ii++)
+                    {
+                        tempCameraX++;
+                        landArray[tempCameraX, tempCameraY].land = d;
+                    }
+                    for (int ii = 0; ii < i * 2; ii++)
+                    {
+                        tempCameraY++;
+                        landArray[tempCameraX, tempCameraY].land = d;
+                    }
+                    for (int ii = 0; ii < i * 2; ii++)
+                    {
+                        tempCameraX--;
+                        landArray[tempCameraX, tempCameraY].land = d;
+                    }
+                    for (int ii = 0; ii < i * 2; ii++)
+                    {
+                        tempCameraY--;
+                        landArray[tempCameraX, tempCameraY].land = d;
+                    }
+                    tempCameraX--;
+                    tempCameraY--;
+                }
+            }
         }
 
         public static async Task All()
@@ -156,12 +221,12 @@ namespace Game1
                         {
                             landArray[x, y].biome = 2;
                         }
-                        GenerateBiome(x - 1, y - 1, (int)rnd, landArray);
+                        Biome(x - 1, y - 1, (int)rnd, landArray);
                     }
                     if (landArray[x, y].land == -6)
                     {
                         landArray[x, y].land = 6;
-                        GenerateMod(x - 1, y - 1, 6, landArray);
+                        Land(x - 1, y - 1, 6, landArray);
                     }
                 }
             }
@@ -273,85 +338,7 @@ namespace Game1
                 }
             }
         }
-
-
-        /* GenerateBiome;
-         * Input Values: cameraLocationX, cameraLocationY, Land[].biome;
-         * Generates random biome scale depending on biome ID
-         * while making sure to stay within default array bounds
-         * by checking for array scale value which is this max i & ii in the function
-         * it will run a number of times i while less than the scale of biome
-         * and set tile biome values to the passed biome ID b until to scale
-         */
-
-        public static void GenerateBiome(int tempCameraX, int tempCameraY, int d, Land[,] landArray)
-        {
-            double rnd = Random.Next(5, 17);
-
-            if ((tempCameraX > rnd && tempCameraX < 1000 - rnd) && (tempCameraY > rnd && tempCameraY < 1000 - rnd))
-            {
-                for (int i = 0; i < rnd; i++)
-                {
-                    for (int ii = 0; ii < i * 2; ii++)
-                    {
-                        tempCameraX++;
-                        landArray[tempCameraX, tempCameraY].biome = d;
-                    }
-                    for (int ii = 0; ii < i * 2; ii++)
-                    {
-                        tempCameraY++;
-                        landArray[tempCameraX, tempCameraY].biome = d;
-                    }
-                    for (int ii = 0; ii < i * 2; ii++)
-                    {
-                        tempCameraX--;
-                        landArray[tempCameraX, tempCameraY].biome = d;
-                    }
-                    for (int ii = 0; ii < i * 2; ii++)
-                    {
-                        tempCameraY--;
-                        landArray[tempCameraX, tempCameraY].biome = d;
-                    }
-                    tempCameraX--;
-                    tempCameraY--;
-                }
-            }
-        }
-
-        public static void GenerateMod(int tempCameraX, int tempCameraY, int d, Land[,] landArray)
-        {
-            double rnd = Random.Next(1, 5);
-
-            if ((tempCameraX > rnd && tempCameraX < 1000 - rnd) && (tempCameraY > rnd && tempCameraY < 1000 - rnd))
-            {
-                for (int i = 0; i < rnd; i++)
-                {
-                    for (int ii = 0; ii < i * 2; ii++)
-                    {
-                        tempCameraX++;
-                        landArray[tempCameraX, tempCameraY].land = d;
-                    }
-                    for (int ii = 0; ii < i * 2; ii++)
-                    {
-                        tempCameraY++;
-                        landArray[tempCameraX, tempCameraY].land = d;
-                    }
-                    for (int ii = 0; ii < i * 2; ii++)
-                    {
-                        tempCameraX--;
-                        landArray[tempCameraX, tempCameraY].land = d;
-                    }
-                    for (int ii = 0; ii < i * 2; ii++)
-                    {
-                        tempCameraY--;
-                        landArray[tempCameraX, tempCameraY].land = d;
-                    }
-                    tempCameraX--;
-                    tempCameraY--;
-                }
-            }
-        }
-
+        
         public void ExpandBiome(int d)
         {
 
@@ -368,6 +355,11 @@ namespace Game1
                 array[i] = (int)rnd;
             }
             return (array);
+        }
+
+        public void Camp()
+        {
+
         }
     }
 }

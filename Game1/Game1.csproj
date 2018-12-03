@@ -77,6 +77,8 @@
     <Compile Include="Client\Job.cs" />
     <Compile Include="Client\Net.cs" />
     <Compile Include="Client\User.cs" />
+    <Compile Include="Control.cs" />
+    <Compile Include="Data.cs" />
     <Compile Include="Show.cs" />
     <Compile Include="DrawingBoard.cs" />
     <Compile Include="Game1.cs" />
