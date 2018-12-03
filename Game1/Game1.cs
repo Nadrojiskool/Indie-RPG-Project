@@ -13,6 +13,9 @@ using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
 using Microsoft.Xna.Framework.Input.Touch;
+using Game1.Client;
+using Game1.Contract;
+using Game1.Region;
 
 namespace Game1
 {
@@ -91,11 +94,12 @@ namespace Game1
         private static Random Random = new Random();
         private double rnd;
         #endregion
-        
+
+        private bool gameActive = true;
         public static byte[] receivedBytes = new byte[50000];
         protected static Keys[] KeysMovement = new Keys[] { Keys.D, Keys.S, Keys.A, Keys.W };
         protected static int[,] MovementXY = new int[,] { { 0, 0 }, { 1, 0 }, { 0, 1 }, { -1, 0 }, { 0, -1 } };
-        private bool gameActive = true;
+        protected static List<Manor> LocalManors = new List<Manor>();
 
         #region Build Menu Static Rectangle Grid Test Variables
         public static Rectangle buildRect1 = new Rectangle(600, 650, 100, 150);

@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using Game1.Contract;
 
 namespace Game1
 {
@@ -44,6 +45,7 @@ namespace Game1
         public int gold { get; set; }
         //public ArrayList Workers = new ArrayList();
         public static List<Unit> Units = new List<Unit>();
+        public static List<Asset> Assets = new List<Asset>();
         public int xp { get; set; }
 
         public Player (int x, int y, int[] array) : base(x, y, 0, array)

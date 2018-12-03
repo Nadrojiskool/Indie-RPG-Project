@@ -16,6 +16,17 @@ using Microsoft.Xna.Framework.Input.Touch;
 
 namespace Game1
 {
+    /*
+     * Final Tile Size to be 60 x 60 for PC.
+     * This implies 32 x 18 (16:9) Tiles drawn to a 1080p screen, minimizing resize calculations
+     * 
+     * Release Version will include ability to adjust Tile Scale to pre-set adjustments
+     * Which is likely best optimized by resyncing library to pre-compressed scale sizes
+     * Client will initialize MAP-scale asset compression library at launch, stored in parallel
+     * 
+     * --Pending Optimization
+     */
+
     public class Show : Game1
     {
         static Random Random = new Random();
@@ -29,18 +40,14 @@ namespace Game1
                     (Player.player.DrawY)),
                 tileScale, Player.player.Rotation, new Rectangle(0, 0, 50, 50));
 
-            if (invOpen == true)
-            {
-                Inventory();
-            }
-            if (buildMenuOpen == true)
-            {
-                Blueprints();
-            }
-            if (workerListOpen == true)
-            {
-                Workers();
-            }
+            if (invOpen == true) {
+                Inventory(); }
+
+            if (buildMenuOpen == true) {
+                Blueprints(); }
+
+            if (workerListOpen == true) {
+                Workers(); }
 
             Text();
         }
@@ -61,6 +68,8 @@ namespace Game1
          * Steps: Determine global tile at current position camera x & y plus
          * the point at which in this function (int x or y) it has already drawn to
          * then check for biome before using tile scale and location data to draw tile
+         * 
+         * --Pending 60x60 Optimization
          */
 
         static void Tiles()
@@ -98,6 +107,7 @@ namespace Game1
                             landArray[cameraLocationX + x, cameraLocationY + y].biome,
                             landArray[cameraLocationX + x, cameraLocationY + y].frame];
                     Object obj = Object.Objects[landArray[cameraLocationX + x, cameraLocationY + y].land];
+                    Color color = Color.White;
 
                     if (landArray[cameraLocationX + x, cameraLocationY + y].land != 0)
                     {
@@ -129,28 +139,25 @@ namespace Game1
 
         static void Text(/*string text, int width, int height*/)
         {
-            if (actionPending == true)
-            {
-                spriteBatch.DrawString(font, $"{actionTimer.ElapsedMilliseconds / 1000}", new Vector2(1000, 500), Color.Red);
-            }
-            if (cantBuild.IsRunning == true)
-            {
+            if (actionPending == true) {
+                spriteBatch.DrawString(font, $"{actionTimer.ElapsedMilliseconds / 1000}", new Vector2(1000, 500), Color.Red); }
+
+            if (cantBuild.IsRunning == true) {
                 string output = "Not Enough Resources!";
                 Vector2 FontOrigin = font.MeasureString(output) / 2;
-                spriteBatch.DrawString(font, output, new Vector2(1000, 450), Color.Red, 0, FontOrigin, 1.0f, SpriteEffects.None, 0.5f);
-            }
-            spriteBatch.DrawString(font, $"{ Object.Objects[201].X }", new Vector2(50, 250), Color.DarkViolet);
-            spriteBatch.DrawString(font, $"{ Object.Objects[201].Y }", new Vector2(50, 300), Color.DarkViolet);
-            if (Unit.Active.Count > 0)
-            {
+                spriteBatch.DrawString(font, output, new Vector2(1000, 450), Color.Red, 0, FontOrigin, 1.0f, SpriteEffects.None, 0.5f); }
+
+            if (Unit.Active.Count > 0) {
                 int[] array = Unit.Active[0].stats;
                 spriteBatch.DrawString(font, $"{ array[0] }", new Vector2(50, 100), Color.DarkViolet);
                 spriteBatch.DrawString(font, $"{ array[1] }", new Vector2(100, 100), Color.DarkViolet);
                 spriteBatch.DrawString(font, $"{ array[2] }", new Vector2(150, 100), Color.DarkViolet);
                 spriteBatch.DrawString(font, $"{ array[3] }", new Vector2(200, 100), Color.DarkViolet);
                 spriteBatch.DrawString(font, $"{ Unit.Active[0].X }", new Vector2(50, 200), Color.DarkViolet);
-                spriteBatch.DrawString(font, $"{ Unit.Active[0].Y }", new Vector2(150, 200), Color.DarkViolet);
-            }
+                spriteBatch.DrawString(font, $"{ Unit.Active[0].Y }", new Vector2(150, 200), Color.DarkViolet); }
+
+            spriteBatch.DrawString(font, $"{ Object.Objects[201].X }", new Vector2(50, 250), Color.DarkViolet);
+            spriteBatch.DrawString(font, $"{ Object.Objects[201].Y }", new Vector2(50, 300), Color.DarkViolet);
         }
 
         static void Inventory()
