@@ -30,6 +30,28 @@ namespace Game1
     public class Show : Game1
     {
         static Random Random = new Random();
+        static public Object[] Objects = new Object[250];
+        static public Object[] InterfaceObjects = new Object[100];
+
+        public static void Initialize()
+        {
+            Objects[000] = new Object("Zero", 50, 50, 1, 1);
+            Objects[001] = new Object("Land", 50, 50, 1, 1);
+            Objects[002] = new Object("Water", 50, 50, 1, 1);
+            Objects[003] = new Object("Bush", 50, 50, 1, 1);
+            Objects[004] = new Object("Deer", 50, 50, 1, 1);
+            Objects[005] = new Object("Tree", 100, 100, 1, 1);
+            Objects[006] = new Object("Rock", 50, 50, 1, 1);
+            Objects[100] = new Object("Obelisk", 50, 100, 1, 1);
+            Objects[101] = new Object("Wall Wood Horizontal", 50, 100, 1, 1);
+            Objects[102] = new Object("Wall Wood Vertical", 50, 100, 1, 1);
+            Objects[103] = new Object("Wall Wood Corner Left", 50, 100, 1, 1);
+            Objects[104] = new Object("Wall Wood Corner Right", 50, 100, 1, 1);
+            Objects[105] = new Object("Wall Wood Back Left", 50, 100, 1, 1);
+            Objects[106] = new Object("Wall Wood Back Right", 50, 100, 1, 1);
+            Objects[201] = new Object("Kame House", 100, 150, 2, 2);
+            Objects[202] = new Object("Mine", 100, 100, 2, 2);
+        }
 
         public static void Interface()
         {
@@ -39,6 +61,7 @@ namespace Game1
                     (Player.player.DrawX),
                     (Player.player.DrawY)),
                 tileScale, Player.player.Rotation, new Rectangle(0, 0, 50, 50));
+            LocalUnits(Player.LocalWorkers, Player.LocalEnemies);
 
             if (invOpen == true) {
                 Inventory(); }
@@ -47,7 +70,7 @@ namespace Game1
                 Blueprints(); }
 
             if (workerListOpen == true) {
-                Workers(); }
+                WorkerList(); }
 
             Text();
         }
@@ -106,16 +129,13 @@ namespace Game1
                     Texture2D texture = DrawingBoard.Tiles[landArray[cameraLocationX + x, cameraLocationY + y].land,
                             landArray[cameraLocationX + x, cameraLocationY + y].biome,
                             landArray[cameraLocationX + x, cameraLocationY + y].frame];
-                    Object obj = Object.Objects[landArray[cameraLocationX + x, cameraLocationY + y].land];
-                    Color color = Color.White;
+                    Object obj = Objects[landArray[cameraLocationX + x, cameraLocationY + y].land];
 
                     if (landArray[cameraLocationX + x, cameraLocationY + y].land != 0)
                     {
                         spriteBatch.Draw(DrawingBoard.Tiles[0, landArray[cameraLocationX + x, cameraLocationY + y].biome, 5],
-                            new Rectangle((x * (int)(50 * tileScale)),
-                                (y * (int)(50 * tileScale)),
-                                (int)(50 * tileScale),
-                                (int)(50 * tileScale)),
+                            new Rectangle((x * (int)(50 * tileScale)), (y * (int)(50 * tileScale)),
+                                (int)(50 * tileScale), (int)(50 * tileScale)),
                             Color.White);
                     }
 
@@ -127,8 +147,7 @@ namespace Game1
                         fl = 2.0f; }
 
                     spriteBatch.Draw(texture,
-                        new Vector2(
-                            (x - ((obj.X / 50) - 1)) * ((int)(50 * tileScale)),
+                        new Vector2((x - ((obj.X / 50) - 1)) * ((int)(50 * tileScale)),
                             (y - ((obj.Y / 50) - 1)) * ((int)(50 * tileScale))),
                         new Rectangle(0, 0, obj.X, obj.Y),
                         Color.White, 0, origin,
@@ -147,17 +166,21 @@ namespace Game1
                 Vector2 FontOrigin = font.MeasureString(output) / 2;
                 spriteBatch.DrawString(font, output, new Vector2(1000, 450), Color.Red, 0, FontOrigin, 1.0f, SpriteEffects.None, 0.5f); }
 
-            if (Unit.Active.Count > 0) {
-                int[] array = Unit.Active[0].stats;
-                spriteBatch.DrawString(font, $"{ array[0] }", new Vector2(50, 100), Color.DarkViolet);
-                spriteBatch.DrawString(font, $"{ array[1] }", new Vector2(100, 100), Color.DarkViolet);
-                spriteBatch.DrawString(font, $"{ array[2] }", new Vector2(150, 100), Color.DarkViolet);
-                spriteBatch.DrawString(font, $"{ array[3] }", new Vector2(200, 100), Color.DarkViolet);
-                spriteBatch.DrawString(font, $"{ Unit.Active[0].X }", new Vector2(50, 200), Color.DarkViolet);
-                spriteBatch.DrawString(font, $"{ Unit.Active[0].Y }", new Vector2(150, 200), Color.DarkViolet); }
+            if (Player.LocalWorkers.Count > 0) {
+                int[] array = Player.LocalWorkers[0].Stats;
+                spriteBatch.DrawString(font, $"{ Player.player.X }", new Vector2(50, 10), Color.DarkViolet);
+                spriteBatch.DrawString(font, $"{ Player.player.Y }", new Vector2(100, 10), Color.DarkViolet);
+                spriteBatch.DrawString(font, $"{ Player.LocalWorkers[0].X }", new Vector2(50, 100), Color.DarkViolet);
+                spriteBatch.DrawString(font, $"{ Player.LocalWorkers[0].Y }", new Vector2(100, 100), Color.DarkViolet);
+                spriteBatch.DrawString(font, $"{ Player.LocalWorkers[0].DestinationOffset[0] }", new Vector2(50, 150), Color.DarkViolet);
+                spriteBatch.DrawString(font, $"{ Player.LocalWorkers[0].DestinationOffset[1] }", new Vector2(100, 150), Color.DarkViolet);
+                spriteBatch.DrawString(font, $"{ Player.LocalWorkers[0].LeftOrRight }", new Vector2(50, 50), Color.DarkViolet);
+                spriteBatch.DrawString(font, $"{ Player.LocalWorkers[0].OriginOffset[0] }", new Vector2(50, 200), Color.DarkViolet);
+                spriteBatch.DrawString(font, $"{ Player.LocalWorkers[0].OriginOffset[1] }", new Vector2(100, 200), Color.DarkViolet);
+            }
 
-            spriteBatch.DrawString(font, $"{ Object.Objects[201].X }", new Vector2(50, 250), Color.DarkViolet);
-            spriteBatch.DrawString(font, $"{ Object.Objects[201].Y }", new Vector2(50, 300), Color.DarkViolet);
+            //spriteBatch.DrawString(font, $"{ Objects[201].X }", new Vector2(50, 250), Color.DarkViolet);
+            //spriteBatch.DrawString(font, $"{ Objects[201].Y }", new Vector2(50, 300), Color.DarkViolet);
         }
 
         static void Inventory()
@@ -166,36 +189,36 @@ namespace Game1
             if (newMouseState.RightButton == ButtonState.Pressed)
             {
                 DrawingBoard.DrawObjects(idCardBack, new Vector2(50, 150), 1, 0, new Rectangle(0, 0, 1200, 732));
-                spriteBatch.DrawString(font, $"Gathering: {Player.player.stats[11]} ", new Vector2(370, 450), Color.Black);
-                spriteBatch.DrawString(font, $"Wood Cutting: {Player.player.stats[12]} ", new Vector2(370, 500), Color.Black);
-                spriteBatch.DrawString(font, $"Mining: {Player.player.stats[14]}", new Vector2(370, 550), Color.Black);
-                spriteBatch.DrawString(font, $"Construction: {Player.player.stats[17] }", new Vector2(370, 600), Color.Black);
-                spriteBatch.DrawString(font, $"Hunting: {Player.player.stats[18]}", new Vector2(370, 650), Color.Black);
-                spriteBatch.DrawString(font, $"LVL  {(int)Player.player.stats[11] / 50}", new Vector2(750, 450), Color.Gold);
-                spriteBatch.DrawString(font, $"LVL  {(int)Player.player.stats[12] / 500}", new Vector2(750, 500), Color.Gold);
-                spriteBatch.DrawString(font, $"LVL  {(int)Player.player.stats[14] / 50}", new Vector2(750, 550), Color.Gold);
-                spriteBatch.DrawString(font, $"LVL  {(int)Player.player.stats[17] / 20}", new Vector2(750, 600), Color.Gold);
-                spriteBatch.DrawString(font, $"LVL  {(int)Player.player.stats[18] / 10}", new Vector2(750, 650), Color.Gold);
+                spriteBatch.DrawString(font, $"Gathering: {Player.player.Stats[11]} ", new Vector2(370, 450), Color.Black);
+                spriteBatch.DrawString(font, $"Wood Cutting: {Player.player.Stats[12]} ", new Vector2(370, 500), Color.Black);
+                spriteBatch.DrawString(font, $"Mining: {Player.player.Stats[14]}", new Vector2(370, 550), Color.Black);
+                spriteBatch.DrawString(font, $"Construction: {Player.player.Stats[17] }", new Vector2(370, 600), Color.Black);
+                spriteBatch.DrawString(font, $"Hunting: {Player.player.Stats[18]}", new Vector2(370, 650), Color.Black);
+                spriteBatch.DrawString(font, $"LVL  {(int)Player.player.Stats[11] / 50}", new Vector2(750, 450), Color.Gold);
+                spriteBatch.DrawString(font, $"LVL  {(int)Player.player.Stats[12] / 500}", new Vector2(750, 500), Color.Gold);
+                spriteBatch.DrawString(font, $"LVL  {(int)Player.player.Stats[14] / 50}", new Vector2(750, 550), Color.Gold);
+                spriteBatch.DrawString(font, $"LVL  {(int)Player.player.Stats[17] / 20}", new Vector2(750, 600), Color.Gold);
+                spriteBatch.DrawString(font, $"LVL  {(int)Player.player.Stats[18] / 10}", new Vector2(750, 650), Color.Gold);
             }
             else
             {
                 DrawingBoard.DrawObjects(idCard, new Vector2(50, 150), 1, 0, new Rectangle(0, 0, 1200, 732));
-                spriteBatch.DrawString(font, $"Experience: {Player.player.stats[0]}", new Vector2(50, 450), Color.DarkViolet);
-                spriteBatch.DrawString(font, $"Workers: {Player.Units.Count} / {Player.player.resources[10]}", new Vector2(50, 500), Color.Blue);
+                spriteBatch.DrawString(font, $"Experience: {Player.player.Stats[0]}", new Vector2(50, 450), Color.DarkViolet);
+                spriteBatch.DrawString(font, $"Workers: {Player.Workers.Count} / {Player.player.resources[10]}", new Vector2(50, 500), Color.Blue);
                 spriteBatch.DrawString(font, $"Gold: {Player.player.gold}", new Vector2(50, 550), Color.DarkGoldenrod);
                 spriteBatch.DrawString(font, $"Water: {Player.player.resources[2]}", new Vector2(50, 600), Color.DarkBlue);
                 spriteBatch.DrawString(font, $"Vines: {Player.player.resources[3]}", new Vector2(50, 650), Color.ForestGreen);
                 spriteBatch.DrawString(font, $"Meat: {Player.player.resources[4]}", new Vector2(50, 700), Color.Crimson);
                 spriteBatch.DrawString(font, $"Lumber: {Player.player.resources[5]}", new Vector2(50, 750), Color.SaddleBrown);
-                spriteBatch.DrawString(font, $"Vitality: {Player.player.stats[1]}", new Vector2(370, 350), Color.Black);
-                spriteBatch.DrawString(font, $"Physique: {Player.player.stats[2]}", new Vector2(370, 400), Color.Black);
-                spriteBatch.DrawString(font, $"Agility: {Player.player.stats[3]}", new Vector2(370, 450), Color.Black);
-                spriteBatch.DrawString(font, $"Combat: {Player.player.stats[4]}", new Vector2(370, 500), Color.Black);
-                spriteBatch.DrawString(font, $"Magic: {Player.player.stats[5]}", new Vector2(370, 550), Color.Black);
-                spriteBatch.DrawString(font, $"Knowledge: {Player.player.stats[6]}", new Vector2(370, 600), Color.Black);
-                spriteBatch.DrawString(font, $"Leadership: {Player.player.stats[7]}", new Vector2(370, 650), Color.Black);
-                spriteBatch.DrawString(font, $"Sociability: {Player.player.stats[8]}", new Vector2(370, 700), Color.Black);
-                spriteBatch.DrawString(font, $"Expertise: {Player.player.stats[9]}", new Vector2(980, 220), Color.Gold);
+                spriteBatch.DrawString(font, $"Vitality: {Player.player.Stats[1]}", new Vector2(370, 350), Color.Black);
+                spriteBatch.DrawString(font, $"Physique: {Player.player.Stats[2]}", new Vector2(370, 400), Color.Black);
+                spriteBatch.DrawString(font, $"Agility: {Player.player.Stats[3]}", new Vector2(370, 450), Color.Black);
+                spriteBatch.DrawString(font, $"Combat: {Player.player.Stats[4]}", new Vector2(370, 500), Color.Black);
+                spriteBatch.DrawString(font, $"Magic: {Player.player.Stats[5]}", new Vector2(370, 550), Color.Black);
+                spriteBatch.DrawString(font, $"Knowledge: {Player.player.Stats[6]}", new Vector2(370, 600), Color.Black);
+                spriteBatch.DrawString(font, $"Leadership: {Player.player.Stats[7]}", new Vector2(370, 650), Color.Black);
+                spriteBatch.DrawString(font, $"Sociability: {Player.player.Stats[8]}", new Vector2(370, 700), Color.Black);
+                spriteBatch.DrawString(font, $"Expertise: {Player.player.Stats[9]}", new Vector2(980, 220), Color.Gold);
             }
         }
 
@@ -213,16 +236,41 @@ namespace Game1
 
         }
 
-        static void Workers()
+        static void WorkerList()
         {
             int[] array = new int[10];
             DrawingBoard.DrawObjects(workerList, new Vector2(50, 50), 1, 0, new Rectangle(0, 0, 510, 825));
-            for (int i = 0; i < Player.Units.Count; i++)
+            for (int i = 0; i < Player.Workers.Count; i++)
             {
-                array = Player.Units[i].stats;
+                array = Player.Workers[i].Stats;
                 spriteBatch.Draw(player, new Vector2(80, 80 + i * 50), Color.White);
                 spriteBatch.DrawString(font, $": {array[0]} | {array[1]} | {array[2]} | {array[3]} | {array[4]} | {array[5]} | " +
                     $"{array[6]} | {array[7]} | {array[8]} | {array[9]}", new Vector2(135, 80 + i * 50), Color.Black);
+            }
+        }
+
+        static void LocalUnits(List<Unit> localWorkers, List<Unit> localEnemies)
+        {
+            if (localWorkers.Count > 0)
+            {
+                foreach (Unit unit in localWorkers)
+                {
+                    DrawingBoard.DrawObjects(player, new Vector2(
+                        Check.Range((Player.player.DrawX - ((Player.player.X - unit.X) * (int)(50 * tileScale))), (int)(50 * tileScale), (int)(1920 - 50 * tileScale)),
+                        Check.Range((Player.player.DrawY - ((Player.player.Y - unit.Y) * (int)(50 * tileScale))), (int)(50 * tileScale), (int)(1080 - 50 * tileScale))), 
+                        tileScale, unit.Rotation, new Rectangle(0, 0, 50, 50));
+                }
+            }
+
+            if (localEnemies.Count > 0)
+            {
+                foreach (Unit unit in localEnemies)
+                {
+                    DrawingBoard.DrawObjects(enemy, new Vector2(
+                        Check.Range((Player.player.DrawX - ((Player.player.X - unit.X) * (int)(50 * tileScale))), (int)(50 * tileScale), (int)(1920 - 50 * tileScale)),
+                        Check.Range((Player.player.DrawY - ((Player.player.Y - unit.Y) * (int)(50 * tileScale))), (int)(50 * tileScale), (int)(1080 - 50 * tileScale))),
+                        tileScale, unit.Rotation, new Rectangle(0, 0, 50, 50));
+                }
             }
         }
     }

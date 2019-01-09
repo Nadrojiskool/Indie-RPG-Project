@@ -382,7 +382,6 @@ namespace Game1
                 for (int ii = 0; ii < 20; ii++)
                 {
                     landArray[50 + ii, 50 + i].land = array[i, ii];
-                    landArray[50 + ii, 50 + i].IsHostile = true;
                 }
             }
 

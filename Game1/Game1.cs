@@ -35,6 +35,7 @@ namespace Game1
         protected static Texture2D buildMenu;
         protected static Texture2D workerList;
         protected static Texture2D player;
+        protected static Texture2D enemy;
         protected static Texture2D BGFinalFantasy;
         protected static Texture2D house_kame;
         protected static Texture2D mine;
@@ -100,6 +101,7 @@ namespace Game1
         protected static Keys[] KeysMovement = new Keys[] { Keys.D, Keys.S, Keys.A, Keys.W };
         protected static int[,] MovementXY = new int[,] { { 0, 0 }, { 1, 0 }, { 0, 1 }, { -1, 0 }, { 0, -1 } };
         protected static List<Manor> LocalManors = new List<Manor>();
+        public static int[] MovementSync = new int[2] { 0, 0 };
 
         #region Build Menu Static Rectangle Grid Test Variables
         public static Rectangle buildRect1 = new Rectangle(600, 650, 100, 150);
@@ -152,10 +154,12 @@ namespace Game1
             Player.player.DrawX = (int)((20 * displayWidth / 1920) / tileScale) * (int)(50 * tileScale) + (int)(25 * tileScale);
             Player.player.DrawY = (int)((10 * displayHeight / 1080) / tileScale) * (int)(50 * tileScale) + (int)(25 * tileScale);
 
-            Object.Initialize();
+            Show.Initialize();
 
-            Client.Net.UserList.Add(new Client.User("Bob", Client.Net.Endpoint));
-            var t = Task.Run(() => Client.Net.Listener(Client.Net.Client));
+            //var t = Task.Run(() => Control.Logic());
+
+            //Net.UserList.Add(new User("Bob", Net.Endpoint));
+            //var t2 = Task.Run(() => Net.Listener(Net.Client));
 
             //ScaleTileMap();
 
@@ -194,6 +198,7 @@ namespace Game1
             land = Content.Load<Texture2D>("Land");
             water = Content.Load<Texture2D>("Water");
             player = Content.Load<Texture2D>("Player");
+            enemy = Content.Load<Texture2D>("Enemy");
             bush = Content.Load<Texture2D>("Bush");
             deer = Content.Load<Texture2D>("Deer");
             tree0 = Content.Load<Texture2D>("Tree0");
@@ -302,7 +307,8 @@ namespace Game1
                 if (this.IsActive == false) {
                     graphics.IsFullScreen = false;
                     graphics.ApplyChanges();
-                    gameActive = false; }
+                    gameActive 
+                        = false; }
                 else if (this.IsActive == true) {
                     graphics.IsFullScreen = true;
                     graphics.ApplyChanges();
@@ -346,12 +352,21 @@ namespace Game1
                 Control.AutoAI(Player.player); }
 
             rnd = Random.Next(0, 10000);
-            if (rnd < 5 && Player.player.resources[10] > Player.Units.Count) {
-                Player.Units.Add(new Unit(0, 0, Player.Units.Count, Generate.Worker())); }
+            if (rnd < 50 && Player.player.resources[10] > Player.Workers.Count) { // INCREASED WORKER SPAWN RATE FROM 5
+                Player.Workers.Add(new Unit(0, 0, Player.Workers.Count, Generate.Worker())); }
             
-            if (Unit.Active.Count > 0) {
-                for (int i = 0; i < Unit.Active.Count; i++) {
-                    Control.AutoAI(Unit.Active[i]); } }
+            if (Player.LocalWorkers.Count > 0) {
+                foreach (Unit unit in Player.LocalWorkers) {
+                    Control.UnitManager(unit); ; }
+            }
+
+            if (Player.LocalEnemies.Count > 0)
+            {
+                foreach (Unit unit in Player.LocalEnemies)
+                {
+                    Control.UnitManager(unit);
+                }
+            }
 
             if (cantBuild.ElapsedMilliseconds > 2000) {
                 cantBuild.Reset(); }

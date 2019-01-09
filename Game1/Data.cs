@@ -25,7 +25,7 @@ namespace Game1
             String[] informationToWriteMod = new String[1000000];
             String[] informationToWritePlayerResources = new String[1000];
             String[] informationToWritePlayerStats = new String[200];
-            String[] informationToWritePlayerWorkers = new String[Player.Units.Count * 200];
+            String[] informationToWritePlayerWorkers = new String[Player.Workers.Count * 200];
             int[] array = new int[200];
             int counter = 0;
             for (int y = 0; y < 1000; y++)
@@ -40,7 +40,7 @@ namespace Game1
                         informationToWritePlayerResources[x] = Player.player.resources[x].ToString();
                         if (x < 200)
                         {
-                            informationToWritePlayerStats[x] = Player.player.stats[x].ToString();
+                            informationToWritePlayerStats[x] = Player.player.Stats[x].ToString();
                         }
                     }
                 }
@@ -50,9 +50,9 @@ namespace Game1
             //Player.player.Workers.CopyTo(informationToWritePlayerWorkers);
 
             counter = 0;
-            for (int y = 0; y < Player.Units.Count; y++)
+            for (int y = 0; y < Player.Workers.Count; y++)
             {
-                array = Player.Units[y].stats;
+                array = Player.Workers[y].Stats;
                 for (int x = 0; x < 200; x++)
                 {
                     informationToWritePlayerWorkers[counter + x] = array[x].ToString();
@@ -100,15 +100,15 @@ namespace Game1
                     if (counter == 0)
                     {
                         Player.player.resources[x] = Int32.Parse(informationToWritePlayerResources[x]);
-                        if (x < 200) { Player.player.stats[x] = Int32.Parse(informationToWritePlayerStats[x]); }
+                        if (x < 200) { Player.player.Stats[x] = Int32.Parse(informationToWritePlayerStats[x]); }
                     }
                 }
                 counter = counter + 1000;
             }
             counter = 0;
 
-            Player.Units.Clear();
-            Unit.Active.Clear();
+            Player.Workers.Clear();
+            Player.LocalWorkers.Clear();
             String[] informationToWritePlayerWorkers = File.ReadAllLines("C:/Users/2/Desktop/test1workers.txt");
             for (int y = 0; y < informationToWritePlayerWorkers.Length / 200; y++)
             {
@@ -117,7 +117,7 @@ namespace Game1
                     array[x] = Int32.Parse(informationToWritePlayerWorkers[counter + x]);
                 }
 
-                Player.Units.Add(new Unit(0, 0, Player.Units.Count, array));
+                Player.Workers.Add(new Unit(0, 0, Player.Workers.Count, array));
                 counter = counter + 200;
             }
 

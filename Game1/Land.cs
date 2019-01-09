@@ -17,6 +17,7 @@ namespace Game1
         // Modifcations to Tile (Draw-Over)   //
         ////////////////////////////////////////
         ////////////////////////////////////////
+
         /*  Advanced Features:
          *  Tiles store a null array[2] (Domain) which is initialized if an Asset is created
          *  It stores an sbyte for X & Y pointing to asset center
@@ -41,6 +42,14 @@ namespace Game1
         /// .depth[0]
         /// 
 
+        /* Target Map Size (5ft Tiles)
+         * 26,295,456 (Earth) / 256 = 102717
+         * 256 * 256 = 65536 * 256 = 16,777,216 (erf) or 33,554,432 (ERF) with Negative Coordinates
+         * 16,777,216 ^ 2 = 281,474,976,710,656
+         * 767.7254TB Per Layer (based on 2.86mb 1000x1000 tileMap)
+         */
+
+
 
         //public int X;
         //public int Y;
@@ -51,7 +60,7 @@ namespace Game1
         public int biome = 0;
         public int land = 0;
         public bool IsActive = false;
-        public bool IsOccupied = false;
+        //public bool IsOccupied = false;
         public DateTime LastUpdate = new DateTime();
         public sbyte[] Manor { get; set; }
 

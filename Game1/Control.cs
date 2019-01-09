@@ -31,16 +31,16 @@ namespace Game1
         
         public static void Click()
         {
-            if (!invOpen && !buildMenuOpen && !MainMenuOpen) {
+            if (!MainMenuOpen && !invOpen && !buildMenuOpen && !workerListOpen) {
                 int spellX = (newMouseState.X / (int)(50 * tileScale) + cameraLocationX) - 2;
                 int spellY = (newMouseState.Y / (int)(50 * tileScale) + cameraLocationY) - 2;
                 Manipulator(spellX, spellY, 5, 5, 0, false); }
 
-            if (MainMenuOpen) {
+            /*if (MainMenuOpen) {
                 Client.Job job = new Client.Job((byte)Client.Net.UserList[0].JobList.Count(), 5, Client.Net.UserList[0].Endpoint, Client.Net.Endpoint);
                 Console.WriteLine($"Starting Job ID {Client.Net.UserList[0].JobList.Count()}");
                 Client.Net.UserList[0].JobList.Add(job);
-                var t = Task.Run(() => Client.Net.JobManager(job)); }
+                var t = Task.Run(() => Client.Net.JobManager(job)); }*/
 
             if (invOpen) {
                 invOpen = false; }
@@ -75,11 +75,21 @@ namespace Game1
 
                 buildMenuOpen = false;
             }
+
+            if (workerListOpen)
+            {
+                foreach (Unit unit in Player.LocalWorkers)
+                {
+                    unit.ActionID = 3;
+                    Task.Delay(31);
+                }
+                workerListOpen = false;
+            }
         }
 
         public static void ClickRight()
         {
-            if (!invOpen && !buildMenuOpen && !MainMenuOpen) {
+            if (!MainMenuOpen && !invOpen && !buildMenuOpen && !workerListOpen) {
                 int spellX = (newMouseState.X / (int)(50 * tileScale) + cameraLocationX) - 2;
                 int spellY = (newMouseState.Y / (int)(50 * tileScale) + cameraLocationY) - 2;
                 Manipulator(spellX, spellY, 5, 5, 5, false); }
@@ -102,13 +112,15 @@ namespace Game1
                 buildMenuOpen = false; }
 
             if (workerListOpen) {
-                // NOTE TO SELF // ADD START BIAS // i.e. Workers favor mining in the direction placed
-                if (Unit.Active.Count < Player.Units.Count)
+                // SIMPLE FEATURE : ADD START BIAS // i.e. Workers favor mining in the direction placed
+                if (Player.LocalWorkers.Count < Player.Workers.Count)
                 {
-                    Unit.Active.Add(Player.Units[Unit.Active.Count]);
-                    Unit.Active[Unit.Active.Count - 1].X = Player.player.X + MovementXY[Player.player.LastMove, 0];
-                    Unit.Active[Unit.Active.Count - 1].Y = Player.player.Y + MovementXY[Player.player.LastMove, 1];
-                    landArray[Unit.Active[Unit.Active.Count - 1].X, Unit.Active[Unit.Active.Count - 1].Y].IsOccupied = true;
+                    Player.LocalWorkers.Add(Player.Workers[Player.LocalWorkers.Count]);
+                    Player.LocalWorkers[Player.LocalWorkers.Count - 1].X = Player.player.X + MovementXY[Player.player.LastMove, 0];
+                    Player.LocalWorkers[Player.LocalWorkers.Count - 1].Y = Player.player.Y + MovementXY[Player.player.LastMove, 1];
+                    Player.LocalWorkers[Player.LocalWorkers.Count - 1].LastMove = Player.player.LastMove;
+                    Player.LocalWorkers[Player.LocalWorkers.Count - 1].ActionID = 1;
+                    //landArray[Player.LocalWorkers[Player.LocalWorkers.Count - 1].X, Player.LocalWorkers[Player.LocalWorkers.Count - 1].Y].IsOccupied = true;
                 }
                 workerListOpen = false; }
         }
@@ -124,9 +136,9 @@ namespace Game1
             else if (oldState.IsKeyUp(Keys.Space) && newState.IsKeyDown(Keys.Space)) {
                 if (landArray[cameraLocationX + Player.player.tileX + MovementXY[Player.player.LastMove, 0],
                     cameraLocationY + Player.player.tileY + MovementXY[Player.player.LastMove, 1]].land == 202)
-                    { Player.player.depth++; }
+                    { Player.player.Depth++; }
                 else {
-                    Player.player.depth = 0;
+                    Player.player.Depth = 0;
                     actionPending = true;
                     actionTimer.Start(); }}
 
@@ -188,7 +200,7 @@ namespace Game1
                 else {
                     Player.player.AutoX = 0;
                     Player.player.AutoY = 0;
-                    landArray[Player.player.X, Player.player.Y].IsOccupied = false;
+                    //landArray[Player.player.X, Player.player.Y].IsOccupied = false;
                     landArray[Player.player.X + MovementXY[Player.player.LastMove, 0], Player.player.Y + MovementXY[Player.player.LastMove, 1]].IsActive = false;
                     playerAuto = false; }}
         }
@@ -212,15 +224,80 @@ namespace Game1
             unit.Rotation = (float)unit.LastMove * ((float)Math.PI / 2.0f);
             if (unit == Player.player)
             {
-                cameraLocationX = Check.Range(cameraLocationX + MovementXY[unit.LastMove, 0], 0, 1000);
-                cameraLocationY = Check.Range(cameraLocationY + MovementXY[unit.LastMove, 1], 0, 1000);
-                Player.player.X = Check.Range(Player.player.X + MovementXY[unit.LastMove, 0], 40, 960);
-                Player.player.Y = Check.Range(Player.player.Y + MovementXY[unit.LastMove, 1], 20, 980);
+                if (cameraLocationX + MovementXY[unit.LastMove, 0] < 0 ||
+                    cameraLocationX + MovementXY[unit.LastMove, 0] > 1000 ||
+                    cameraLocationY + MovementXY[unit.LastMove, 1] < 0 ||
+                    cameraLocationY + MovementXY[unit.LastMove, 1] > 1000)
+                {
+
+                }
+                else
+                {
+                    cameraLocationX = cameraLocationX + MovementXY[unit.LastMove, 0];
+                    cameraLocationY = cameraLocationY + MovementXY[unit.LastMove, 1];
+                    Player.player.X = Player.player.X + MovementXY[unit.LastMove, 0];
+                    Player.player.Y = Player.player.Y + MovementXY[unit.LastMove, 1];
+                    MovementSync[0] = MovementSync[0] + MovementXY[unit.LastMove, 0];
+                    MovementSync[1] = MovementSync[1] + MovementXY[unit.LastMove, 1];
+                }
             }
             else
             {
                 unit.X = Check.Range(unit.X + MovementXY[unit.LastMove, 0], 0, 1000);
                 unit.Y = Check.Range(unit.Y + MovementXY[unit.LastMove, 1], 0, 1000);
+                
+                unit.DestinationOffset[0] += MovementXY[unit.LastMove, 0];
+                unit.DestinationOffset[1] += MovementXY[unit.LastMove, 1];
+
+                if (unit.LeftOrRight != 0)
+                {
+                    unit.OriginOffset[0] += MovementXY[unit.LastMove, 0];
+                    unit.OriginOffset[1] += MovementXY[unit.LastMove, 1];
+
+                    sbyte sb = Math.Abs(unit.LeftOrRight);
+                    if (unit.OriginOffset[1] == 0)
+                    {
+                        if (sb == 1)
+                        {
+                            if (unit.OriginOffset[0] > 0)
+                            {
+                                unit.LeftOrRight = 0;
+                                unit.OriginOffset[0] = 0;
+                                unit.OriginOffset[1] = 0;
+                            }
+                        }
+                        else if (sb == 3)
+                        {
+                            if (unit.OriginOffset[0] < 0)
+                            {
+                                unit.LeftOrRight = 0;
+                                unit.OriginOffset[0] = 0;
+                                unit.OriginOffset[1] = 0;
+                            }
+                        }
+                    }
+                    else if (unit.OriginOffset[0] == 0)
+                    {
+                        if (sb == 2)
+                        {
+                            if (unit.OriginOffset[1] > 0)
+                            {
+                                unit.LeftOrRight = 0;
+                                unit.OriginOffset[0] = 0;
+                                unit.OriginOffset[1] = 0;
+                            }
+                        }
+                        else if (sb == 4)
+                        {
+                            if (unit.OriginOffset[1] < 0)
+                            {
+                                unit.LeftOrRight = 0;
+                                unit.OriginOffset[0] = 0;
+                                unit.OriginOffset[1] = 0;
+                            }
+                        }
+                    }
+                }
             }
         }
 
@@ -249,15 +326,15 @@ namespace Game1
                         Player.player.resources[10] = Player.player.resources[10] + 4; }
 
                     if (MovementXY[Player.player.LastMove, 0] > 0 || MovementXY[Player.player.LastMove, 1] > 0) {
-                        Manipulator(cameraLocationX + Player.player.tileX + (Object.Objects[Math.Abs(a)].Width * MovementXY[Player.player.LastMove, 0]),
-                            cameraLocationY + Player.player.tileY + (Object.Objects[Math.Abs(a)].Height * MovementXY[Player.player.LastMove, 1]),
-                            Object.Objects[Math.Abs(a)].Width, Object.Objects[Math.Abs(a)].Height, 1, true);
-                        landArray[cameraLocationX + Player.player.tileX + (Object.Objects[Math.Abs(a)].Width * MovementXY[Player.player.LastMove, 0]),
-                            cameraLocationY + Player.player.tileY + (Object.Objects[Math.Abs(a)].Height * MovementXY[Player.player.LastMove, 1])].land = Math.Abs(a); }
+                        Manipulator(cameraLocationX + Player.player.tileX + (Show.Objects[Math.Abs(a)].Width * MovementXY[Player.player.LastMove, 0]),
+                            cameraLocationY + Player.player.tileY + (Show.Objects[Math.Abs(a)].Height * MovementXY[Player.player.LastMove, 1]),
+                            Show.Objects[Math.Abs(a)].Width, Show.Objects[Math.Abs(a)].Height, 1, true);
+                        landArray[cameraLocationX + Player.player.tileX + (Show.Objects[Math.Abs(a)].Width * MovementXY[Player.player.LastMove, 0]),
+                            cameraLocationY + Player.player.tileY + (Show.Objects[Math.Abs(a)].Height * MovementXY[Player.player.LastMove, 1])].land = Math.Abs(a); }
                     else {
                         Manipulator(cameraLocationX + Player.player.tileX + MovementXY[Player.player.LastMove, 0],
-                            cameraLocationY + Player.player.tileY + MovementXY[Player.player.LastMove, 1], Object.Objects[Math.Abs(a)].Width,
-                            Object.Objects[Math.Abs(a)].Height, 1, true);
+                            cameraLocationY + Player.player.tileY + MovementXY[Player.player.LastMove, 1], Show.Objects[Math.Abs(a)].Width,
+                            Show.Objects[Math.Abs(a)].Height, 1, true);
                         landArray[cameraLocationX + Player.player.tileX + MovementXY[Player.player.LastMove, 0],
                             cameraLocationY + Player.player.tileY + MovementXY[Player.player.LastMove, 1]].land = Math.Abs(a); }}
 
@@ -271,34 +348,34 @@ namespace Game1
         {
             if (landArray[a, b].land != 0)
             {
-                unit.stats[0]++;
+                unit.Stats[0]++;
                 Player.player.resources[landArray[a, b].land]++;
 
                 if (landArray[a, b].land == 2 || landArray[a, b].land == 3)
                 {
-                    unit.stats[11]++;
+                    unit.Stats[11]++;
                 }
                 else if (landArray[a, b].land == 4)
                 {
-                    unit.stats[18]++;
-                    unit.stats[19]++;
-                    unit.stats[20]++;
-                    unit.stats[21]++;
+                    unit.Stats[18]++;
+                    unit.Stats[19]++;
+                    unit.Stats[20]++;
+                    unit.Stats[21]++;
                 }
                 else if (landArray[a, b].land == 5)
                 {
-                    unit.stats[12]++;
+                    unit.Stats[12]++;
                 }
                 else if (landArray[a, b].land == 6)
                 {
-                    unit.stats[14]++;
+                    unit.Stats[14]++;
                 }
                 else if (landArray[a, b].land > 6)
                 {
-                    unit.stats[17]++;
+                    unit.Stats[17]++;
                     if (landArray[a, b].land == 202)
                     {
-                        unit.depth = 1;
+                        unit.Depth = 1;
                     }
                 }
                 landArray[a, b].land = 0;
@@ -360,11 +437,11 @@ namespace Game1
                         if (landArray[unit.X, unit.Y + 1].land < 3
                             || landArray[unit.X, unit.Y + 1].land > 99)
                         {
-                            landArray[unit.X, unit.Y].IsOccupied = false;
+                            //landArray[unit.X, unit.Y].IsOccupied = false;
                             Movement(unit);
                             unit.ActionTime.Start();
                             unit.ActionDuration = 1000;
-                            landArray[unit.X, unit.Y].IsOccupied = true;
+                            //landArray[unit.X, unit.Y].IsOccupied = true;
                         }
                         else
                         {
@@ -386,11 +463,11 @@ namespace Game1
                         if (landArray[unit.X, unit.Y - 1].land < 3
                             || landArray[unit.X, unit.Y - 1].land > 99)
                         {
-                            landArray[unit.X, unit.Y].IsOccupied = false;
+                            //landArray[unit.X, unit.Y].IsOccupied = false;
                             Movement(unit);
                             unit.ActionTime.Start();
                             unit.ActionDuration = 1000;
-                            landArray[unit.X, unit.Y].IsOccupied = true;
+                            //landArray[unit.X, unit.Y].IsOccupied = true;
                         }
                         else
                         {
@@ -412,11 +489,11 @@ namespace Game1
                         if (landArray[unit.X + 1, unit.Y].land < 3
                             || landArray[unit.X + 1, unit.Y].land > 99)
                         {
-                            landArray[unit.X, unit.Y].IsOccupied = false;
+                            //landArray[unit.X, unit.Y].IsOccupied = false;
                             Movement(unit);
                             unit.ActionTime.Start();
                             unit.ActionDuration = 1000;
-                            landArray[unit.X, unit.Y].IsOccupied = true;
+                            //landArray[unit.X, unit.Y].IsOccupied = true;
                         }
                         else
                         {
@@ -438,11 +515,11 @@ namespace Game1
                         if (landArray[unit.X - 1, unit.Y].land < 3
                             || landArray[unit.X - 1, unit.Y].land > 99)
                         {
-                            landArray[unit.X, unit.Y].IsOccupied = false;
+                            //landArray[unit.X, unit.Y].IsOccupied = false;
                             Movement(unit);
                             unit.ActionTime.Start();
                             unit.ActionDuration = 1000;
-                            landArray[unit.X, unit.Y].IsOccupied = true;
+                            //landArray[unit.X, unit.Y].IsOccupied = true;
                         }
                         else
                         {
@@ -528,6 +605,449 @@ namespace Game1
                 }
             }
         }
+
+        public static void Pathing(Unit unit)
+        {
+            if (unit.ActionTime.IsRunning == false)
+            {
+                //List<sbyte[]> path = new List<sbyte[]>();
+                
+                if (unit.LeftOrRight != 0)
+                {
+
+                }
+                else
+                {
+                    /*if (Math.Abs(unit.DestinationOffset[0]) == Math.Abs(unit.DestinationOffset[1]))
+                    {
+                        // Not Implemented Diagnal
+                    }
+                    else */
+                    if (Math.Abs(unit.DestinationOffset[0]) >= Math.Abs(unit.DestinationOffset[1]))
+                    {
+                        if (unit.DestinationOffset[0] > 0)
+                        {
+                            SetRotation(unit, 3);
+                        }
+                        else if (unit.DestinationOffset[0] < 0)
+                        {
+                            SetRotation(unit, 1);
+                        }
+                    }
+                    else if (Math.Abs(unit.DestinationOffset[1]) > Math.Abs(unit.DestinationOffset[0]))
+                    {
+                        if (unit.DestinationOffset[1] > 0)
+                        {
+                            SetRotation(unit, 4);
+                        }
+                        else if (unit.DestinationOffset[1] < 0)
+                        {
+                            SetRotation(unit, 2);
+                        }
+                    }
+                }
+
+                Land land = landArray[unit.X + MovementXY[unit.LastMove, 0], unit.Y + MovementXY[unit.LastMove, 1]];
+
+                if (unit.ActionID == 3 && land.land > 2 && land.land < 100)
+                {
+                    if (!land.IsActive)
+                    {
+                        unit.ActionTime.Start();
+                        unit.ActionDuration = 10000;
+                        land.IsActive = true;
+                    }
+                    else
+                    {
+                        unit.DestinationOffset[0] = 0;
+                        unit.DestinationOffset[1] = 0;
+                        unit.LeftOrRight = 0;
+                        unit.OriginOffset[0] = 0;
+                        unit.OriginOffset[1] = 0;
+                    }
+                }
+                else if (land.land < 1)
+                {
+                    Movement(unit);
+                    unit.ActionTime.Start();
+                    unit.ActionDuration = 1000;
+                    if (unit.LeftOrRight != 0)
+                    {
+                        unit.LastMove = Check.LoopInt((unit.LastMove - (unit.LeftOrRight / Math.Abs(unit.LeftOrRight))), 1, 4);
+                    }
+                }
+                else
+                {
+                    if (unit.LeftOrRight != 0)
+                    {
+                        unit.LastMove = Check.LoopInt((unit.LastMove + (unit.LeftOrRight / Math.Abs(unit.LeftOrRight))), 1, 4);
+                    }
+                    else
+                    {
+                        CheckPathing(unit); // AI NEEDS TIMEOUTS TO STOP PATHING LOOPS
+                    }
+                }
+            }
+            else
+            {
+                if (unit.ActionTime.ElapsedMilliseconds > unit.ActionDuration)
+                {
+                    if (unit.ActionTime.ElapsedMilliseconds >= 10000)
+                    {
+                        Gather(unit.X + MovementXY[unit.LastMove, 0], unit.Y + MovementXY[unit.LastMove, 1], unit);
+                        landArray[unit.X + MovementXY[unit.LastMove, 0], unit.Y + MovementXY[unit.LastMove, 1]].IsActive = false;
+                    }
+                    unit.ActionTime.Reset();
+                }
+            }
+        }
+
+        public static void CheckPathing (Unit unit)
+        {
+            if (PathingLeft(unit) < PathingRight(unit))
+            {
+                unit.LeftOrRight = Convert.ToSByte(-unit.LastMove);
+            }
+            else
+            {
+                unit.LeftOrRight = Convert.ToSByte(unit.LastMove);
+            }
+            
+            #region Generate Full Path (Not Implemented)
+            //False Start, Not as Intended, Wanted "Blind Pathing"
+            /*List<int[]> pathLeft = new List<int[]>();
+            List<int[]> pathRight = new List<int[]>();
+            int plane;
+            if (unit.LastMove == 1 || unit.LastMove == 3)
+            {
+                plane = 0;
+            }
+            else
+            {
+                plane = 1;
+            }
+
+            while (true)
+            {
+                pathLeft.Add(PathLeft());
+                int[] offset = pathLeft[pathLeft.Count];
+                leftOffset[0] += offset[0];
+                leftOffset[1] += offset[1];
+                pathRight.Add(PathRight());
+
+                offset = pathLeft[pathLeft.Count];
+                rightOffset[0] += offset[0];
+                rightOffset[1] += offset[1];
+
+                if (leftOffset[plane] == 0 || rightOffset[plane] == 0)
+                {
+                    break;
+                }
+            }*/
+            #endregion
+        }
+
+        public static int PathingLeft(Unit unit)
+        {
+            bool isStarted = false;
+            int length = 0;
+            int[] offset = new int[] { 0, 0 };
+            int lastMove = Check.LoopInt((unit.LastMove - 1), 1, 4);
+            
+            while (true)
+            {
+                if (landArray[(unit.X + MovementXY[lastMove, 0] + offset[0]), (unit.Y + MovementXY[lastMove, 1] + offset[1])].land < 1)
+                {
+                    offset[0] += MovementXY[lastMove, 0];
+                    offset[1] += MovementXY[lastMove, 1];
+                    length += 1;
+                    lastMove = Check.LoopInt((lastMove + 1), 1, 4);
+                    isStarted = true;
+                }
+                else
+                {
+                    lastMove = Check.LoopInt((lastMove - 1), 1, 4);
+                }
+
+                if (isStarted == true)
+                {
+                    if (offset[1] == 0)
+                    {
+                        if (unit.LastMove == 1)
+                        {
+                            if (offset[0] > 0)
+                            {
+                                break;
+                            }
+                        }
+                        else if (unit.LastMove == 3)
+                        {
+                            if (offset[0] < 0)
+                            {
+                                break;
+                            }
+                        }
+                    }
+                    else if (offset[0] == 0)
+                    {
+                        if (unit.LastMove == 2)
+                        {
+                            if (offset[1] > 0)
+                            {
+                                break;
+                            }
+                        }
+                        else if (unit.LastMove == 4)
+                        {
+                            if (offset[1] < 0)
+                            {
+                                break;
+                            }
+                        }
+                    }
+                }
+
+                int x = (unit.X + MovementXY[lastMove, 0] + offset[0]);
+                int y = (unit.Y + MovementXY[lastMove, 1] + offset[1]);
+                if (x < 0 || x > 1000 || y < 0 || y > 1000)
+                {
+                    break;
+                }
+            }
+
+            return (length);
+        }
+
+        public static int PathingRight(Unit unit)
+        {
+            bool isStarted = false;
+            int length = 0;
+            int[] offset = new int[] { 0, 0 };
+            int lastMove = Check.LoopInt((unit.LastMove + 1), 1, 4);
+
+            while (true)
+            {
+                if (landArray[(unit.X + MovementXY[lastMove, 0] + offset[0]), (unit.Y + MovementXY[lastMove, 1] + offset[1])].land < 1)
+                {
+                    offset[0] += MovementXY[lastMove, 0];
+                    offset[1] += MovementXY[lastMove, 1];
+                    length += 1;
+                    lastMove = Check.LoopInt((lastMove - 1), 1, 4);
+                    isStarted = true;
+                }
+                else
+                {
+                    lastMove = Check.LoopInt((lastMove + 1), 1, 4);
+                }
+
+                if (isStarted == true)
+                {
+                    if (offset[1] == 0)
+                    {
+                        if (unit.LastMove == 1)
+                        {
+                            if (offset[0] > 0)
+                            {
+                                break;
+                            }
+                        }
+                        else if (unit.LastMove == 3)
+                        {
+                            if (offset[0] < 0)
+                            {
+                                break;
+                            }
+                        }
+                    }
+                    else if (offset[0] == 0)
+                    {
+                        if (unit.LastMove == 2)
+                        {
+                            if (offset[1] > 0)
+                            {
+                                break;
+                            }
+                        }
+                        else if (unit.LastMove == 4)
+                        {
+                            if (offset[1] < 0)
+                            {
+                                break;
+                            }
+                        }
+                    }
+                }
+
+                int x = (unit.X + MovementXY[lastMove, 0] + offset[0]);
+                int y = (unit.Y + MovementXY[lastMove, 1] + offset[1]);
+                if (x < 0 || x > 1000 || y < 0 || y > 1000)
+                {
+                    break;
+                }
+            }
+
+            return (length);
+        }
+
+        public static void SetRotation(Unit unit, int movement)
+        {
+            unit.Rotation = movement * (float)Math.PI / 2.0f;
+            unit.LastMove = movement;
+        }
+
+        public static void UnitManager(Unit unit)
+        {
+            if (unit.ActionID == 1)
+            {
+                if (unit.DestinationOffset[1] == 0 && unit.DestinationOffset[0] == 0) {
+                    FollowPlayer(unit); }
+                else {
+                    Pathing(unit); }
+            }
+            else if (unit.ActionID == 2)
+            {
+                unit.X = Player.player.X - MovementXY[Player.player.LastMove, 0];
+                unit.Y = Player.player.Y - MovementXY[Player.player.LastMove, 1];
+                SetRotation(unit, Player.player.LastMove);
+            }
+            else if (unit.ActionID == 3)
+            {
+                if (unit.DestinationOffset[1] == 0 && unit.DestinationOffset[0] == 0)
+                {
+                    ScanForResource(unit);
+                }
+                else
+                {
+                    Pathing(unit);
+                }
+            }
+            else
+            {
+                unit.ActionTime.Start();
+                unit.ActionDuration = 3000;
+            }
+        }
+
+        public static void FollowPlayer(Unit unit)
+        {
+            if (unit.X == Player.player.X - MovementXY[Player.player.LastMove, 0] && unit.Y == Player.player.Y - MovementXY[Player.player.LastMove, 1])
+            {
+                unit.ActionID = 2;
+            }
+            else
+            {
+                unit.DestinationOffset[0] = (unit.X - Player.player.X + MovementXY[Player.player.LastMove, 0]);
+                unit.DestinationOffset[1] = (unit.Y - Player.player.Y + MovementXY[Player.player.LastMove, 1]);
+            }
+        }
+
+        public static void ScanForResource(Unit unit)
+        {
+            int x = unit.X;
+            int y = unit.Y;
+            for (int a = 1; a < 25; a++)
+            {
+                x--;
+                y--;
+                if (CheckSetDestination(unit, Check.Range(x, 0, 1000), Check.Range(y, 0, 1000)))
+                    return;
+
+                for (int c = 0; c < (a * 2); c++)
+                {
+                    x++;
+                    if (CheckSetDestination(unit, Check.Range(x, 0, 1000), Check.Range(y, 0, 1000)))
+                        return;
+                }
+
+                for (int c = 0; c < (a * 2); c++)
+                {
+                    y++;
+                    if (CheckSetDestination(unit, Check.Range(x, 0, 1000), Check.Range(y, 0, 1000)))
+                        return;
+                }
+
+                for (int c = 0; c < (a * 2); c++)
+                {
+                    x--;
+                    if (CheckSetDestination(unit, Check.Range(x, 0, 1000), Check.Range(y, 0, 1000)))
+                        return;
+                }
+
+                for (int c = 0; c < (a * 2); c++)
+                {
+                    y--;
+                    if (CheckSetDestination(unit, Check.Range(x, 0, 1000), Check.Range(y, 0, 1000)))
+                        return;
+                }
+            }
+        }
+
+        public static bool CheckSetDestination(Unit unit, int x, int y)
+        {
+            if (IsResource(x, y) && !landArray[x, y].IsActive)
+            {
+                unit.DestinationOffset[0] = unit.X - x;
+                unit.DestinationOffset[1] = unit.Y - y;
+                return true;
+            }
+            else { return false; }
+        }
+
+        public static bool IsResource(int x, int y)
+        {
+            if (landArray[x, y].land > 2 && landArray[x, y].land < 100)
+            {
+                return true;
+            }
+            else { return false; }
+        }
+
+        /*public static async void Logic()
+        {
+            while (true)
+            {
+                if (MovementSync[0] <= -25 ||
+                    MovementSync[0] >= 25 ||
+                    MovementSync[1] <= -25 ||
+                    MovementSync[1] >= -25)
+                {
+                    MovementSync[0] = 0;
+                    MovementSync[1] = 0;
+                    //LocalizeElements();
+                }
+                else
+                {
+                    await Task.Delay(500);
+                }
+            }
+        }*/
+
+        /*static void LocalizeElements()
+        {
+            Player.LocalWorkers.Clear();
+            Player.LocalEnemies.Clear();
+
+            foreach (Unit unit in Player.Workers)
+            {
+                if (unit.X >= Player.player.X - 50 ||
+                    unit.X <= Player.player.X + 50 ||
+                    unit.Y >= Player.player.Y - 50 ||
+                    unit.Y <= Player.player.Y + 50)
+                {
+                    Player.LocalWorkers.Add(unit);
+                }
+            }
+            foreach (Unit unit in Player.Enemies)
+            {
+                if (unit.X >= Player.player.X - 50 ||
+                    unit.X <= Player.player.X + 50 ||
+                    unit.Y >= Player.player.Y - 50 ||
+                    unit.Y <= Player.player.Y + 50)
+                {
+                    Player.LocalEnemies.Add(unit);
+                }
+            }
+        }*/
         
         /// /////////////////////////////////
         // UNTESTED CODE, MOVEMENT CONTROLS//
