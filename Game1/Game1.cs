@@ -387,6 +387,14 @@ namespace Game1
                 foreach (Unit unit in Player.LocalEnemies) {
                     Control.UnitManager(unit); }}
 
+            if (Player.Enemies.Count > 0) {
+                foreach (Unit unit in Player.Enemies) {
+                    if (unit.Stats[1] < 1) {
+                        Player.LocalEnemies.Remove(unit);
+                        Set.CoreStats(unit);
+                        unit.ActionID = 0;
+                    }}}
+
             // Quarter Second Interval Recurring Logic
             if (ScanTiles.ElapsedMilliseconds > 250)
             {
