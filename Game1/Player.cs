@@ -16,7 +16,7 @@ namespace Game1
         public int DrawX { get; set; }
         public int DrawY { get; set; }
         public int[] resources = new int[1000];
-        /*
+        /* (Old resources pending removal)
          * 0: Experience
          * 1: Vitality
          * 2: Physique

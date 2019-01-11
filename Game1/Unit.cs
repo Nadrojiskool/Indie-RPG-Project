@@ -48,7 +48,7 @@ namespace Game1
         /// 28: Skinning
         /// 29: Butchering
         /// 30: Cooking
-        /// 100: Capacity Workers
+        /// 100: Worker Capacity
         /// 101: Gold
         /// 102: Workers
         /// 
@@ -68,7 +68,7 @@ namespace Game1
         //public sbyte[] Path;
         public int[] DestinationOffset = new int[2] { 0, 0 };
         public int[] OriginOffset = new int[2] { 0, 0 };
-        public sbyte LeftOrRight = 0; // -1 is FavorLeft // 1 is FavorRight //
+        public sbyte LeftOrRight = 0; // Cached Rotation (LastMove) // Negative (-) is FavorLeft // Positive (+) is FavorRight //
         //public static List<Unit> Active = new List<Unit>();
 
         public Unit(int x, int y, int id, int[] array) : base($"{id}", x, y, 0, 0)
@@ -82,6 +82,20 @@ namespace Game1
         public void Attack(Unit unit)
         {
             unit.Stats[1] -= Check.Min(this.Stats[2] - unit.Stats[3], 1);
+        }
+
+        public void CheckSlash(Unit unit)
+        {
+            int x = X + Game1.MovementXY[LastMove, 0] + Game1.MovementXY[Check.LoopInt(LastMove - 1, 1, 4), 0];
+            int y = Y + Game1.MovementXY[LastMove, 1] + Game1.MovementXY[Check.LoopInt(LastMove - 1, 1, 4), 1];
+            for (int i = 0; i < 3; i++)
+            {
+                if (unit.X == (x + (i * Game1.MovementXY[Check.LoopInt(LastMove + 1, 1, 4), 0]))
+                    && unit.Y == (y + (i * Game1.MovementXY[Check.LoopInt(LastMove + 1, 1, 4), 1])))
+                {
+                    Attack(unit);
+                }
+            }
         }
     }
 }

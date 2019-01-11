@@ -180,6 +180,7 @@ namespace Game1
                 spriteBatch.DrawString(font, $"{ Player.player.Y }", new Vector2(100, 10), Color.DarkViolet);
                 spriteBatch.DrawString(font, $"{ Player.LocalEnemies[0].LeftOrRight }", new Vector2(50, 50), Color.DarkViolet);
                 spriteBatch.DrawString(font, $"{ Player.LocalEnemies[0].ActionID }", new Vector2(100, 50), Color.DarkViolet);
+                spriteBatch.DrawString(font, $"{ Player.LocalEnemies[0].Stats[1] }", new Vector2(150, 50), Color.DarkViolet);
                 spriteBatch.DrawString(font, $"{ Player.LocalEnemies[0].X }", new Vector2(50, 100), Color.DarkViolet);
                 spriteBatch.DrawString(font, $"{ Player.LocalEnemies[0].Y }", new Vector2(100, 100), Color.DarkViolet);
                 spriteBatch.DrawString(font, $"{ Player.LocalEnemies[0].DestinationOffset[0] }", new Vector2(50, 150), Color.DarkViolet);
@@ -280,10 +281,10 @@ namespace Game1
             {
                 foreach (Unit unit in localEnemies)
                 {
-                    DrawingBoard.DrawObjects(enemy, new Vector2(
+                    DrawingBoard.DrawObjects(DrawingBoard.Enemies[0, unit.LastMove, 0], new Vector2(
                         Check.Range((Player.player.DrawX - ((Player.player.X - unit.X) * (int)(50 * tileScale))), (int)(50 * tileScale), (int)(1920 - 50 * tileScale)),
                         Check.Range((Player.player.DrawY - ((Player.player.Y - unit.Y) * (int)(50 * tileScale))), (int)(50 * tileScale), (int)(1080 - 50 * tileScale))),
-                        tileScale, unit.Rotation, new Rectangle(0, 0, 50, 50));
+                        tileScale, 0, new Rectangle(0, 0, 50, 50));
                 }
             }
         }

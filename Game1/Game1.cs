@@ -100,7 +100,7 @@ namespace Game1
         private bool gameActive = true;
         public static byte[] receivedBytes = new byte[50000];
         protected static Keys[] KeysMovement = new Keys[] { Keys.D, Keys.S, Keys.A, Keys.W };
-        protected static int[,] MovementXY = new int[,] { { 0, 0 }, { 1, 0 }, { 0, 1 }, { -1, 0 }, { 0, -1 } };
+        public static int[,] MovementXY = new int[,] { { 0, 0 }, { 1, 0 }, { 0, 1 }, { -1, 0 }, { 0, -1 } };
         protected static List<Manor> LocalManors = new List<Manor>();
         public static int[] MovementSync = new int[2] { 0, 0 };
 
@@ -292,6 +292,11 @@ namespace Game1
             DrawingBoard.Tiles[201, 2, 5] = house_kame;
             DrawingBoard.Tiles[202, 1, 5] = mine;
             DrawingBoard.Tiles[202, 2, 5] = mine;
+
+            DrawingBoard.Enemies[0, 1, 0] = Content.Load<Texture2D>("Bug1");
+            DrawingBoard.Enemies[0, 2, 0] = Content.Load<Texture2D>("Bug2");
+            DrawingBoard.Enemies[0, 3, 0] = Content.Load<Texture2D>("Bug3");
+            DrawingBoard.Enemies[0, 4, 0] = Content.Load<Texture2D>("Bug4");
             #endregion
         }
 

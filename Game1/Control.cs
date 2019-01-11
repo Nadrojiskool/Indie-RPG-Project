@@ -150,13 +150,15 @@ namespace Game1
                 Ctrl(); }
 
             else if (oldState.IsKeyUp(Keys.Space) && newState.IsKeyDown(Keys.Space)) {
-                if (landArray[cameraLocationX + Player.player.tileX + MovementXY[Player.player.LastMove, 0],
-                    cameraLocationY + Player.player.tileY + MovementXY[Player.player.LastMove, 1]].land == 202)
-                    { Player.player.Depth++; }
-                else {
-                    Player.player.Depth = 0;
+                if (IsResource(cameraLocationX + Player.player.tileX + MovementXY[Player.player.LastMove, 0],
+                    cameraLocationY + Player.player.tileY + MovementXY[Player.player.LastMove, 1])) {
                     actionPending = true;
-                    actionTimer.Start(); }}
+                    actionTimer.Start(); }
+                else {
+                    foreach (Unit unit in Player.LocalEnemies)
+                    {
+                        Player.player.CheckSlash(unit);
+                    }}}
 
             else if (oldState.IsKeyUp(Keys.I) && newState.IsKeyDown(Keys.I)) {
                 if (invOpen == true) {
@@ -974,6 +976,9 @@ namespace Game1
                 {
                     unit.DestinationOffset[0] = (unit.X - Player.player.X - MovementXY[Player.player.LastMove, 0]);
                     unit.DestinationOffset[1] = (unit.Y - Player.player.Y - MovementXY[Player.player.LastMove, 1]);
+                    unit.LeftOrRight = 0;
+                    unit.OriginOffset[0] = 0;
+                    unit.OriginOffset[1] = 0;
                 }
                 else
                 {
