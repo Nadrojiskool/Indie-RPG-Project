@@ -6,10 +6,15 @@ using System.Threading.Tasks;
 
 namespace Game1
 {
-    public class Spawn
+    public static class Spawn
     {
 
-        public void Enemy()
+        public static void Resident(Unit unit)
+        {
+
+        }
+
+        public static void Enemy()
         {
 
         }

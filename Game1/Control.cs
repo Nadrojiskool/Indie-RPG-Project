@@ -46,30 +46,46 @@ namespace Game1
                 invOpen = false; }
 
             if (buildMenuOpen) {
-                if (buildRect1.Contains(newMouseState.X, newMouseState.Y) && Player.player.resources[5] >= 200) {
+                if (buildRect1.Contains(newMouseState.X, newMouseState.Y) && Player.player.resources[5] >= 0) {
                     //Player.player.resources[5] = Player.player.resources[5] - 200;
                     Mine(201); }
-                else if (buildRect2.Contains(newMouseState.X, newMouseState.Y) && Player.player.resources[5] >= 50) {
-                    Player.player.resources[5] = Player.player.resources[5] - 50;
+                else if (buildRect2.Contains(newMouseState.X, newMouseState.Y) && Player.player.resources[5] >= 0) {
+                    //Player.player.resources[5] = Player.player.resources[5] - 50;
                     Mine(101); }
-                else if (buildRect3.Contains(newMouseState.X, newMouseState.Y) && Player.player.resources[5] >= 50) {
-                    Player.player.resources[5] = Player.player.resources[5] - 50;
+                else if (buildRect3.Contains(newMouseState.X, newMouseState.Y) && Player.player.resources[5] >= 0) {
+                    //Player.player.resources[5] = Player.player.resources[5] - 50;
                     Mine(102); }
-                else if (buildRect4.Contains(newMouseState.X, newMouseState.Y) && Player.player.resources[5] >= 50) {
-                    Player.player.resources[5] = Player.player.resources[5] - 50;
+                else if (buildRect4.Contains(newMouseState.X, newMouseState.Y) && Player.player.resources[5] >= 0) {
+                    //Player.player.resources[5] = Player.player.resources[5] - 50;
                     Mine(103); }
-                else if (buildRect5.Contains(newMouseState.X, newMouseState.Y) && Player.player.resources[5] >= 50) {
-                    Player.player.resources[5] = Player.player.resources[5] - 50;
+                else if (buildRect5.Contains(newMouseState.X, newMouseState.Y) && Player.player.resources[5] >= 0) {
+                    //Player.player.resources[5] = Player.player.resources[5] - 50;
                     Mine(104); }
-                else if (buildRect6.Contains(newMouseState.X, newMouseState.Y) && Player.player.resources[5] >= 50) {
-                    Player.player.resources[5] = Player.player.resources[5] - 50;
+                else if (buildRect6.Contains(newMouseState.X, newMouseState.Y) && Player.player.resources[5] >= 0) {
+                    //Player.player.resources[5] = Player.player.resources[5] - 50;
                     Mine(105); }
-                else if (buildRect7.Contains(newMouseState.X, newMouseState.Y) && Player.player.resources[5] >= 50) {
-                    Player.player.resources[5] = Player.player.resources[5] - 50;
+                else if (buildRect7.Contains(newMouseState.X, newMouseState.Y) && Player.player.resources[5] >= 0) {
+                    //Player.player.resources[5] = Player.player.resources[5] - 50;
                     Mine(106); }
                 else if (buildRect8.Contains(newMouseState.X, newMouseState.Y) && Player.player.resources[6] >= 0) {
                     //Player.player.resources[6] = Player.player.resources[6] - 200;
-                    Mine(202); }
+                    Mine(202);
+                }
+                else if (buildRect9.Contains(newMouseState.X, newMouseState.Y) && Player.player.resources[5] >= 0)
+                {
+                    //Player.player.resources[6] = Player.player.resources[6] - 200;
+                    Build.Cabin(Player.player.X + MovementXY[Player.player.LastMove, 0], Player.player.Y + MovementXY[Player.player.LastMove, 1]);
+                }
+                else if (buildRect10.Contains(newMouseState.X, newMouseState.Y) && Player.player.resources[5] >= 0)
+                {
+                    //Player.player.resources[6] = Player.player.resources[6] - 200;
+                    Build.Camp(Player.player.X + MovementXY[Player.player.LastMove, 0], Player.player.Y + MovementXY[Player.player.LastMove, 1]);
+                }
+                else if (buildRect11.Contains(newMouseState.X, newMouseState.Y) && Player.player.resources[5] >= 0)
+                {
+                    //Player.player.resources[6] = Player.player.resources[6] - 200;
+                    Generate.Village(1, Player.player.X + MovementXY[Player.player.LastMove, 0], Player.player.Y + MovementXY[Player.player.LastMove, 1]);
+                }
                 else {
                     cantBuild.Start(); }
 
@@ -762,7 +778,18 @@ namespace Game1
                     offset[1] += MovementXY[lastMove, 1];
                     length += 1;
                     lastMove = Check.LoopInt((lastMove + 1), 1, 4);
-                    isStarted = true;
+
+                    if (!isStarted)
+                    {
+                        isStarted = true;
+                    }
+                    else
+                    {
+                        if (length > 50)
+                        {
+                            return length;
+                        }
+                    }
                 }
                 else
                 {
@@ -833,7 +860,18 @@ namespace Game1
                     offset[1] += MovementXY[lastMove, 1];
                     length += 1;
                     lastMove = Check.LoopInt((lastMove - 1), 1, 4);
-                    isStarted = true;
+
+                    if (!isStarted)
+                    {
+                        isStarted = true;
+                    }
+                    else
+                    {
+                        if (length > 50)
+                        {
+                            return length;
+                        }
+                    }
                 }
                 else
                 {
@@ -921,6 +959,27 @@ namespace Game1
                     Pathing(unit);
                 }
             }
+            else if (unit.ActionID == 4)
+            {
+                if (Math.Abs(Player.player.X - unit.X) <= 1 && Math.Abs(Player.player.Y - unit.Y) <= 1 && !unit.ActionTime.IsRunning)
+                {
+                    Player.player.Stats[3] = 0;
+                    unit.Attack(Player.player);
+                    unit.ActionTime.Start();
+                    unit.ActionDuration = 2000 - (10 * unit.Stats[13]);
+                    unit.DestinationOffset[0] = 0;
+                    unit.DestinationOffset[1] = 0;
+                }
+                else if (UpdateDestination.ElapsedMilliseconds >= 250)
+                {
+                    unit.DestinationOffset[0] = (unit.X - Player.player.X - MovementXY[Player.player.LastMove, 0]);
+                    unit.DestinationOffset[1] = (unit.Y - Player.player.Y - MovementXY[Player.player.LastMove, 1]);
+                }
+                else
+                {
+                    Pathing(unit);
+                }
+            }
             else
             {
                 unit.ActionTime.Start();
@@ -978,6 +1037,49 @@ namespace Game1
                     y--;
                     if (CheckSetDestination(unit, Check.Range(x, 0, 1000), Check.Range(y, 0, 1000)))
                         return;
+                }
+            }
+        }
+
+        public static void ScanLocalTiles(int x, int y, int lastMove, int id)
+        {
+            // lastMove bias currently not implemented
+            // id tentatively pending actual functionality
+            Land land;
+            int x2 = 0;
+            int y2 = 0;
+
+            for (int a = 0; a < 25; a++)
+            {
+                x2 -= a;
+                y2 -= a;
+
+                for (int a2 = 0; a2 <= a; a++)
+                {
+                    land = landArray[x + x2, y + y2];
+                    if (land.land == id)
+                    {
+
+                    }
+                    else
+                    {
+                        if (a != 0)
+                        {
+                            for (int l = 1; l <= 4; l++)
+                            {
+                                for (int l2 = 0; l2 < a * 2; l2++)
+                                {
+                                    x2 += MovementXY[l, 0];
+                                    y2 += MovementXY[l, 1];
+                                    land = landArray[x + x2, y + y2];
+                                    if (land.land == id)
+                                    {
+
+                                    }
+                                }
+                            }
+                        }
+                    }
                 }
             }
         }

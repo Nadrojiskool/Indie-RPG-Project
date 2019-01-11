@@ -14,6 +14,45 @@ namespace Game1
         /// 1: Pathing
         /// 2: Follow Player
         /// 3: Gather Resources
+        /// 4: Attack Target
+        /// 
+        /// 9: Sleep
+        /// </summary>
+
+        /// <summary> Unit Stats Array Index
+        /// 0: Level (LVL) = 1 + Stats 10-30
+        /// 1: Health (HP) = 10 * (2 + Vitality(11) + Physique(12))
+        /// 2: Attack (ATK) = 1 + Combat(14) * (Agility(13) + Physique(12))
+        /// 3: Defense (DEF) = 1 + Combat(14) * (Agility(13) + Physique(12) + Vitality(11))
+        /// 4: Speed (SPD) = 1 / (101 - (Agility(13) * Vitality(11)))
+        /// 5: 
+        /// 9: 
+        /// 10: Experience
+        /// 11: Vitality
+        /// 12: Physique
+        /// 13: Agility
+        /// 14: Combat
+        /// 15: Magic
+        /// 16: Knowledge
+        /// 17: Leadership
+        /// 18: Sociability
+        /// 19: Expertise
+        /// 20: Gathering
+        /// 21: Wood Cutting
+        /// 22: Wood Working
+        /// 23: Mining
+        /// 24: Smithing
+        /// 25: Engineering
+        /// 26: Construction
+        /// 27: Hunting
+        /// 28: Skinning
+        /// 29: Butchering
+        /// 30: Cooking
+        /// 100: Capacity Workers
+        /// 101: Gold
+        /// 102: Workers
+        /// 
+        /// 
         /// </summary>
 
         public int[] Stats = new int[200];
@@ -27,7 +66,7 @@ namespace Game1
         public int AutoX { get; set; }
         public int AutoY { get; set; }
         //public sbyte[] Path;
-        public int[] DestinationOffset = new int[2] { -10, 0 };
+        public int[] DestinationOffset = new int[2] { 0, 0 };
         public int[] OriginOffset = new int[2] { 0, 0 };
         public sbyte LeftOrRight = 0; // -1 is FavorLeft // 1 is FavorRight //
         //public static List<Unit> Active = new List<Unit>();
@@ -40,5 +79,9 @@ namespace Game1
             this.Stats = array;
         }
 
+        public void Attack(Unit unit)
+        {
+            unit.Stats[1] -= Check.Min(this.Stats[2] - unit.Stats[3], 1);
+        }
     }
 }

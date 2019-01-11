@@ -39,6 +39,7 @@ namespace Game1
         protected static Texture2D BGFinalFantasy;
         protected static Texture2D house_kame;
         protected static Texture2D mine;
+        protected static Texture2D cabin1;
         protected static Texture2D orbPillar;
         protected static Texture2D WallWoodHorizontal;
         protected static Texture2D WallWoodVertical;
@@ -103,6 +104,9 @@ namespace Game1
         protected static List<Manor> LocalManors = new List<Manor>();
         public static int[] MovementSync = new int[2] { 0, 0 };
 
+        public static Stopwatch ScanTiles = new Stopwatch();
+        public static Stopwatch UpdateDestination = new Stopwatch();
+
         #region Build Menu Static Rectangle Grid Test Variables
         public static Rectangle buildRect1 = new Rectangle(600, 650, 100, 150);
         public static Rectangle buildRect2 = new Rectangle(750, 650, 50, 100);
@@ -112,6 +116,9 @@ namespace Game1
         public static Rectangle buildRect6 = new Rectangle(950, 650, 50, 100);
         public static Rectangle buildRect7 = new Rectangle(1000, 650, 50, 100);
         public static Rectangle buildRect8 = new Rectangle(1050, 650, 100, 100);
+        public static Rectangle buildRect9 = new Rectangle(1150, 650, 100, 100);
+        public static Rectangle buildRect10 = new Rectangle(600, 980, 200, 80);
+        public static Rectangle buildRect11 = new Rectangle(900, 980, 200, 80);
         #endregion
 
         public Rectangle[,] TileMap = new Rectangle[(int)(42 / tileScale), (int)(24 / tileScale)];
@@ -143,6 +150,10 @@ namespace Game1
         /// </summary>
         /// 
 
+        public static int testHP = 0;
+        public static int testVit = 0;
+        public static int testPhy = 0;
+
         protected override void Initialize()
         {
             this.IsMouseVisible = true;
@@ -153,6 +164,11 @@ namespace Game1
             Player.player.tileY = (int)((10 * displayHeight / 1080) / tileScale);
             Player.player.DrawX = (int)((20 * displayWidth / 1920) / tileScale) * (int)(50 * tileScale) + (int)(25 * tileScale);
             Player.player.DrawY = (int)((10 * displayHeight / 1080) / tileScale) * (int)(50 * tileScale) + (int)(25 * tileScale);
+            Player.player.Stats = Generate.Worker();
+            Set.CoreStats(Player.player);
+            testHP = Player.player.Stats[1];
+            testVit = Player.player.Stats[11];
+            testPhy = Player.player.Stats[12];
 
             Show.Initialize();
 
@@ -222,7 +238,8 @@ namespace Game1
             buildMenu = Content.Load<Texture2D>("ui_3");
             workerList = Content.Load<Texture2D>("ui_4");
             house_kame = Content.Load<Texture2D>("House (Kame)");
-            mine = Content.Load<Texture2D>("Cabin1");
+            mine = Content.Load<Texture2D>("Mine");
+            cabin1 = Content.Load<Texture2D>("Cabin1");
             orbPillar = Content.Load<Texture2D>("Orb Pillar");
             WallWoodHorizontal = Content.Load<Texture2D>("Wall Wood");
             WallWoodVertical = Content.Load<Texture2D>("WallWoodVertical");
@@ -269,6 +286,8 @@ namespace Game1
             DrawingBoard.Tiles[105, 2, 5] = WallWoodBackLeft;
             DrawingBoard.Tiles[106, 1, 5] = WallWoodBackRight;
             DrawingBoard.Tiles[106, 2, 5] = WallWoodBackRight;
+            DrawingBoard.Tiles[200, 1, 5] = cabin1;
+            DrawingBoard.Tiles[200, 2, 5] = cabin1;
             DrawingBoard.Tiles[201, 1, 5] = house_kame;
             DrawingBoard.Tiles[201, 2, 5] = house_kame;
             DrawingBoard.Tiles[202, 1, 5] = mine;
@@ -301,7 +320,7 @@ namespace Game1
                 Exit();
 
             // TODO: Add your update logic here
-
+            
             if (this.IsActive != gameActive)
             {
                 if (this.IsActive == false) {
@@ -326,11 +345,11 @@ namespace Game1
                 if (TouchPanel.IsGestureAvailable) {
                     if (MainMenuOpen) {
                         if (NoMap) {
-                            Client.Job job = new Client.Job((byte)Client.Net.UserList[0].JobList.Count(), 5, Client.Net.UserList[0].Endpoint, Client.Net.Endpoint);
+                            /*Client.Job job = new Client.Job((byte)Client.Net.UserList[0].JobList.Count(), 5, Client.Net.UserList[0].Endpoint, Client.Net.Endpoint);
                             Console.WriteLine($"Starting Job ID {Client.Net.UserList[0].JobList.Count()}");
                             Client.Net.UserList[0].JobList.Add(job);
                             var t = Task.Run(() => Client.Net.JobManager(job));
-                            NoMap = false; }}
+                            NoMap = false;*/ }}
                     else {
                         Control.MovementTouch(); }}
 
@@ -357,21 +376,60 @@ namespace Game1
             
             if (Player.LocalWorkers.Count > 0) {
                 foreach (Unit unit in Player.LocalWorkers) {
-                    Control.UnitManager(unit); ; }
-            }
+                    Control.UnitManager(unit); ; }}
 
-            if (Player.LocalEnemies.Count > 0)
+            if (Player.LocalEnemies.Count > 0) {
+                foreach (Unit unit in Player.LocalEnemies) {
+                    Control.UnitManager(unit); }}
+
+            // Quarter Second Interval Recurring Logic
+            if (ScanTiles.ElapsedMilliseconds > 250)
             {
-                foreach (Unit unit in Player.LocalEnemies)
+                // Scan Local Tiles for Logic Updates
+                for (int y = 0; y < 100; y++)
                 {
-                    Control.UnitManager(unit);
+                    for (int x = 0; x < 100; x++)
+                    {
+                        int x2 = Check.Range((cameraLocationX + x - 30), 0, 1000);
+                        int y2 = Check.Range((cameraLocationY + y - 40), 0, 1000);
+                        Land land = landArray[x2, y2];
+
+                        // currently Residents are expected to be an enemy
+                        if (land.IsResident)
+                        {
+                            // who will emerge from his Residence if player is closer than 20 tiles
+                            if (Math.Abs(Player.player.X - x2) < 20 && Math.Abs(Player.player.Y - y2) < 20 && land.Resident.ActionID == 9)
+                            {
+                                Player.LocalEnemies.Add(land.Resident);
+                                Player.LocalEnemies[Player.LocalEnemies.Count - 1].Y += 1;
+                                Player.LocalEnemies[Player.LocalEnemies.Count - 1].LastMove = 2;
+                                Player.LocalEnemies[Player.LocalEnemies.Count - 1].ActionID = 4;
+                                // landArray[x2, y2].Resident.ActionID = 0; // WHEN ENABLED ALSO CHANGED VALUE IN LOCALENEMIES, ARE VARIABLES LINKED?? //
+                            }
+                        }
+                        else if (land.land > 199)
+                        {
+                            Unit resident = new Unit(x2, y2, Player.Enemies.Count, Generate.Worker());
+                            Set.CoreStats(resident);
+                            resident.ActionID = 9;
+                            landArray[x2, y2].Resident = resident;
+                            landArray[x2, y2].IsResident = true;
+                            Player.Enemies.Add(landArray[x2, y2].Resident);
+                        }
+                        
+                    }
                 }
+
+                ScanTiles.Restart();
             }
 
             if (cantBuild.ElapsedMilliseconds > 2000) {
                 cantBuild.Reset(); }
 
-            base.Update(gameTime);
+            if (UpdateDestination.ElapsedMilliseconds > 250)
+                UpdateDestination.Restart();
+
+                base.Update(gameTime);
         }
         
         /// <summary>

@@ -49,6 +49,7 @@ namespace Game1
             Objects[104] = new Object("Wall Wood Corner Right", 50, 100, 1, 1);
             Objects[105] = new Object("Wall Wood Back Left", 50, 100, 1, 1);
             Objects[106] = new Object("Wall Wood Back Right", 50, 100, 1, 1);
+            Objects[200] = new Object("Cabin", 100, 100, 2, 2);
             Objects[201] = new Object("Kame House", 100, 150, 2, 2);
             Objects[202] = new Object("Mine", 100, 100, 2, 2);
         }
@@ -131,24 +132,31 @@ namespace Game1
                             landArray[cameraLocationX + x, cameraLocationY + y].frame];
                     Object obj = Objects[landArray[cameraLocationX + x, cameraLocationY + y].land];
 
-                    if (landArray[cameraLocationX + x, cameraLocationY + y].land != 0)
+                    // Note of Intense Calculation in Visual Rendering Method // 
+                    // Potential Optimization in Indexing or Off-Loading Redundant Math 
+                    // Example: int modifiedTileScale = (int)(50 * tileScale);
+
+                    int modifiedTileScale = (int)(50 * tileScale);
+                    Land land = landArray[cameraLocationX + x, cameraLocationY + y];
+
+                    if (land.land != 0)
                     {
-                        spriteBatch.Draw(DrawingBoard.Tiles[0, landArray[cameraLocationX + x, cameraLocationY + y].biome, 5],
-                            new Rectangle((x * (int)(50 * tileScale)), (y * (int)(50 * tileScale)),
-                                (int)(50 * tileScale), (int)(50 * tileScale)),
+                        spriteBatch.Draw(DrawingBoard.Tiles[0, land.biome, 5],
+                            new Rectangle((x * modifiedTileScale), (y * modifiedTileScale),
+                                modifiedTileScale, modifiedTileScale),
                             Color.White);
                     }
 
                     float fl = 1.0f;
                     Vector2 origin = new Vector2(0, 0);
-                    if (landArray[cameraLocationX + x, cameraLocationY + y].land == 5) {
+                    if (land.land == 5) {
                         origin.X = -12;
                         origin.Y = 8;
                         fl = 2.0f; }
-
+                    
                     spriteBatch.Draw(texture,
-                        new Vector2((x - ((obj.X / 50) - 1)) * ((int)(50 * tileScale)),
-                            (y - ((obj.Y / 50) - 1)) * ((int)(50 * tileScale))),
+                        new Vector2((x - ((obj.X / 50) - 1)) * (modifiedTileScale),
+                            (y - ((obj.Y / 50) - 1)) * (modifiedTileScale)),
                         new Rectangle(0, 0, obj.X, obj.Y),
                         Color.White, 0, origin,
                         fl * (float)tileScale, SpriteEffects.None, 1);
@@ -166,21 +174,24 @@ namespace Game1
                 Vector2 FontOrigin = font.MeasureString(output) / 2;
                 spriteBatch.DrawString(font, output, new Vector2(1000, 450), Color.Red, 0, FontOrigin, 1.0f, SpriteEffects.None, 0.5f); }
 
-            if (Player.LocalWorkers.Count > 0) {
-                int[] array = Player.LocalWorkers[0].Stats;
+            if (Player.LocalEnemies.Count > 0) {
+                //int[] array = Player.LocalEnemies[0].Stats;
                 spriteBatch.DrawString(font, $"{ Player.player.X }", new Vector2(50, 10), Color.DarkViolet);
                 spriteBatch.DrawString(font, $"{ Player.player.Y }", new Vector2(100, 10), Color.DarkViolet);
-                spriteBatch.DrawString(font, $"{ Player.LocalWorkers[0].X }", new Vector2(50, 100), Color.DarkViolet);
-                spriteBatch.DrawString(font, $"{ Player.LocalWorkers[0].Y }", new Vector2(100, 100), Color.DarkViolet);
-                spriteBatch.DrawString(font, $"{ Player.LocalWorkers[0].DestinationOffset[0] }", new Vector2(50, 150), Color.DarkViolet);
-                spriteBatch.DrawString(font, $"{ Player.LocalWorkers[0].DestinationOffset[1] }", new Vector2(100, 150), Color.DarkViolet);
-                spriteBatch.DrawString(font, $"{ Player.LocalWorkers[0].LeftOrRight }", new Vector2(50, 50), Color.DarkViolet);
-                spriteBatch.DrawString(font, $"{ Player.LocalWorkers[0].OriginOffset[0] }", new Vector2(50, 200), Color.DarkViolet);
-                spriteBatch.DrawString(font, $"{ Player.LocalWorkers[0].OriginOffset[1] }", new Vector2(100, 200), Color.DarkViolet);
+                spriteBatch.DrawString(font, $"{ Player.LocalEnemies[0].LeftOrRight }", new Vector2(50, 50), Color.DarkViolet);
+                spriteBatch.DrawString(font, $"{ Player.LocalEnemies[0].ActionID }", new Vector2(100, 50), Color.DarkViolet);
+                spriteBatch.DrawString(font, $"{ Player.LocalEnemies[0].X }", new Vector2(50, 100), Color.DarkViolet);
+                spriteBatch.DrawString(font, $"{ Player.LocalEnemies[0].Y }", new Vector2(100, 100), Color.DarkViolet);
+                spriteBatch.DrawString(font, $"{ Player.LocalEnemies[0].DestinationOffset[0] }", new Vector2(50, 150), Color.DarkViolet);
+                spriteBatch.DrawString(font, $"{ Player.LocalEnemies[0].DestinationOffset[1] }", new Vector2(100, 150), Color.DarkViolet);
+                spriteBatch.DrawString(font, $"{ Player.LocalEnemies[0].OriginOffset[0] }", new Vector2(50, 200), Color.DarkViolet);
+                spriteBatch.DrawString(font, $"{ Player.LocalEnemies[0].OriginOffset[1] }", new Vector2(100, 200), Color.DarkViolet);
             }
 
-            //spriteBatch.DrawString(font, $"{ Objects[201].X }", new Vector2(50, 250), Color.DarkViolet);
-            //spriteBatch.DrawString(font, $"{ Objects[201].Y }", new Vector2(50, 300), Color.DarkViolet);
+            spriteBatch.DrawString(font, $"{ Player.player.Stats[1] }", new Vector2(50, 1000), Color.Red);
+            spriteBatch.DrawString(font, $"{ Player.player.Stats[2] }", new Vector2(125, 1000), Color.DarkViolet);
+            spriteBatch.DrawString(font, $"{ Player.player.Stats[3] }", new Vector2(200, 1000), Color.DarkViolet);
+            spriteBatch.DrawString(font, $"{ testHP }//{ testVit }//{ testPhy }", new Vector2(300, 1000), Color.DarkViolet);
         }
 
         static void Inventory()
@@ -203,22 +214,22 @@ namespace Game1
             else
             {
                 DrawingBoard.DrawObjects(idCard, new Vector2(50, 150), 1, 0, new Rectangle(0, 0, 1200, 732));
-                spriteBatch.DrawString(font, $"Experience: {Player.player.Stats[0]}", new Vector2(50, 450), Color.DarkViolet);
+                spriteBatch.DrawString(font, $"Experience: {Player.player.Stats[10]}", new Vector2(50, 450), Color.DarkViolet);
                 spriteBatch.DrawString(font, $"Workers: {Player.Workers.Count} / {Player.player.resources[10]}", new Vector2(50, 500), Color.Blue);
                 spriteBatch.DrawString(font, $"Gold: {Player.player.gold}", new Vector2(50, 550), Color.DarkGoldenrod);
                 spriteBatch.DrawString(font, $"Water: {Player.player.resources[2]}", new Vector2(50, 600), Color.DarkBlue);
                 spriteBatch.DrawString(font, $"Vines: {Player.player.resources[3]}", new Vector2(50, 650), Color.ForestGreen);
                 spriteBatch.DrawString(font, $"Meat: {Player.player.resources[4]}", new Vector2(50, 700), Color.Crimson);
                 spriteBatch.DrawString(font, $"Lumber: {Player.player.resources[5]}", new Vector2(50, 750), Color.SaddleBrown);
-                spriteBatch.DrawString(font, $"Vitality: {Player.player.Stats[1]}", new Vector2(370, 350), Color.Black);
-                spriteBatch.DrawString(font, $"Physique: {Player.player.Stats[2]}", new Vector2(370, 400), Color.Black);
-                spriteBatch.DrawString(font, $"Agility: {Player.player.Stats[3]}", new Vector2(370, 450), Color.Black);
-                spriteBatch.DrawString(font, $"Combat: {Player.player.Stats[4]}", new Vector2(370, 500), Color.Black);
-                spriteBatch.DrawString(font, $"Magic: {Player.player.Stats[5]}", new Vector2(370, 550), Color.Black);
-                spriteBatch.DrawString(font, $"Knowledge: {Player.player.Stats[6]}", new Vector2(370, 600), Color.Black);
-                spriteBatch.DrawString(font, $"Leadership: {Player.player.Stats[7]}", new Vector2(370, 650), Color.Black);
-                spriteBatch.DrawString(font, $"Sociability: {Player.player.Stats[8]}", new Vector2(370, 700), Color.Black);
-                spriteBatch.DrawString(font, $"Expertise: {Player.player.Stats[9]}", new Vector2(980, 220), Color.Gold);
+                spriteBatch.DrawString(font, $"Vitality: {Player.player.Stats[11]}", new Vector2(370, 350), Color.Black);
+                spriteBatch.DrawString(font, $"Physique: {Player.player.Stats[12]}", new Vector2(370, 400), Color.Black);
+                spriteBatch.DrawString(font, $"Agility: {Player.player.Stats[13]}", new Vector2(370, 450), Color.Black);
+                spriteBatch.DrawString(font, $"Combat: {Player.player.Stats[14]}", new Vector2(370, 500), Color.Black);
+                spriteBatch.DrawString(font, $"Magic: {Player.player.Stats[15]}", new Vector2(370, 550), Color.Black);
+                spriteBatch.DrawString(font, $"Knowledge: {Player.player.Stats[16]}", new Vector2(370, 600), Color.Black);
+                spriteBatch.DrawString(font, $"Leadership: {Player.player.Stats[17]}", new Vector2(370, 650), Color.Black);
+                spriteBatch.DrawString(font, $"Sociability: {Player.player.Stats[18]}", new Vector2(370, 700), Color.Black);
+                spriteBatch.DrawString(font, $"Expertise: {Player.player.Stats[19]}", new Vector2(980, 220), Color.Gold);
             }
         }
 
@@ -233,6 +244,9 @@ namespace Game1
             DrawingBoard.DrawObjects(WallWoodBackLeft, new Vector2(950, 650), 1, 0, new Rectangle(0, 0, 50, 100));
             DrawingBoard.DrawObjects(WallWoodBackRight, new Vector2(1000, 650), 1, 0, new Rectangle(0, 0, 50, 100));
             DrawingBoard.DrawObjects(mine, new Vector2(1050, 650), 1, 0, new Rectangle(0, 0, 100, 100));
+            DrawingBoard.DrawObjects(cabin1, new Vector2(1150, 650), 1, 0, new Rectangle(0, 0, 100, 100));
+            spriteBatch.DrawString(font, $"Spawn Camp", new Vector2(600, 980), Color.DarkViolet);
+            spriteBatch.DrawString(font, $"Spawn Village", new Vector2(900, 980), Color.DarkViolet);
 
         }
 

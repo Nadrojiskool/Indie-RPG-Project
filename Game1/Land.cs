@@ -63,6 +63,8 @@ namespace Game1
         //public bool IsOccupied = false;
         public DateTime LastUpdate = new DateTime();
         public sbyte[] Manor { get; set; }
+        public Unit Resident { get; set; }
+        public bool IsResident { get; set; }
 
         public Land()//int x, int y, int m)
         {

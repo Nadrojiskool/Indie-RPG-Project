@@ -10,7 +10,7 @@ namespace Game1
 {
     public class Player : Unit
     {
-        static public Player player;
+        public static Player player;
         public int tileX { get; set; }
         public int tileY { get; set; }
         public int DrawX { get; set; }
@@ -43,6 +43,8 @@ namespace Game1
          * 102: Workers
          */
         public int gold { get; set; }
+        // I'm concerned with the way I implemented these lists
+        // I would also like them to just be pointers to the unit at their residence to prevent additional syncing
         public static List<Unit> Workers = new List<Unit>();
         public static List<Unit> Enemies = new List<Unit>();
         public static List<Unit> LocalWorkers = new List<Unit>();

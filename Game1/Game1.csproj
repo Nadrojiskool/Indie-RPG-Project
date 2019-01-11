@@ -72,6 +72,7 @@
     <StartupObject />
   </PropertyGroup>
   <ItemGroup>
+    <Compile Include="Build.cs" />
     <Compile Include="Check.cs" />
     <Compile Include="Archive.cs" />
     <Compile Include="Client\Job.cs" />
@@ -85,6 +86,7 @@
     <Compile Include="Region\Duchy.cs" />
     <Compile Include="Region\Kingdom.cs" />
     <Compile Include="Region\Manor.cs" />
+    <Compile Include="Set.cs" />
     <Compile Include="Show.cs" />
     <Compile Include="DrawingBoard.cs" />
     <Compile Include="Game1.cs" />
