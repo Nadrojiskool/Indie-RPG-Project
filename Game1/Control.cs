@@ -976,9 +976,9 @@ namespace Game1
                 {
                     unit.DestinationOffset[0] = (unit.X - Player.player.X - MovementXY[Player.player.LastMove, 0]);
                     unit.DestinationOffset[1] = (unit.Y - Player.player.Y - MovementXY[Player.player.LastMove, 1]);
-                    unit.LeftOrRight = 0;
-                    unit.OriginOffset[0] = 0;
-                    unit.OriginOffset[1] = 0;
+                    //unit.LeftOrRight = 0;
+                    //unit.OriginOffset[0] = 0;
+                    //unit.OriginOffset[1] = 0;
                 }
                 else
                 {

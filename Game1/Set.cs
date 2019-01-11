@@ -10,11 +10,11 @@ namespace Game1
     {
         public static void Land(int[,] blueprint, int x, int y)
         {
-            for (int x2 = 0; x2 < blueprint.GetLength(0); x2++)
+            for (int y2 = 0; y2 < blueprint.GetLength(0); y2++)
             {
-                for (int y2 = 0; y2 < blueprint.GetLength(1); y2++)
+                for (int x2 = 0; x2 < blueprint.GetLength(1); x2++)
                 {
-                    landArray[x + x2, y + y2].land = blueprint[x2, y2];
+                    landArray[x + x2, y + y2].land = blueprint[y2, x2];
                 }
             }
         }
