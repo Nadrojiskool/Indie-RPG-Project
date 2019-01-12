@@ -69,6 +69,10 @@ namespace Game1
         public int[] DestinationOffset = new int[2] { 0, 0 };
         public int[] OriginOffset = new int[2] { 0, 0 };
         public sbyte LeftOrRight = 0; // Cached Rotation (LastMove) // Negative (-) is FavorLeft // Positive (+) is FavorRight //
+        
+        // Bloat for the following Test Pathing variable is concerning
+        public List<int[]> Pathed { get; set; }
+
         //public static List<Unit> Active = new List<Unit>();
 
         public Unit(int x, int y, int id, int[] array) : base($"{id}", x, y, 0, 0)
@@ -94,6 +98,21 @@ namespace Game1
                     && unit.Y == (y + (i * Game1.MovementXY[Check.LoopInt(LastMove + 1, 1, 4), 1])))
                 {
                     Attack(unit);
+                }
+            }
+        }
+        
+        public void CheckAOE(Unit unit, int x, int y, int width, int height)
+        {
+            for (int a = 0; a < height; a++)
+            {
+                for (int b = 0; b < width; b++)
+                {
+                    if (unit.X == (x + b)
+                        && unit.Y == (y + a))
+                    {
+                        Attack(unit);
+                    }
                 }
             }
         }

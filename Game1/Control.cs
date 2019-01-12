@@ -32,6 +32,7 @@ namespace Game1
         public static void Click()
         {
             if (!MainMenuOpen && !invOpen && !buildMenuOpen && !workerListOpen) {
+                // Clear Land //
                 int spellX = (newMouseState.X / (int)(50 * tileScale) + cameraLocationX) - 2;
                 int spellY = (newMouseState.Y / (int)(50 * tileScale) + cameraLocationY) - 2;
                 Manipulator(spellX, spellY, 5, 5, 0, false); }
@@ -84,7 +85,7 @@ namespace Game1
                 else if (buildRect11.Contains(newMouseState.X, newMouseState.Y) && Player.player.resources[5] >= 0)
                 {
                     //Player.player.resources[6] = Player.player.resources[6] - 200;
-                    Generate.Village(1, Player.player.X + MovementXY[Player.player.LastMove, 0], Player.player.Y + MovementXY[Player.player.LastMove, 1]);
+                    Generate.Village(100, Player.player.X + MovementXY[Player.player.LastMove, 0], Player.player.Y + MovementXY[Player.player.LastMove, 1]);
                 }
                 else {
                     cantBuild.Start(); }
@@ -105,13 +106,20 @@ namespace Game1
 
         public static void ClickRight()
         {
-            if (!MainMenuOpen && !invOpen && !buildMenuOpen && !workerListOpen) {
-                int spellX = (newMouseState.X / (int)(50 * tileScale) + cameraLocationX) - 2;
+            if (!MainMenuOpen && !invOpen && !buildMenuOpen && !workerListOpen)
+            {
+                // AOE Attack (5x5)
+                foreach (Unit unit in Player.LocalEnemies)
+                    Player.player.CheckAOE(unit, (newMouseState.X / (int)(50 * tileScale) + cameraLocationX) - 2, (newMouseState.Y / (int)(50 * tileScale) + cameraLocationY) - 2, 5, 5);
+                Player.Animations.Add(new Animation((newMouseState.X / (int)(50 * tileScale) + cameraLocationX) - 2, (newMouseState.Y / (int)(50 * tileScale) + cameraLocationY) - 2, 0, 0));
+                // Spawn Trees //
+                /*int spellX = (newMouseState.X / (int)(50 * tileScale) + cameraLocationX) - 2;
                 int spellY = (newMouseState.Y / (int)(50 * tileScale) + cameraLocationY) - 2;
-                Manipulator(spellX, spellY, 5, 5, 5, false); }
+                Manipulator(spellX, spellY, 5, 5, 5, false);*/
+            }
 
-            if (MainMenuOpen) {
-                var t = Task.Run(() => Generate.All()); }
+            //if (MainMenuOpen) {
+            //    var t = Task.Run(() => Generate.All()); }
 
             if (invOpen) {
                 /*invOpen = false;*/ }
@@ -161,6 +169,7 @@ namespace Game1
                     }}}
 
             else if (oldState.IsKeyUp(Keys.I) && newState.IsKeyDown(Keys.I)) {
+                var t = Task.Run(() => Generate.All());
                 if (invOpen == true) {
                     invOpen = false; }
                 else {
@@ -722,7 +731,18 @@ namespace Game1
 
         public static void CheckPathing (Unit unit)
         {
-            if (PathingLeft(unit) < PathingRight(unit))
+            int left = PathingLeft(unit);
+            unit.Pathed = null;
+            int right = PathingRight(unit);
+            unit.Pathed = null;
+
+            if (left == 1000 && right == 1000)
+            {
+                unit.ActionTime.Start();
+                unit.ActionDuration = 3000;
+                return;
+            }
+            else if (left < right)
             {
                 unit.LeftOrRight = Convert.ToSByte(-unit.LastMove);
             }
@@ -771,11 +791,21 @@ namespace Game1
             int length = 0;
             int[] offset = new int[] { 0, 0 };
             int lastMove = Check.LoopInt((unit.LastMove - 1), 1, 4);
-            
+            unit.Pathed = new List<int[]>();
+
             while (true)
             {
-                if (landArray[(unit.X + MovementXY[lastMove, 0] + offset[0]), (unit.Y + MovementXY[lastMove, 1] + offset[1])].land < 1)
+                int x = (unit.X + MovementXY[lastMove, 0] + offset[0]);
+                int y = (unit.Y + MovementXY[lastMove, 1] + offset[1]);
+
+                if (landArray[x, y].land < 1)
                 {
+                    int[] xy = new int[2] { x, y };
+                    if (unit.Pathed.Contains(xy))
+                        return 1000;
+                    else
+                        unit.Pathed.Add(new int[2] { x, y });
+
                     offset[0] += MovementXY[lastMove, 0];
                     offset[1] += MovementXY[lastMove, 1];
                     length += 1;
@@ -787,9 +817,10 @@ namespace Game1
                     }
                     else
                     {
-                        if (length > 50)
+                        // Future Note: Modify Scan Length by unit.Vision, reflected in, "Smarter Units," being able to Path further
+                        if (length > 100)
                         {
-                            return length;
+                            return 1000;
                         }
                     }
                 }
@@ -836,11 +867,11 @@ namespace Game1
                     }
                 }
 
-                int x = (unit.X + MovementXY[lastMove, 0] + offset[0]);
-                int y = (unit.Y + MovementXY[lastMove, 1] + offset[1]);
+                x = (unit.X + MovementXY[lastMove, 0] + offset[0]);
+                y = (unit.Y + MovementXY[lastMove, 1] + offset[1]);
                 if (x < 0 || x > 1000 || y < 0 || y > 1000)
                 {
-                    break;
+                    return 1000;
                 }
             }
 
@@ -853,11 +884,21 @@ namespace Game1
             int length = 0;
             int[] offset = new int[] { 0, 0 };
             int lastMove = Check.LoopInt((unit.LastMove + 1), 1, 4);
+            unit.Pathed = new List<int[]>();
 
             while (true)
             {
-                if (landArray[(unit.X + MovementXY[lastMove, 0] + offset[0]), (unit.Y + MovementXY[lastMove, 1] + offset[1])].land < 1)
+                int x = (unit.X + MovementXY[lastMove, 0] + offset[0]);
+                int y = (unit.Y + MovementXY[lastMove, 1] + offset[1]);
+                
+                if (landArray[x, y].land < 1)
                 {
+                    int[] xy = new int[2] { x, y };
+                    if (unit.Pathed.Contains(xy))
+                        return 1000;
+                    else
+                        unit.Pathed.Add(new int[2] { x, y });
+
                     offset[0] += MovementXY[lastMove, 0];
                     offset[1] += MovementXY[lastMove, 1];
                     length += 1;
@@ -869,9 +910,10 @@ namespace Game1
                     }
                     else
                     {
-                        if (length > 50)
+                        // Future Note: Modify Scan Length by unit.Vision, reflected in, "Smarter Units," being able to Path further
+                        if (length > 100)
                         {
-                            return length;
+                            return 1000;
                         }
                     }
                 }
@@ -918,11 +960,11 @@ namespace Game1
                     }
                 }
 
-                int x = (unit.X + MovementXY[lastMove, 0] + offset[0]);
-                int y = (unit.Y + MovementXY[lastMove, 1] + offset[1]);
+                x = (unit.X + MovementXY[lastMove, 0] + offset[0]);
+                y = (unit.Y + MovementXY[lastMove, 1] + offset[1]);
                 if (x < 0 || x > 1000 || y < 0 || y > 1000)
                 {
-                    break;
+                    return 1000;
                 }
             }
 

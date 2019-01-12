@@ -1,9 +1,19 @@
 ﻿using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Diagnostics;
+using System.IO;
 using System.Linq;
+using System.Net;
+using System.Net.Sockets;
+using System.Runtime.InteropServices;
 using System.Text;
+using System.Threading;
 using System.Threading.Tasks;
+using Microsoft.Xna.Framework;
+using Microsoft.Xna.Framework.Graphics;
+using Microsoft.Xna.Framework.Input;
+using Microsoft.Xna.Framework.Input.Touch;
 using Game1.Contract;
 
 namespace Game1
@@ -45,6 +55,7 @@ namespace Game1
         public int gold { get; set; }
         // I'm concerned with the way I implemented these lists
         // I would also like them to just be pointers to the unit at their residence to prevent additional syncing
+        public static List<Animation> Animations = new List<Animation>();
         public static List<Unit> Workers = new List<Unit>();
         public static List<Unit> Enemies = new List<Unit>();
         public static List<Unit> LocalWorkers = new List<Unit>();

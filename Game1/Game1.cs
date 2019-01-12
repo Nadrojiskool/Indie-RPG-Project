@@ -293,6 +293,84 @@ namespace Game1
             DrawingBoard.Tiles[202, 1, 5] = mine;
             DrawingBoard.Tiles[202, 2, 5] = mine;
 
+            DrawingBoard.HPBar[0] = Content.Load<Texture2D>("ui_bar 50px");
+            DrawingBoard.HPBar[1] = Content.Load<Texture2D>("ui_bar_hp 50px");
+
+            DrawingBoard.Blast[0] = Content.Load<Texture2D>("Blast (1)");
+            DrawingBoard.Blast[1] = Content.Load<Texture2D>("Blast (2)");
+            DrawingBoard.Blast[2] = Content.Load<Texture2D>("Blast (3)");
+            DrawingBoard.Blast[3] = Content.Load<Texture2D>("Blast (4)");
+            DrawingBoard.Blast[4] = Content.Load<Texture2D>("Blast (5)");
+            DrawingBoard.Blast[5] = Content.Load<Texture2D>("Blast (6)");
+            DrawingBoard.Blast[6] = Content.Load<Texture2D>("Blast (7)");
+            DrawingBoard.Blast[7] = Content.Load<Texture2D>("Blast (8)");
+            DrawingBoard.Blast[8] = Content.Load<Texture2D>("Blast (9)");
+            DrawingBoard.Blast[9] = Content.Load<Texture2D>("Blast (10)");
+            DrawingBoard.Blast[10] = Content.Load<Texture2D>("Blast (11)");
+            DrawingBoard.Blast[11] = Content.Load<Texture2D>("Blast (12)");
+            DrawingBoard.Blast[12] = Content.Load<Texture2D>("Blast (13)");
+            DrawingBoard.Blast[13] = Content.Load<Texture2D>("Blast (14)");
+            DrawingBoard.Blast[14] = Content.Load<Texture2D>("Blast (15)");
+            DrawingBoard.Blast[15] = Content.Load<Texture2D>("Blast (16)");
+            DrawingBoard.Blast[16] = Content.Load<Texture2D>("Blast (17)");
+            DrawingBoard.Blast[17] = Content.Load<Texture2D>("Blast (18)");
+            DrawingBoard.Blast[18] = Content.Load<Texture2D>("Blast (19)");
+            DrawingBoard.Blast[19] = Content.Load<Texture2D>("Blast (20)");
+            DrawingBoard.Blast[20] = Content.Load<Texture2D>("Blast (21)");
+            DrawingBoard.Blast[21] = Content.Load<Texture2D>("Blast (22)");
+            DrawingBoard.Blast[22] = Content.Load<Texture2D>("Blast (23)");
+            DrawingBoard.Blast[23] = Content.Load<Texture2D>("Blast (24)");
+            DrawingBoard.Blast[24] = Content.Load<Texture2D>("Blast (25)");
+            DrawingBoard.Blast[25] = Content.Load<Texture2D>("Blast (26)");
+            DrawingBoard.Blast[26] = Content.Load<Texture2D>("Blast (27)");
+            DrawingBoard.Blast[27] = Content.Load<Texture2D>("Blast (28)");
+            DrawingBoard.Blast[28] = Content.Load<Texture2D>("Blast (29)");
+            DrawingBoard.Blast[29] = Content.Load<Texture2D>("Blast (30)");
+            DrawingBoard.Blast[30] = Content.Load<Texture2D>("Blast (31)");
+            DrawingBoard.Blast[31] = Content.Load<Texture2D>("Blast (32)");
+            DrawingBoard.Blast[32] = Content.Load<Texture2D>("Blast (33)");
+            DrawingBoard.Blast[33] = Content.Load<Texture2D>("Blast (34)");
+            DrawingBoard.Blast[34] = Content.Load<Texture2D>("Blast (35)");
+            DrawingBoard.Blast[35] = Content.Load<Texture2D>("Blast (36)");
+            DrawingBoard.Blast[36] = Content.Load<Texture2D>("Blast (37)");
+            DrawingBoard.Blast[37] = Content.Load<Texture2D>("Blast (38)");
+            DrawingBoard.Blast[38] = Content.Load<Texture2D>("Blast (39)");
+            DrawingBoard.Blast[39] = Content.Load<Texture2D>("Blast (40)");
+            DrawingBoard.Blast[40] = Content.Load<Texture2D>("Blast (41)");
+            DrawingBoard.Blast[41] = Content.Load<Texture2D>("Blast (42)");
+            DrawingBoard.Blast[42] = Content.Load<Texture2D>("Blast (43)");
+            DrawingBoard.Blast[43] = Content.Load<Texture2D>("Blast (44)");
+            DrawingBoard.Blast[44] = Content.Load<Texture2D>("Blast (45)");
+            DrawingBoard.Blast[45] = Content.Load<Texture2D>("Blast (46)");
+            DrawingBoard.Blast[46] = Content.Load<Texture2D>("Blast (47)");
+            DrawingBoard.Blast[47] = Content.Load<Texture2D>("Blast (48)");
+            DrawingBoard.Blast[48] = Content.Load<Texture2D>("Blast (49)");
+            DrawingBoard.Blast[49] = Content.Load<Texture2D>("Blast (50)");
+            DrawingBoard.Blast[50] = Content.Load<Texture2D>("Blast (51)");
+            DrawingBoard.Blast[51] = Content.Load<Texture2D>("Blast (52)");
+            DrawingBoard.Blast[52] = Content.Load<Texture2D>("Blast (53)");
+            DrawingBoard.Blast[53] = Content.Load<Texture2D>("Blast (54)");
+            DrawingBoard.Blast[54] = Content.Load<Texture2D>("Blast (55)");
+            DrawingBoard.Blast[55] = Content.Load<Texture2D>("Blast (56)");
+            DrawingBoard.Blast[56] = Content.Load<Texture2D>("Blast (57)");
+            DrawingBoard.Blast[57] = Content.Load<Texture2D>("Blast (58)");
+            DrawingBoard.Blast[58] = Content.Load<Texture2D>("Blast (59)");
+            DrawingBoard.Blast[59] = Content.Load<Texture2D>("Blast (60)");
+            DrawingBoard.Blast[60] = Content.Load<Texture2D>("Blast (61)");
+            DrawingBoard.Blast[61] = Content.Load<Texture2D>("Blast (62)");
+            DrawingBoard.Blast[62] = Content.Load<Texture2D>("Blast (63)");
+            DrawingBoard.Blast[63] = Content.Load<Texture2D>("Blast (64)");
+            DrawingBoard.Blast[64] = Content.Load<Texture2D>("Blast (65)");
+            DrawingBoard.Blast[65] = Content.Load<Texture2D>("Blast (66)");
+            DrawingBoard.Blast[66] = Content.Load<Texture2D>("Blast (67)");
+            DrawingBoard.Blast[67] = Content.Load<Texture2D>("Blast (68)");
+            DrawingBoard.Blast[68] = Content.Load<Texture2D>("Blast (69)");
+            DrawingBoard.Blast[69] = Content.Load<Texture2D>("Blast (70)");
+            DrawingBoard.Blast[70] = Content.Load<Texture2D>("Blast (71)");
+            DrawingBoard.Blast[71] = Content.Load<Texture2D>("Blast (72)");
+            DrawingBoard.Blast[72] = Content.Load<Texture2D>("Blast (73)");
+            DrawingBoard.Blast[73] = Content.Load<Texture2D>("Blast (74)");
+
             DrawingBoard.Enemies[0, 1, 0] = Content.Load<Texture2D>("Bug1");
             DrawingBoard.Enemies[0, 2, 0] = Content.Load<Texture2D>("Bug2");
             DrawingBoard.Enemies[0, 3, 0] = Content.Load<Texture2D>("Bug3");
@@ -359,9 +437,9 @@ namespace Game1
                         Control.MovementTouch(); }}
 
                 newMouseState = Mouse.GetState();
-                if (oldMouseState.LeftButton == ButtonState.Released && newMouseState.LeftButton == ButtonState.Pressed) {
+                if (/*oldMouseState.LeftButton == ButtonState.Released && */newMouseState.LeftButton == ButtonState.Pressed) {
                     Control.Click(); }
-                if (oldMouseState.RightButton == ButtonState.Released && newMouseState.RightButton == ButtonState.Pressed) {
+                if (/*oldMouseState.RightButton == ButtonState.Released && */newMouseState.RightButton == ButtonState.Pressed) {
                     Control.ClickRight(); }
                 oldMouseState = newMouseState;
 

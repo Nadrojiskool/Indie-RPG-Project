@@ -189,6 +189,8 @@ namespace Game1
                 spriteBatch.DrawString(font, $"{ Player.LocalEnemies[0].OriginOffset[1] }", new Vector2(100, 200), Color.DarkViolet);
             }
 
+            spriteBatch.DrawString(font, $"Total Enemies: { Player.Enemies.Count() }", new Vector2(50, 900), Color.Red);
+            spriteBatch.DrawString(font, $"Total Active Enemies: { Player.LocalEnemies.Count() }", new Vector2(50, 950), Color.Red);
             spriteBatch.DrawString(font, $"{ Player.player.Stats[1] }", new Vector2(50, 1000), Color.Red);
             spriteBatch.DrawString(font, $"{ Player.player.Stats[2] }", new Vector2(125, 1000), Color.DarkViolet);
             spriteBatch.DrawString(font, $"{ Player.player.Stats[3] }", new Vector2(200, 1000), Color.DarkViolet);
@@ -270,10 +272,12 @@ namespace Game1
             {
                 foreach (Unit unit in localWorkers)
                 {
-                    DrawingBoard.DrawObjects(player, new Vector2(
-                        Check.Range((Player.player.DrawX - ((Player.player.X - unit.X) * (int)(50 * tileScale))), (int)(50 * tileScale), (int)(1920 - 50 * tileScale)),
-                        Check.Range((Player.player.DrawY - ((Player.player.Y - unit.Y) * (int)(50 * tileScale))), (int)(50 * tileScale), (int)(1080 - 50 * tileScale))), 
-                        tileScale, unit.Rotation, new Rectangle(0, 0, 50, 50));
+                    int modifiedTileScale = (int)(50 * tileScale);
+                    int x = Check.Range((Player.player.DrawX - ((Player.player.X - unit.X) * modifiedTileScale)), modifiedTileScale, (int)(1920 - modifiedTileScale));
+                    int y = Check.Range((Player.player.DrawY - ((Player.player.Y - unit.Y) * modifiedTileScale)), modifiedTileScale, (int)(1080 - modifiedTileScale));
+                    DrawingBoard.DrawObjects(player, new Vector2(x, y), tileScale, unit.Rotation, new Rectangle(0, 0, 50, 50));
+                    DrawingBoard.DrawObjects(DrawingBoard.HPBar[0], new Vector2(x, y + modifiedTileScale), tileScale, 0, new Rectangle(0, 0, 50, 10));
+                    DrawingBoard.DrawObjects(DrawingBoard.HPBar[1], new Vector2(x, y + modifiedTileScale + (int)(2 * tileScale)), tileScale, 0, new Rectangle(0, 0, 50, 6));
                 }
             }
 
@@ -281,10 +285,38 @@ namespace Game1
             {
                 foreach (Unit unit in localEnemies)
                 {
-                    DrawingBoard.DrawObjects(DrawingBoard.Enemies[0, unit.LastMove, 0], new Vector2(
-                        Check.Range((Player.player.DrawX - ((Player.player.X - unit.X) * (int)(50 * tileScale))), (int)(50 * tileScale), (int)(1920 - 50 * tileScale)),
-                        Check.Range((Player.player.DrawY - ((Player.player.Y - unit.Y) * (int)(50 * tileScale))), (int)(50 * tileScale), (int)(1080 - 50 * tileScale))),
-                        tileScale, 0, new Rectangle(0, 0, 50, 50));
+                    int modifiedTileScale = (int)(50 * tileScale);
+                    int x = Check.Range((Player.player.DrawX - ((Player.player.X - unit.X) * modifiedTileScale)), modifiedTileScale, (int)(1920 - modifiedTileScale));
+                    int y = Check.Range((Player.player.DrawY - ((Player.player.Y - unit.Y) * modifiedTileScale)), modifiedTileScale, (int)(1080 - modifiedTileScale));
+                    DrawingBoard.DrawObjects(DrawingBoard.Enemies[0, unit.LastMove, 0], new Vector2(x, y), tileScale, 0, new Rectangle(0, 0, 50, 50));
+                    DrawingBoard.DrawObjects(DrawingBoard.HPBar[0], new Vector2(x, y + modifiedTileScale), tileScale, 0, new Rectangle(0, 0, 50, 10));
+                    int maxHP = 10 * (2 + unit.Stats[11] + unit.Stats[12]);
+                    spriteBatch.Draw(DrawingBoard.HPBar[1], 
+                            new Rectangle(x - (modifiedTileScale / 2), y - (modifiedTileScale / 2) + modifiedTileScale, 
+                            (int)((48 * ((double)unit.Stats[1] / maxHP)) * tileScale), (int)(6 * tileScale)), 
+                        Color.White);
+                }
+            }
+
+            if (Player.Animations.Count > 0)
+            {
+                int count = 0;
+                for (int i = 0; i < Player.Animations.Count(); i++)
+                {
+                    int modifiedTileScale = (int)(50 * tileScale);
+                    Animation animation = Player.Animations[i - count];
+                    int x = (Player.player.DrawX - ((Player.player.X - animation.X) * modifiedTileScale));
+                    int y = (Player.player.DrawY - ((Player.player.Y - animation.Y) * modifiedTileScale));
+                    spriteBatch.Draw(DrawingBoard.Blast[animation.Frame], new Rectangle(x - (modifiedTileScale / 2), y - (modifiedTileScale / 2), 5 * modifiedTileScale, 5 * modifiedTileScale), Color.White);
+                    if (animation.Frame == 73)
+                    {
+                        Player.Animations.RemoveAt(i - count);
+                        count += 1;
+                    }
+                    else
+                    {
+                        animation.Frame += 1;
+                    }
                 }
             }
         }

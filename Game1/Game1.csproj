@@ -72,6 +72,8 @@
     <StartupObject />
   </PropertyGroup>
   <ItemGroup>
+    <Compile Include="Animation.cs" />
+    <Compile Include="Boss.cs" />
     <Compile Include="Build.cs" />
     <Compile Include="Check.cs" />
     <Compile Include="Archive.cs" />
