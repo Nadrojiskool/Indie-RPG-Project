@@ -3,16 +3,18 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-using Microsoft.Xna.Framework;
-using Microsoft.Xna.Framework.Graphics;
-using Microsoft.Xna.Framework.Input;
-using Microsoft.Xna.Framework.Input.Touch;
 
 namespace Game1
 {
-    public class Spawn
+    public static class Spawn
     {
-        public static void SpawnPlayer()
+
+        public static void Resident(Unit unit)
+        {
+
+        }
+
+        public static void Enemy()
         {
 
         }
