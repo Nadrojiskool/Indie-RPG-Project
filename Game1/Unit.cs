@@ -9,6 +9,13 @@ namespace Game1
 {
     public class Unit : Object
     {
+        // Notes:
+        // - Need to establish unit hierarchies so that dumber units can spawn in larger numbers
+        // > This means dumber units won't path as far, and are limited to a small number of attacks
+        // > Lowest on the hierachy are creatures which have no pathing and can only cast single tile attacks at most
+        // >> The next tier may have small tile range attacks and limited pathing
+        // >>> The next tier may have advanced pathing and dependent hierachies (including unit-independent animation and logic threads)
+
         /// <summary> Future Unit Action Array Index
         /// 0: Idle
         /// 1: Pathing
