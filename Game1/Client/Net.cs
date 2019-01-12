@@ -13,7 +13,6 @@ using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
 using Microsoft.Xna.Framework.Input.Touch;
-using System.Net.PeerToPeer;
 
 namespace Game1.Client
 {
@@ -75,6 +74,7 @@ namespace Game1.Client
                         }
                         Console.WriteLine($"Byte List Full!");
                         MainMenuOpen = false;
+                        ScanTiles.Start();
 
                         Job j = new Job(job.ID, 2, job.Employee, job.Employer);
                         UserList[0].JobList.Add(j);

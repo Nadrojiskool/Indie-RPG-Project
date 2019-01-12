@@ -33,5 +33,21 @@ namespace Game1
             value = Max(value, max);
             return (value);
         }
+        // Expected one iteration on loop max - min to avoid while statement
+        public static int LoopInt(int num, int loopMin, int loopMax)
+        {
+            int loopSize = loopMax - (loopMin - 1);
+
+            if (num > loopMax)
+            {
+                num -= loopSize;
+            }
+            else if (num < loopMin)
+            {
+                num += loopSize;
+            }
+
+            return (num);
+        }
     }
 }

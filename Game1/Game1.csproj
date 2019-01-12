@@ -72,11 +72,23 @@
     <StartupObject />
   </PropertyGroup>
   <ItemGroup>
+    <Compile Include="Animation.cs" />
+    <Compile Include="Boss.cs" />
+    <Compile Include="Build.cs" />
     <Compile Include="Check.cs" />
     <Compile Include="Archive.cs" />
     <Compile Include="Client\Job.cs" />
     <Compile Include="Client\Net.cs" />
     <Compile Include="Client\User.cs" />
+    <Compile Include="Contract\Title.cs" />
+    <Compile Include="Control.cs" />
+    <Compile Include="Data.cs" />
+    <Compile Include="Contract\Asset.cs" />
+    <Compile Include="Region\County.cs" />
+    <Compile Include="Region\Duchy.cs" />
+    <Compile Include="Region\Kingdom.cs" />
+    <Compile Include="Region\Manor.cs" />
+    <Compile Include="Set.cs" />
     <Compile Include="Show.cs" />
     <Compile Include="DrawingBoard.cs" />
     <Compile Include="Game1.cs" />
@@ -86,6 +98,7 @@
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Land.cs" />
+    <Compile Include="Spawn.cs" />
     <Compile Include="Unit.cs" />
   </ItemGroup>
   <ItemGroup>

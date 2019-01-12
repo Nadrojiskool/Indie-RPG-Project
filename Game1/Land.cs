@@ -16,7 +16,20 @@ namespace Game1
         // Base Tile Natural Biome            //
         // Modifcations to Tile (Draw-Over)   //
         ////////////////////////////////////////
+        ////////////////////////////////////////
 
+        /*  Advanced Features:
+         *  Tiles store a null array[2] (Domain) which is initialized if an Asset is created
+         *  It stores an sbyte for X & Y pointing to asset center
+         *  This has limitations of run-time variability, lack of real-time sync, and limit of 256x256 tile assets
+         *  But is essentially able to un-pack assets for client use with minimal network impact
+         *  This keeps the route of communication clear and variable allowing center indexing
+         *  As well as [de]centralized logic storage with hierarchical access allowing proper checkpoints during run-time
+         *  
+         *  Note: Land Leasing - Asset Owner or Regional Lord will redirect you to Asset Leaser
+         *  
+         *  Note: During map drawing, each tile can be calculated by region offset to see if it matches existing Region and then draw color of Region
+         */
 
         /// 
         /// VARIABLES THAT NEED REINITIALIZED ON LOAD:
@@ -29,17 +42,29 @@ namespace Game1
         /// .depth[0]
         /// 
 
+        /* Target Map Size (5ft Tiles)
+         * 26,295,456 (Earth) / 256 = 102717
+         * 256 * 256 = 65536 * 256 = 16,777,216 (erf) or 33,554,432 (ERF) with Negative Coordinates
+         * 16,777,216 ^ 2 = 281,474,976,710,656
+         * 767.7254TB Per Layer (based on 2.86mb 1000x1000 tileMap)
+         */
+
+
 
         //public int X;
         //public int Y;
         //public int land { get; set; }
         //public int mod { get; set; }
+        //public float? rotate = null;
         public int frame = 5;
         public int biome = 0;
         public int land = 0;
-        public float? rotate = null;
         public bool IsActive = false;
-        public bool IsOccupied = false;
+        //public bool IsOccupied = false;
+        public DateTime LastUpdate = new DateTime();
+        public sbyte[] Manor { get; set; }
+        public Unit Resident { get; set; }
+        public bool IsResident { get; set; }
 
         public Land()//int x, int y, int m)
         {
@@ -51,5 +76,9 @@ namespace Game1
             //rotate = (float?)r;
         }
 
+        public void SetManor(sbyte x, sbyte y)
+        {
+            Manor = new sbyte[2] { x, y };
+        }
     }
 }
