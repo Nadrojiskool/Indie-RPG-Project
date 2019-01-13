@@ -165,10 +165,11 @@ namespace Game1
             Player.player.DrawX = (int)((20 * displayWidth / 1920) / tileScale) * (int)(50 * tileScale) + (int)(25 * tileScale);
             Player.player.DrawY = (int)((10 * displayHeight / 1080) / tileScale) * (int)(50 * tileScale) + (int)(25 * tileScale);
             Player.player.Stats = Generate.Worker();
+            Player.player.Stats[11] = 10;
+            Player.player.Stats[12] = 10;
+            Player.player.Stats[13] = 10;
+            Player.player.Stats[14] = 1;
             Set.CoreStats(Player.player);
-            testHP = Player.player.Stats[1];
-            testVit = Player.player.Stats[11];
-            testPhy = Player.player.Stats[12];
 
             Show.Initialize();
 
@@ -371,6 +372,22 @@ namespace Game1
             DrawingBoard.Blast[72] = Content.Load<Texture2D>("Blast (73)");
             DrawingBoard.Blast[73] = Content.Load<Texture2D>("Blast (74)");
 
+            DrawingBoard.Player[0, 0] = player;
+            DrawingBoard.Player[0, 1] = player;
+            DrawingBoard.Player[0, 2] = player;
+            DrawingBoard.Player[1, 0] = Content.Load<Texture2D>("Player1 (1)");
+            DrawingBoard.Player[1, 1] = Content.Load<Texture2D>("Player1 (2)");
+            DrawingBoard.Player[1, 2] = Content.Load<Texture2D>("Player1 (3)");
+            DrawingBoard.Player[2, 0] = Content.Load<Texture2D>("Player2 (1)");
+            DrawingBoard.Player[2, 1] = Content.Load<Texture2D>("Player2 (2)");
+            DrawingBoard.Player[2, 2] = Content.Load<Texture2D>("Player2 (3)");
+            DrawingBoard.Player[3, 0] = Content.Load<Texture2D>("Player3 (1)");
+            DrawingBoard.Player[3, 1] = Content.Load<Texture2D>("Player3 (2)");
+            DrawingBoard.Player[3, 2] = Content.Load<Texture2D>("Player3 (3)");
+            DrawingBoard.Player[4, 0] = Content.Load<Texture2D>("Player4 (1)");
+            DrawingBoard.Player[4, 1] = Content.Load<Texture2D>("Player4 (2)");
+            DrawingBoard.Player[4, 2] = Content.Load<Texture2D>("Player4 (3)");
+
             DrawingBoard.Enemies[0, 1, 0] = Content.Load<Texture2D>("Bug1");
             DrawingBoard.Enemies[0, 2, 0] = Content.Load<Texture2D>("Bug2");
             DrawingBoard.Enemies[0, 3, 0] = Content.Load<Texture2D>("Bug3");
@@ -439,7 +456,7 @@ namespace Game1
                 newMouseState = Mouse.GetState();
                 if (/*oldMouseState.LeftButton == ButtonState.Released && */newMouseState.LeftButton == ButtonState.Pressed) {
                     Control.Click(); }
-                if (/*oldMouseState.RightButton == ButtonState.Released && */newMouseState.RightButton == ButtonState.Pressed) {
+                if (oldMouseState.RightButton == ButtonState.Released && newMouseState.RightButton == ButtonState.Pressed) {
                     Control.ClickRight(); }
                 oldMouseState = newMouseState;
 

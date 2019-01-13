@@ -118,8 +118,8 @@ namespace Game1
                 Manipulator(spellX, spellY, 5, 5, 5, false);*/
             }
 
-            //if (MainMenuOpen) {
-            //    var t = Task.Run(() => Generate.All()); }
+            if (MainMenuOpen) {
+                var t = Task.Run(() => Generate.All()); }
 
             if (invOpen) {
                 /*invOpen = false;*/ }
@@ -169,7 +169,6 @@ namespace Game1
                     }}}
 
             else if (oldState.IsKeyUp(Keys.I) && newState.IsKeyDown(Keys.I)) {
-                var t = Task.Run(() => Generate.All());
                 if (invOpen == true) {
                     invOpen = false; }
                 else {
@@ -676,6 +675,13 @@ namespace Game1
 
                 Land land = landArray[unit.X + MovementXY[unit.LastMove, 0], unit.Y + MovementXY[unit.LastMove, 1]];
 
+                // Changing Map Tiles can cause units to get stuck in a loop where they cannot reach their destination
+                // A timeout of 20 seconds or longer should be implemented to allow for large object pathing before resetting LeftOrRight to 0
+                // Additionally, a single array of x and y can store the last x & y of the unit at direction 1 * (unit.LeftOrRight / Math.Abs(unit.LeftOrRight))
+                // Then store a tracker which stores absolute spin, which can track absolute right of 4 and then loop to back to 1 and check against last LastMove(1)
+                // This protects further against false trigger loops where there may be a left before returning to spin of 1
+                // Furthermore, some implementation of absolute spin for further pathing cutt-off points may be beneficial
+
                 if (unit.ActionID == 3 && land.land > 2 && land.land < 100)
                 {
                     if (!land.IsActive)
@@ -1007,7 +1013,6 @@ namespace Game1
             {
                 if (Math.Abs(Player.player.X - unit.X) <= 1 && Math.Abs(Player.player.Y - unit.Y) <= 1 && !unit.ActionTime.IsRunning)
                 {
-                    Player.player.Stats[3] = 0;
                     unit.Attack(Player.player);
                     unit.ActionTime.Start();
                     unit.ActionDuration = 2000 - (10 * unit.Stats[13]);

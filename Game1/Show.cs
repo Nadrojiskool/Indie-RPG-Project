@@ -16,9 +16,13 @@ using Microsoft.Xna.Framework.Input.Touch;
 
 namespace Game1
 {
+    // Thought: Each Tile is 5ft or 60in which means a single byte TileOffset could store a tile xy +- distance in half inches. 
+    // Example: An sbyte can hold +-128 which would mean 120 half inch segments in either direction from the tile draw position with an additional 16 overflow digits.
+
     /*
-     * Final Tile Size to be 60 x 60 for PC.
-     * This implies 32 x 18 (16:9) Tiles drawn to a 1080p screen, minimizing resize calculations
+     * Final Default Tile Size to be 60 x 60 for PC.
+     * This implies 32 x 18 (16:9) Tiles drawn to a 1080p screen, minimizing resize calculations.
+     * With each tile representing 5ft (60in), that means each pixel also represents 1 inch.
      * 
      * Release Version will include ability to adjust Tile Scale to pre-set adjustments
      * Which is likely best optimized by resyncing library to pre-compressed scale sizes
@@ -58,10 +62,9 @@ namespace Game1
         {
             Tiles();
 
-            DrawingBoard.DrawObjects(player, new Vector2(
-                    (Player.player.DrawX),
-                    (Player.player.DrawY)),
-                tileScale, Player.player.Rotation, new Rectangle(0, 0, 50, 50));
+            DrawingBoard.DrawObjects(DrawingBoard.Player[Player.player.LastMove, 0], 
+                new Vector2((Player.player.DrawX), (Player.player.DrawY)),
+                tileScale, 0, new Rectangle(0, 0, 50, 50));
             LocalUnits(Player.LocalWorkers, Player.LocalEnemies);
 
             if (invOpen == true) {
@@ -194,7 +197,7 @@ namespace Game1
             spriteBatch.DrawString(font, $"{ Player.player.Stats[1] }", new Vector2(50, 1000), Color.Red);
             spriteBatch.DrawString(font, $"{ Player.player.Stats[2] }", new Vector2(125, 1000), Color.DarkViolet);
             spriteBatch.DrawString(font, $"{ Player.player.Stats[3] }", new Vector2(200, 1000), Color.DarkViolet);
-            spriteBatch.DrawString(font, $"{ testHP }//{ testVit }//{ testPhy }", new Vector2(300, 1000), Color.DarkViolet);
+            //spriteBatch.DrawString(font, $"{ testHP }//{ testVit }//{ testPhy }", new Vector2(300, 1000), Color.DarkViolet);
         }
 
         static void Inventory()

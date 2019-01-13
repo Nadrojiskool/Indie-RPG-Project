@@ -19,6 +19,7 @@ namespace Game1
         public static Texture2D[,,] Enemies = new Texture2D[1, 5, 1]; // Enemy ID, Enemy Direction (Frame), Enemy Frame
         public static Texture2D[] HPBar = new Texture2D[2];
         public static Texture2D[] Blast = new Texture2D[74];
+        public static Texture2D[,] Player = new Texture2D[5, 3];
 
         public static void DrawObjects(Texture2D spr, Vector2 location, double scale, float rotate, Rectangle sourceRectangle)
         {
