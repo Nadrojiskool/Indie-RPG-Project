@@ -52,16 +52,15 @@ namespace Game1
          * 101: Gold
          * 102: Workers
          */
-        public int gold { get; set; }
         // I'm concerned with the way I implemented these lists
         // I would also like them to just be pointers to the unit at their residence to prevent additional syncing
-        public static List<Animation> Animations = new List<Animation>();
         public static List<Unit> Workers = new List<Unit>();
         public static List<Unit> Enemies = new List<Unit>();
         public static List<Unit> LocalWorkers = new List<Unit>();
         public static List<Unit> LocalEnemies = new List<Unit>();
-        public static List<Asset> Assets = new List<Asset>();
-        public int xp { get; set; }
+        //public static List<Asset> Assets = new List<Asset>();
+        public static List<Animation> Animations = new List<Animation>();
+        public static List<Item> ItemIndex = new List<Item>();
 
         public Player (int x, int y, int[] array) : base(x, y, 0, array)
         {

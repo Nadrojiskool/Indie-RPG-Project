@@ -505,7 +505,7 @@ namespace Game1
                         // currently Residents are expected to be an enemy
                         if (land.IsResident)
                         {
-                            // who will emerge from his Residence if player is closer than 20 tiles
+                            // who will emerge from their Residence and attack if player is closer than 20 tiles
                             if (Math.Abs(Player.player.X - x2) < 20 && Math.Abs(Player.player.Y - y2) < 20 && land.Resident.ActionID == 9)
                             {
                                 Player.LocalEnemies.Add(land.Resident);
