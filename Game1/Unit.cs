@@ -134,7 +134,7 @@ namespace Game1
         /// >> >> Pentlandite(NiS2FeS)
         /// >> 23: Bismuth (1753)
         /// >> 25: Iron 
-        /// >> >> Taconite 
+        /// >> >> Taconite(100% Delicious)
         /// >> >> Magnetite(Fe3O4, 72.4% Fe), 
         /// >> >> Hematite(Fe2O3, 69.9% Fe), 
         /// >> >> Goethite(FeO(OH), 62.9% Fe), 
@@ -154,6 +154,7 @@ namespace Game1
         /// >> >> Molybdenite(MoS2)
         /// >> >> Wulfenite(PbMoO4)
         /// >> >> Powellite(CaMoO4)
+        /// >> 34: Quartz
         /// >> 35: Carbon (Coal)
         /// >> 36: Tellurium (1782)
         /// >> >> Sylvanite(AgAuTe4)
@@ -183,7 +184,8 @@ namespace Game1
         /// >> 55: Titanium (1791:1910)
         /// >> 58: Pyrite (FeS2)
         /// >> 60: Obsidian
-        /// >> 62: Aelinite
+        /// >> 62: Aelium
+        /// >> Aelinite
         /// >> 65: Vanadium (1801:1867)
         /// >> 67: Niobium (1734:1864)
         /// >> >> Columbite((Fe, Mn, Mg)(Nb, Ta)2O6)
@@ -194,9 +196,10 @@ namespace Game1
         /// >> >> Euxenite ((Y, Ca, Er, La, Ce, U, Th)(Nb, Ta, Ti)2O6)
         /// >> 70: Orichalcum
         /// >> >> Orichalite
-        /// >> 75: Quartz
+        /// >> 75: Diamond
         /// >> 78: Dilithium
-        /// >> 80: Sauronite
+        /// >> 80: Sauronic (or Essence of Sauron)
+        /// >> Sauronite
         /// >> 82: Indium (1863)
         /// >> 83: Germanium (1886)
         /// >> >> Argyrodite(Ag8GeS6)
@@ -206,19 +209,21 @@ namespace Game1
         /// >> >> Thorianite (ThO2)
         /// >> >> Monazite((Ce, La, Th, Nd, Y)PO4)
         /// >> 88: Plutonium
-        /// >> 90: Adamantite
+        /// >> 90: Adamantium
+        /// >> Adamantite
         /// >> 92: Trillium
         /// >> 93: Lapiz Lazuli
         /// >> >> Lazurite ((Na,Ca)8[(S,Cl,SO4,OH)2|(Al6Si6O24)])
         /// >> 95: Imperial Gold
-        /// >> 97: Scarlite
+        /// >> 97: Scarlithium
+        /// >> Scarlite
         /// >> Scarletite
-        /// >> 98: Lunite
-        /// >> 99: Diamond
-        /// >> >> Moonstone ((Na,K)AlSi3O8)
-        /// >> 1000 (Expertise 10): Polydenum (A metallic, radioactive, explosive element found in some planetary cores that is mined and refined)
+        /// >> 98: Moonstone
+        /// >> >> Lunite ((Na,K)AlSi3O8)
+        /// >> 99: 
+        /// >> 1000 (Expertise 10): Starlite
+        /// >> >> Plumbignium
         /// /// /// /// /// /// /// ///
-        /// >> >> >> to become the main fuel for starship sub-light engines in the OtherSpace multiverse, as well as a potent explosive.
         /// >> Tin: Small quantities of tin are recovered from complex sulfides such as Stannite, Cylindrite, Franckeite, Canfieldite, and Teallite. 
         /// >> >> >> Minerals with tin are almost always associated with granite rock, usually at a level of 1% tin oxide content.
         /// /// /// /// /// /// /// ///
