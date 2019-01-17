@@ -372,5 +372,19 @@ namespace Game1
                 offset = Check.LoopInt(offset + 1, 0, 1);
             }
         }
+
+        public static void Bonfire(int size, int x, int y)
+        {
+            int offset = 0;
+            for (int y2 = 0; y2 < 1 + size; y2++)
+            {
+                for (int x2 = 0; x2 < 1 + (2 * size); x2++)
+                {
+                    landArray[x + (2 * x2) + (2 * offset), y + (2 * y2)].land = 100;
+                    landArray[x + (2 * x2) + (2 * offset), y + (2 * y2)].frame = 5;
+                }
+                offset = Check.LoopInt(offset + 1, 0, 1);
+            }
+        }
     }
 }

@@ -46,7 +46,7 @@ namespace Game1
             Objects[004] = new Object("Deer", 50, 50, 1, 1);
             Objects[005] = new Object("Tree", 100, 100, 1, 1);
             Objects[006] = new Object("Rock", 50, 50, 1, 1);
-            Objects[100] = new Object("Obelisk", 50, 100, 1, 1);
+            Objects[100] = new Object("Campfire", 50, 50, 1, 1);
             Objects[101] = new Object("Wall Wood Horizontal", 50, 100, 1, 1);
             Objects[102] = new Object("Wall Wood Vertical", 50, 100, 1, 1);
             Objects[103] = new Object("Wall Wood Corner Left", 50, 100, 1, 1);
@@ -222,7 +222,7 @@ namespace Game1
                 DrawingBoard.DrawObjects(idCard, new Vector2(50, 150), 1, 0, new Rectangle(0, 0, 1200, 732));
                 spriteBatch.DrawString(font, $"Experience: {Player.player.Stats[10]}", new Vector2(50, 450), Color.DarkViolet);
                 spriteBatch.DrawString(font, $"Workers: {Player.Workers.Count} / {Player.player.resources[10]}", new Vector2(50, 500), Color.Blue);
-                spriteBatch.DrawString(font, $"Gold: {Player.player.gold}", new Vector2(50, 550), Color.DarkGoldenrod);
+                //spriteBatch.DrawString(font, $"Gold: {Player.player.gold}", new Vector2(50, 550), Color.DarkGoldenrod);
                 spriteBatch.DrawString(font, $"Water: {Player.player.resources[2]}", new Vector2(50, 600), Color.DarkBlue);
                 spriteBatch.DrawString(font, $"Vines: {Player.player.resources[3]}", new Vector2(50, 650), Color.ForestGreen);
                 spriteBatch.DrawString(font, $"Meat: {Player.player.resources[4]}", new Vector2(50, 700), Color.Crimson);
@@ -251,8 +251,10 @@ namespace Game1
             DrawingBoard.DrawObjects(WallWoodBackRight, new Vector2(1000, 650), 1, 0, new Rectangle(0, 0, 50, 100));
             DrawingBoard.DrawObjects(mine, new Vector2(1050, 650), 1, 0, new Rectangle(0, 0, 100, 100));
             DrawingBoard.DrawObjects(cabin1, new Vector2(1150, 650), 1, 0, new Rectangle(0, 0, 100, 100));
-            spriteBatch.DrawString(font, $"Spawn Camp", new Vector2(600, 980), Color.DarkViolet);
-            spriteBatch.DrawString(font, $"Spawn Village", new Vector2(900, 980), Color.DarkViolet);
+            DrawingBoard.DrawObjects(DrawingBoard.Tiles[100, 1, 5], new Vector2(1275, 650), 1, 0, new Rectangle(0, 0, 50, 50));
+            spriteBatch.DrawString(font, $"Spawn Camp", new Vector2(500, 980), Color.DarkViolet);
+            spriteBatch.DrawString(font, $"Spawn Village", new Vector2(700, 980), Color.DarkViolet);
+            spriteBatch.DrawString(font, $"Spawn Bonfire", new Vector2(900, 980), Color.DarkViolet);
 
         }
 

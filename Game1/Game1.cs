@@ -117,8 +117,10 @@ namespace Game1
         public static Rectangle buildRect7 = new Rectangle(1000, 650, 50, 100);
         public static Rectangle buildRect8 = new Rectangle(1050, 650, 100, 100);
         public static Rectangle buildRect9 = new Rectangle(1150, 650, 100, 100);
-        public static Rectangle buildRect10 = new Rectangle(600, 980, 200, 80);
-        public static Rectangle buildRect11 = new Rectangle(900, 980, 200, 80);
+        public static Rectangle buildRect10 = new Rectangle(500, 980, 200, 80);
+        public static Rectangle buildRect11 = new Rectangle(700, 980, 200, 80);
+        public static Rectangle buildRect12 = new Rectangle(1250, 600, 50, 50);
+        public static Rectangle buildRect13 = new Rectangle(900, 980, 200, 80);
         #endregion
 
         public Rectangle[,] TileMap = new Rectangle[(int)(42 / tileScale), (int)(24 / tileScale)];
@@ -275,6 +277,12 @@ namespace Game1
             DrawingBoard.Tiles[5, 2, 5] = snowTree;
             DrawingBoard.Tiles[6, 1, 5] = nodeStone;
             DrawingBoard.Tiles[6, 2, 5] = nodeStone;
+            DrawingBoard.Tiles[100, 1, 4] = Content.Load<Texture2D>("Campfire 1");
+            DrawingBoard.Tiles[100, 2, 4] = Content.Load<Texture2D>("Campfire 1");
+            DrawingBoard.Tiles[100, 1, 5] = Content.Load<Texture2D>("Campfire 2");
+            DrawingBoard.Tiles[100, 2, 5] = Content.Load<Texture2D>("Campfire 2");
+            DrawingBoard.Tiles[100, 1, 6] = Content.Load<Texture2D>("Campfire 3");
+            DrawingBoard.Tiles[100, 2, 6] = Content.Load<Texture2D>("Campfire 3");
             DrawingBoard.Tiles[101, 1, 5] = WallWoodHorizontal;
             DrawingBoard.Tiles[101, 2, 5] = WallWoodHorizontal;
             DrawingBoard.Tiles[102, 1, 5] = WallWoodVertical;
@@ -420,8 +428,10 @@ namespace Game1
                 Exit();
 
             // TODO: Add your update logic here
-            
-            if (this.IsActive != gameActive)
+
+            graphics.IsFullScreen = false;
+            graphics.ApplyChanges();
+            /*if (this.IsActive != gameActive)
             {
                 if (this.IsActive == false) {
                     graphics.IsFullScreen = false;
@@ -432,7 +442,7 @@ namespace Game1
                     graphics.IsFullScreen = true;
                     graphics.ApplyChanges();
                     gameActive = true; }
-            }
+            }*/
 
             ////////////////////////////////////////////
             // Check for Pressed Keys to Move 1 Space //
@@ -514,6 +524,10 @@ namespace Game1
                                 Player.LocalEnemies[Player.LocalEnemies.Count - 1].ActionID = 4;
                                 // landArray[x2, y2].Resident.ActionID = 0; // WHEN ENABLED ALSO CHANGED VALUE IN LOCALENEMIES, ARE VARIABLES LINKED?? //
                             }
+                        }
+                        else if (land.land == 100)
+                        {
+                            land.frame = Check.LoopInt(land.frame + 1, 4, 6);
                         }
                         else if (land.land > 199)
                         {

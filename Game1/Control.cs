@@ -87,6 +87,17 @@ namespace Game1
                     //Player.player.resources[6] = Player.player.resources[6] - 200;
                     Generate.Village(100, Player.player.X + MovementXY[Player.player.LastMove, 0], Player.player.Y + MovementXY[Player.player.LastMove, 1]);
                 }
+                else if (buildRect12.Contains(newMouseState.X, newMouseState.Y) && Player.player.resources[5] >= 0)
+                {
+                    //Player.player.resources[6] = Player.player.resources[6] - 200;
+                    landArray[Player.player.X + MovementXY[Player.player.LastMove, 0], Player.player.Y + MovementXY[Player.player.LastMove, 1]].land = 100;
+                    landArray[Player.player.X + MovementXY[Player.player.LastMove, 0], Player.player.Y + MovementXY[Player.player.LastMove, 1]].frame = 5;
+                }
+                else if (buildRect13.Contains(newMouseState.X, newMouseState.Y) && Player.player.resources[5] >= 0)
+                {
+                    //Player.player.resources[6] = Player.player.resources[6] - 200;
+                    Generate.Bonfire(100, Player.player.X + MovementXY[Player.player.LastMove, 0], Player.player.Y + MovementXY[Player.player.LastMove, 1]);
+                }
                 else {
                     cantBuild.Start(); }
 
@@ -405,6 +416,7 @@ namespace Game1
                     }
                 }
                 landArray[a, b].land = 0;
+                landArray[a, b].frame = 5;
             }
         }
 

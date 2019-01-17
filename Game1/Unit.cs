@@ -118,62 +118,63 @@ namespace Game1
         /// >> >> Malachite (CuCO3•Cu(OH)2)
         /// >> >> Azurite (2CuCO3·Cu(OH)2)
         /// >> >> Cuprite (Cu2O)
-        /// >> >> Chrysocolla (Cu,Al)2H2Si2O5(OH)4·n(H2O)
+        /// >> >> Chrysocolla ((Cu,Al)2H2Si2O5(OH)4·n(H2O))
         /// >> >> Tennantite (Cu12As4S13)
         /// >> >> Dioptase (CuSiO2(OH)2)
         /// >> 15: Tin
-        /// >> >> Cassiterite(SnO2)
+        /// >> >> Cassiterite (SnO2)
         /// >> 18: Lead 
         /// >> >> Galena(PbS) >> Often associated with the minerals sphalerite, calcite and fluorite
         /// >> 19: Antimony
-        /// >> >> Stibnite(Sb2S3)
-        /// >> >> Valentinite(Sb2O3)
+        /// >> >> Stibnite (Sb2S3)
+        /// >> >> Valentinite (Sb2O3)
         /// >> 20: Silver
         /// >> 22: Nickel (1751)
-        /// >> >> Niccolite(NiAs)
-        /// >> >> Pentlandite(NiS2FeS)
+        /// >> >> Niccolite (NiAs)
+        /// >> >> Pentlandite (NiS2FeS)
         /// >> 23: Bismuth (1753)
         /// >> 25: Iron 
-        /// >> >> Taconite(100% Delicious)
-        /// >> >> Magnetite(Fe3O4, 72.4% Fe), 
-        /// >> >> Hematite(Fe2O3, 69.9% Fe), 
-        /// >> >> Goethite(FeO(OH), 62.9% Fe), 
-        /// >> >> Limonite(FeO(OH)·n(H2O), 55% Fe)
-        /// >> >> Siderite(FeCO3, 48.2% Fe)]
+        /// >> >> Meteoric Iron
+        /// >> >> Taconite (100% Delicious)
+        /// >> >> Magnetite (Fe3O4, 72.4% Fe)
+        /// >> >> Hematite (Fe2O3, 69.9% Fe)
+        /// >> >> Goethite (FeO(OH), 62.9% Fe)
+        /// >> >> Limonite (FeO(OH)·n(H2O), 55% Fe)
+        /// >> >> Siderite (FeCO3, 48.2% Fe)
         /// >> 26: Calcite (CaCO3)
         /// >> 27: Arsenic [Free]
-        /// >> >> Arsenopyrite(FeAsS)
-        /// >> >> Realgar(AsS)
-        /// >> >> Orpiment(As2S3)
+        /// >> >> Arsenopyrite (FeAsS)
+        /// >> >> Realgar (AsS)
+        /// >> >> Orpiment (As2S3)
         /// >> 28: Zinc (1400s:1746)
-        /// >> >> Calamine(ZnCO3)
+        /// >> >> Calamine (ZnCO3)
         /// >> 30: Gold [Free]
         /// >> 32: Manganese (1774)
-        /// >> >> Pyrolusite(MnO2)
+        /// >> >> Pyrolusite (MnO2)
         /// >> 33: Molybdenum (1778:1781)
-        /// >> >> Molybdenite(MoS2)
-        /// >> >> Wulfenite(PbMoO4)
-        /// >> >> Powellite(CaMoO4)
+        /// >> >> Molybdenite (MoS2)
+        /// >> >> Wulfenite (PbMoO4)
+        /// >> >> Powellite (CaMoO4)
         /// >> 34: Quartz
         /// >> 35: Carbon (Coal)
         /// >> 36: Tellurium (1782)
-        /// >> >> Sylvanite(AgAuTe4)
-        /// >> >> Calaverite(AuTe2)
-        /// >> >> Krennerite(AuTe2)
+        /// >> >> Sylvanite (AgAuTe4)
+        /// >> >> Calaverite (AuTe2)
+        /// >> >> Krennerite (AuTe2)
         /// >> 37: Phosphorus
-        /// >> >> Phosphate Rock(Ca3(PO4)2)
+        /// >> >> Phosphate Rock (Ca3(PO4)2)
         /// >> 38: Tungsten (1783)
         /// >> 40: Aluminum (1787:1825)
         /// >> >> Bauxite
         /// >> 42: Chromium (1797)
-        /// >> >> Crocoite(PbCrO4)
-        /// >> >> Chromite(FeCr2O4)
+        /// >> >> Crocoite (PbCrO4)
+        /// >> >> Chromite (FeCr2O4)
         /// >> 43: Palladium [Bi-Product] (1803)
         /// >> 45: Platinum (1735)
-        /// >> >> Sperrylite(PtAs2)
+        /// >> >> Sperrylite (PtAs2)
         /// >> 47: Selenium (1817)
-        /// >> >> Eucairite(CuAgSe)
-        /// >> >> Crooksite(CuThSe)
+        /// >> >> Eucairite (CuAgSe)
+        /// >> >> Crooksite (CuThSe)
         /// >> >> Clausthalite (PbSe)
         /// >> 48: Lithium (1817)
         /// >> 50: Mythril
@@ -188,11 +189,11 @@ namespace Game1
         /// >> Aelinite
         /// >> 65: Vanadium (1801:1867)
         /// >> 67: Niobium (1734:1864)
-        /// >> >> Columbite((Fe, Mn, Mg)(Nb, Ta)2O6)
-        /// >> >> Pyrochlore((Ca, Na)2Nb2O6(O, OH, F))
+        /// >> >> Columbite ((Fe, Mn, Mg)(Nb, Ta)2O6)
+        /// >> >> Pyrochlore ((Ca, Na)2Nb2O6(O, OH, F))
         /// >> 68: Tantalum
-        /// >> >> Columbite((Fe, Mn)Nb2O6)
-        /// >> >> Tantalite((Fe, Mn)(Ta, Nb)2O6)
+        /// >> >> Columbite ((Fe, Mn)Nb2O6)
+        /// >> >> Tantalite ((Fe, Mn)(Ta, Nb)2O6)
         /// >> >> Euxenite ((Y, Ca, Er, La, Ce, U, Th)(Nb, Ta, Ti)2O6)
         /// >> 70: Orichalcum
         /// >> >> Orichalite
@@ -202,12 +203,12 @@ namespace Game1
         /// >> Sauronite
         /// >> 82: Indium (1863)
         /// >> 83: Germanium (1886)
-        /// >> >> Argyrodite(Ag8GeS6)
+        /// >> >> Argyrodite (Ag8GeS6)
         /// >> 85: Uranium (1789)
         /// >> 87: Thorium (1828)
-        /// >> >> Thorite(ThSiO4)
+        /// >> >> Thorite (ThSiO4)
         /// >> >> Thorianite (ThO2)
-        /// >> >> Monazite((Ce, La, Th, Nd, Y)PO4)
+        /// >> >> Monazite ((Ce, La, Th, Nd, Y)PO4)
         /// >> 88: Plutonium
         /// >> 90: Adamantium
         /// >> Adamantite
@@ -218,18 +219,32 @@ namespace Game1
         /// >> 97: Scarlithium
         /// >> Scarlite
         /// >> Scarletite
-        /// >> 98: Moonstone
-        /// >> >> Lunite ((Na,K)AlSi3O8)
-        /// >> 99: 
+        /// >> 98: Lunum
+        /// >> >> Moonstone ((Na,K)AlSi3O8) >> Lunite 
+        /// >> 99: Solinium
+        /// >> >> Sunstone ((Ca,Na)((Al,Si)2Si2O8)) >> Solzite (Tear of the Sun)
         /// >> 1000 (Expertise 10): Starlite
-        /// >> >> Plumbignium
+        /// >> >> Plumbignium (Fiery Lead) >> The Core of a Star
         /// /// /// /// /// /// /// ///
         /// >> Tin: Small quantities of tin are recovered from complex sulfides such as Stannite, Cylindrite, Franckeite, Canfieldite, and Teallite. 
         /// >> >> >> Minerals with tin are almost always associated with granite rock, usually at a level of 1% tin oxide content.
         /// /// /// /// /// /// /// ///
         /// 24: Smithing
+        /// /// /// /// /// /// /// ///
+        /// Smelting Can Occur >400°C /// Peak Efficiency >1000°C /// 
+        /// Naturally Occuring Metals:
+        /// >> Gold, Platinum, Silver, Copper
+        /// Japanese charcoal has had pyroligneous acid removed during the charcoal making; it therefore produces almost no smell or smoke when burned.
+        /// >> White charcoal (Binchōtan) is very hard and produces a metallic sound when struck and made from Ubame Oak.
+        /// Sticks >> Billets >> Tipi >> Mud (Dirt + Water) or Damp Clay >> Charcoal
+        /// Copper (1,984°F)
+        /// >> Flux: 
+        /// >> Chalcocite (Cu2S) 1130 °C ( 2066 °F)
+        /// >> Cuprite (Cu2O) 1232 °C (2250 °F)
+        /// Lead 327 °C (621 °F)
+        /// >> Galena 1114 °C (2037 °F)
         /// ///  Level Unlocks  /// ///
-        /// 
+        /// 5: Copper Nugget (Pot + Copper Ore + Charcoal)
         /// /// /// /// /// /// /// ///
         /// 25: Engineering
         /// ///  Level Unlocks  /// ///

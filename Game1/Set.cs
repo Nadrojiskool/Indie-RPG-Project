@@ -15,6 +15,7 @@ namespace Game1
                 for (int x2 = 0; x2 < blueprint.GetLength(1); x2++)
                 {
                     landArray[x + x2, y + y2].land = blueprint[y2, x2];
+                    landArray[x + x2, y + y2].frame = 5;
                 }
             }
         }
