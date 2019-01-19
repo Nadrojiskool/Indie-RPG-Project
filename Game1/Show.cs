@@ -46,6 +46,16 @@ namespace Game1
             Objects[004] = new Object("Deer", 50, 50, 1, 1);
             Objects[005] = new Object("Tree", 100, 100, 1, 1);
             Objects[006] = new Object("Rock", 50, 50, 1, 1);
+            Objects[010] = new Object("Ore 1", 50, 50, 1, 1);
+            Objects[011] = new Object("Ore 2", 50, 50, 1, 1);
+            Objects[012] = new Object("Ore 3", 50, 50, 1, 1);
+            Objects[013] = new Object("Ore 4", 50, 50, 1, 1);
+            Objects[014] = new Object("Ore 5", 50, 50, 1, 1);
+            Objects[015] = new Object("Ore 6", 50, 50, 1, 1);
+            Objects[016] = new Object("Ore 7", 50, 50, 1, 1);
+            Objects[017] = new Object("Ore 8", 50, 50, 1, 1);
+            Objects[018] = new Object("Ore 9", 50, 50, 1, 1);
+            Objects[019] = new Object("Ore 10", 50, 50, 1, 1);
             Objects[100] = new Object("Campfire", 50, 50, 1, 1);
             Objects[101] = new Object("Wall Wood Horizontal", 50, 100, 1, 1);
             Objects[102] = new Object("Wall Wood Vertical", 50, 100, 1, 1);
@@ -163,6 +173,8 @@ namespace Game1
                         new Rectangle(0, 0, obj.X, obj.Y),
                         Color.White, 0, origin,
                         fl * (float)tileScale, SpriteEffects.None, 1);
+
+                    //spriteBatch.DrawString(TileInfoFont, Objects[land.land].Name, new Vector2(x * modifiedTileScale, y * modifiedTileScale), Color.Black);
                 }
             }
         }

@@ -298,7 +298,7 @@ namespace Game1
                             rnd = Random.Next(0, 1000);
                             if (landArray[Check.Min(x - 1, 0), y].land == 6 && rnd > 650)
                             {
-                                landArray[x, y].land = 6;
+                                landArray[x, y].land = Random.Next(10, 19);
                             }
                             if (landArray[x, Check.Min(y - 1, 0)].land == 6 && rnd > 650)
                             {

@@ -19,6 +19,17 @@ namespace Game1
             Set.Land(array, x, y);
         }
 
+        static public void Mine(int x, int y)
+        {
+            int[,] array = new int[3, 2]
+            {
+                { 001, 001 },
+                { 001, 202 },
+                { 000, 000 }
+            };
+            Set.Land(array, x, y);
+        }
+
         static public void Camp(int x, int y)
         {
             int[,] array = new int[14, 20] {

@@ -16,6 +16,38 @@ namespace Game1
         public List<int> Tree = new List<int>();
         public List<int> Deer = new List<int>();
         public static Texture2D[,,] Tiles = new Texture2D[1000, 5, 10]; // Tile ID, Tile Biome, Tile Frame
+        /*
+         * 1: Occupied, Unrendered
+         * 2: Water
+         * 3: Bush
+         * 4: Deer
+         * 5: Tree
+         * 6: Stone
+         * 7:
+         * 9:
+         * 10: Ore 1
+         * 11: Ore 2
+         * 12: Ore 3
+         * 13: Ore 4
+         * 14: Ore 5
+         * 15: Ore 6
+         * 16: Ore 7
+         * 17: Ore 8
+         * 18: Ore 9
+         * 19: Ore 10
+         * 20:
+         * 99:
+         * 100: Campfire
+         * 101: Wall
+         * 102: Wall
+         * 103: Wall
+         * 104: Wall
+         * 105:
+         * 199:
+         * 200: Cabin1
+         * 201: Kame House
+         * 202: Mine
+         */
         public static Texture2D[,,] Enemies = new Texture2D[1, 5, 1]; // Enemy ID, Enemy Direction (Frame), Enemy Frame
         public static Texture2D[] HPBar = new Texture2D[2];
         public static Texture2D[] Blast = new Texture2D[74];

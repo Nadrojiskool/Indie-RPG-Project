@@ -29,6 +29,7 @@ namespace Game1
         public GraphicsDeviceManager graphics;
         public static SpriteBatch spriteBatch;
         public static SpriteFont font;
+        public static SpriteFont TileInfoFont;
         protected static Texture2D inventory;
         protected static Texture2D idCard;
         protected static Texture2D idCardBack;
@@ -209,6 +210,7 @@ namespace Game1
 
             #region Fonts
             font = Content.Load<SpriteFont>("SpriteFont");
+            TileInfoFont = Content.Load<SpriteFont>("TileInfo");
             #endregion
 
             #region Sprite Base
@@ -277,6 +279,26 @@ namespace Game1
             DrawingBoard.Tiles[5, 2, 5] = snowTree;
             DrawingBoard.Tiles[6, 1, 5] = nodeStone;
             DrawingBoard.Tiles[6, 2, 5] = nodeStone;
+            DrawingBoard.Tiles[10, 1, 5] = Content.Load<Texture2D>("Ore 1");
+            DrawingBoard.Tiles[10, 2, 5] = Content.Load<Texture2D>("Ore 1 Snow");
+            DrawingBoard.Tiles[11, 1, 5] = Content.Load<Texture2D>("Ore 2");
+            DrawingBoard.Tiles[11, 2, 5] = Content.Load<Texture2D>("Ore 2 Snow");
+            DrawingBoard.Tiles[12, 1, 5] = Content.Load<Texture2D>("Ore 3");
+            DrawingBoard.Tiles[12, 2, 5] = Content.Load<Texture2D>("Ore 3 Snow");
+            DrawingBoard.Tiles[13, 1, 5] = Content.Load<Texture2D>("Ore 4");
+            DrawingBoard.Tiles[13, 2, 5] = Content.Load<Texture2D>("Ore 4 Snow");
+            DrawingBoard.Tiles[14, 1, 5] = Content.Load<Texture2D>("Ore 5");
+            DrawingBoard.Tiles[14, 2, 5] = Content.Load<Texture2D>("Ore 5 Snow");
+            DrawingBoard.Tiles[15, 1, 5] = Content.Load<Texture2D>("Ore 6");
+            DrawingBoard.Tiles[15, 2, 5] = Content.Load<Texture2D>("Ore 6 Snow");
+            DrawingBoard.Tiles[16, 1, 5] = Content.Load<Texture2D>("Ore 7");
+            DrawingBoard.Tiles[16, 2, 5] = Content.Load<Texture2D>("Ore 7 Snow");
+            DrawingBoard.Tiles[17, 1, 5] = Content.Load<Texture2D>("Ore 8");
+            DrawingBoard.Tiles[17, 2, 5] = Content.Load<Texture2D>("Ore 8 Snow");
+            DrawingBoard.Tiles[18, 1, 5] = Content.Load<Texture2D>("Ore 9");
+            DrawingBoard.Tiles[18, 2, 5] = Content.Load<Texture2D>("Ore 9 Snow");
+            DrawingBoard.Tiles[19, 1, 5] = Content.Load<Texture2D>("Ore 10");
+            DrawingBoard.Tiles[19, 2, 5] = Content.Load<Texture2D>("Ore 10 Snow");
             DrawingBoard.Tiles[100, 1, 4] = Content.Load<Texture2D>("Campfire 1");
             DrawingBoard.Tiles[100, 2, 4] = Content.Load<Texture2D>("Campfire 1");
             DrawingBoard.Tiles[100, 1, 5] = Content.Load<Texture2D>("Campfire 2");
