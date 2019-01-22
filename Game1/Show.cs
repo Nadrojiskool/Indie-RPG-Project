@@ -328,7 +328,8 @@ namespace Game1
                     int modifiedTileScale = (int)(50 * tileScale);
                     int x = Check.Range((Player.player.DrawX - ((Player.player.X - unit.X) * modifiedTileScale)), modifiedTileScale, (int)(1920 - modifiedTileScale));
                     int y = Check.Range((Player.player.DrawY - ((Player.player.Y - unit.Y) * modifiedTileScale)), modifiedTileScale, (int)(1080 - modifiedTileScale));
-                    DrawingBoard.DrawObjects(player, new Vector2(x, y), tileScale, unit.Rotation, new Rectangle(0, 0, 50, 50));
+                    spriteBatch.Draw(DrawingBoard.Allies[1, unit.LastMove, unit.AnimationFrame], 
+                        new Rectangle(x - (modifiedTileScale / 2), y - (modifiedTileScale / 2), modifiedTileScale, modifiedTileScale), Color.White);
                     DrawingBoard.DrawObjects(DrawingBoard.HPBar[0], new Vector2(x, y + modifiedTileScale), tileScale, 0, new Rectangle(0, 0, 50, 10));
                     DrawingBoard.DrawObjects(DrawingBoard.HPBar[1], new Vector2(x, y + modifiedTileScale + (int)(2 * tileScale)), tileScale, 0, new Rectangle(0, 0, 50, 6));
                 }

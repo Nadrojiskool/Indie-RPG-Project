@@ -176,6 +176,7 @@ namespace Game1
             Player.player.Stats[12] = 10;
             Player.player.Stats[13] = 10;
             Player.player.Stats[14] = 1;
+            Player.player.Stats[100] = 10;
             Set.CoreStats(Player.player);
 
             Show.Initialize();
@@ -422,6 +423,18 @@ namespace Game1
             DrawingBoard.Allies[0, 4, 0] = Content.Load<Texture2D>("Player4 (1)");
             DrawingBoard.Allies[0, 4, 1] = Content.Load<Texture2D>("Player4 (2)");
             DrawingBoard.Allies[0, 4, 2] = Content.Load<Texture2D>("Player4 (3)");
+            DrawingBoard.Allies[1, 1, 0] = Content.Load<Texture2D>("Ally1 (1)");
+            DrawingBoard.Allies[1, 1, 1] = Content.Load<Texture2D>("Ally1 (2)");
+            DrawingBoard.Allies[1, 1, 2] = Content.Load<Texture2D>("Ally1 (3)");
+            DrawingBoard.Allies[1, 2, 0] = Content.Load<Texture2D>("Ally2 (1)");
+            DrawingBoard.Allies[1, 2, 1] = Content.Load<Texture2D>("Ally2 (2)");
+            DrawingBoard.Allies[1, 2, 2] = Content.Load<Texture2D>("Ally2 (3)");
+            DrawingBoard.Allies[1, 3, 0] = Content.Load<Texture2D>("Ally3 (1)");
+            DrawingBoard.Allies[1, 3, 1] = Content.Load<Texture2D>("Ally3 (2)");
+            DrawingBoard.Allies[1, 3, 2] = Content.Load<Texture2D>("Ally3 (3)");
+            DrawingBoard.Allies[1, 4, 0] = Content.Load<Texture2D>("Ally4 (1)");
+            DrawingBoard.Allies[1, 4, 1] = Content.Load<Texture2D>("Ally4 (2)");
+            DrawingBoard.Allies[1, 4, 2] = Content.Load<Texture2D>("Ally4 (3)");
 
             DrawingBoard.Enemies[0, 1, 0] = Content.Load<Texture2D>("Bug1");
             DrawingBoard.Enemies[0, 2, 0] = Content.Load<Texture2D>("Bug2");
@@ -510,13 +523,9 @@ namespace Game1
                 Control.AutoAI(Player.player); }
 
             rnd = Random.Next(0, 10000);
-            if (rnd < 50 && Player.player.resources[10] > Player.Workers.Count) { // INCREASED WORKER SPAWN RATE FROM 5
+            if (rnd < 50 && Player.player.Stats[100] > Player.Workers.Count) { // INCREASED WORKER SPAWN RATE FROM 5
                 Player.Workers.Add(new Unit(0, 0, Player.Workers.Count, Generate.Worker())); }
             
-            if (Player.LocalWorkers.Count > 0) {
-                foreach (Unit unit in Player.LocalWorkers) {
-                    Control.UnitManager(unit); ; }}
-
             if (Player.LocalEnemies.Count > 0) {
                 foreach (Unit unit in Player.LocalEnemies) {
                     Control.UnitManager(unit); }}
@@ -537,7 +546,17 @@ namespace Game1
             }
             // Quarter Second Interval Recurring Logic
             else if (LogicClock250.ElapsedMilliseconds > 250)
-            {// Scan Local Tiles for Logic Updates
+            {
+                if (Player.LocalWorkers.Count > 0)
+                {
+                    foreach (Unit unit in Player.LocalWorkers)
+                    {
+                        Control.UnitManager(unit);
+                        unit.AnimationFrame = Check.LoopInt(unit.AnimationFrame + 1, 0, 2);
+                    }
+                }
+
+                // Scan Local Tiles for Logic Updates
                 for (int y = 0; y < 100; y++)
                 {
                     for (int x = 0; x < 100; x++)
