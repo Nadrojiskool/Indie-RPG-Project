@@ -74,7 +74,8 @@ namespace Game1.Client
                         }
                         Console.WriteLine($"Byte List Full!");
                         MainMenuOpen = false;
-                        ScanTiles.Start();
+                        LogicClock100.Start();
+                        LogicClock250.Start();
 
                         Job j = new Job(job.ID, 2, job.Employee, job.Employer);
                         UserList[0].JobList.Add(j);

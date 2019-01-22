@@ -33,14 +33,34 @@ namespace Game1
 
     public class Show : Game1
     {
+        public static bool CursorOutline = false;
+        public static Land CursorLand { get; set; }
+        public static Object[] Objects = new Object[250];
+        public static Object[] InterfaceObjects = new Object[100];
         static Random Random = new Random();
-        static public Object[] Objects = new Object[250];
-        static public Object[] InterfaceObjects = new Object[100];
+        
 
         public static void Initialize()
         {
-            Objects[000] = new Object("Zero", 50, 50, 1, 1);
-            Objects[001] = new Object("Land", 50, 50, 1, 1);
+            // going to set rectangles for tileScale of .5
+            const int x = (int)(42 / tileScaleConst);
+            const int y = (int)(24 / tileScaleConst);
+            int tileSize = (int)(50 * tileScaleConst);
+            TileFrame = new Rectangle[x, y];
+            for (int y2 = 0; y2 < y; y2++)
+            {
+                for (int x2 = 0; x2 < x; x2++)
+                {
+                    TileFrame[x2, y2].X = x2 * tileSize;
+                    TileFrame[x2, y2].Y = y2 * tileSize;
+                    TileFrame[x2, y2].Width = tileSize;
+                    TileFrame[x2, y2].Height = tileSize;
+                }
+            }
+
+
+            Objects[000] = new Object("Land", 50, 50, 1, 1);
+            Objects[001] = new Object("Index 001", 50, 50, 1, 1);
             Objects[002] = new Object("Water", 50, 50, 1, 1);
             Objects[003] = new Object("Bush", 50, 50, 1, 1);
             Objects[004] = new Object("Deer", 50, 50, 1, 1);
@@ -72,9 +92,11 @@ namespace Game1
         {
             Tiles();
 
-            DrawingBoard.DrawObjects(DrawingBoard.Player[Player.player.LastMove, 0], 
-                new Vector2((Player.player.DrawX), (Player.player.DrawY)),
-                tileScale, 0, new Rectangle(0, 0, 50, 50));
+            int modifiedTileScale = (int)(50 * tileScale);
+            spriteBatch.Draw(DrawingBoard.Allies[0, Player.player.LastMove, Player.player.AnimationFrame], 
+                new Rectangle((Player.player.X - cameraLocationX) * modifiedTileScale, (Player.player.Y - cameraLocationY) * modifiedTileScale, modifiedTileScale, modifiedTileScale),
+                Color.White);
+
             LocalUnits(Player.LocalWorkers, Player.LocalEnemies);
 
             if (invOpen == true) {
@@ -87,6 +109,23 @@ namespace Game1
                 WorkerList(); }
 
             Text();
+            
+            if (actionPending == true)
+            {
+                spriteBatch.Draw(DrawingBoard.HPBar[0], new Rectangle(800, 900, 320, 40), Color.White);
+                if (Player.player.ActionID == 254)
+                    spriteBatch.Draw(DrawingBoard.HPBar[1], new Rectangle(805, 905, 310 * (Check.LoopInt((int)actionTimer.ElapsedMilliseconds, 1, 2000)) / 2000, 30), Color.White);
+                else if (Player.player.ActionID == 255)
+                    spriteBatch.Draw(DrawingBoard.HPBar[1], new Rectangle(805, 905, 310 * (1 - (Check.LoopInt((int)actionTimer.ElapsedMilliseconds, 1, 2000) / 2000)), 30), Color.White);
+            }
+            else if (CursorOutline == true)
+            {
+                // Note: Need to separate cursor location logic from rendering methods
+                spriteBatch.Draw(outline, Check.TileAtCursor(newMouseState), Color.White);
+                spriteBatch.Draw(buildMenu, new Rectangle(1600, 10, 300, 200), Color.White);
+                spriteBatch.Draw(DrawingBoard.Tiles[CursorLand.land, CursorLand.biome, 5], new Rectangle(1825, 135, 50, 50), Color.White);
+                spriteBatch.DrawString(font, $"{ Objects[CursorLand.land].Name }", new Vector2(1635, 35), Color.DarkViolet);
+            }
         }
 
         public static void MainMenu()
@@ -181,9 +220,6 @@ namespace Game1
 
         static void Text(/*string text, int width, int height*/)
         {
-            if (actionPending == true) {
-                spriteBatch.DrawString(font, $"{actionTimer.ElapsedMilliseconds / 1000}", new Vector2(1000, 500), Color.Red); }
-
             if (cantBuild.IsRunning == true) {
                 string output = "Not Enough Resources!";
                 Vector2 FontOrigin = font.MeasureString(output) / 2;

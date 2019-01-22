@@ -1,12 +1,22 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Diagnostics;
+using System.IO;
 using System.Linq;
+using System.Net;
+using System.Net.Sockets;
+using System.Runtime.InteropServices;
 using System.Text;
+using System.Threading;
 using System.Threading.Tasks;
+using Microsoft.Xna.Framework;
+using Microsoft.Xna.Framework.Graphics;
+using Microsoft.Xna.Framework.Input;
+using Microsoft.Xna.Framework.Input.Touch;
 
 namespace Game1
 {
-    public class Check
+    public class Check : Game1
     {
         // Check value against a minimum, if below return min //
         public static int Min(int value, int min)
@@ -48,6 +58,22 @@ namespace Game1
             }
 
             return (num);
+        }
+
+        public static Rectangle TileAtCursor(MouseState mouseState)
+        {
+            for (int y = 0; y < (int)(24 / tileScaleConst); y++)
+            {
+                for (int x = 0; x < (int)(42 / tileScaleConst); x++)
+                {
+                    if (TileFrame[x, y].Contains(mouseState.X, mouseState.Y))
+                    {
+                        Show.CursorLand = landArray[cameraLocationX + x, cameraLocationY + y];
+                        return (TileFrame[x, y]);
+                    }
+                }
+            }
+            return (OverflowRectangle);
         }
     }
 }

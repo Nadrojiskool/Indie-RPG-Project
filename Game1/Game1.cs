@@ -23,13 +23,13 @@ namespace Game1
     {
         protected static bool NoMap = true;
         protected static bool MainMenuOpen = true;
-        public static double tileScale = .5;
 
         #region Graphics Variables
         public GraphicsDeviceManager graphics;
         public static SpriteBatch spriteBatch;
         public static SpriteFont font;
         public static SpriteFont TileInfoFont;
+        protected static Texture2D outline;
         protected static Texture2D inventory;
         protected static Texture2D idCard;
         protected static Texture2D idCardBack;
@@ -105,7 +105,13 @@ namespace Game1
         protected static List<Manor> LocalManors = new List<Manor>();
         public static int[] MovementSync = new int[2] { 0, 0 };
 
-        public static Stopwatch ScanTiles = new Stopwatch();
+        public const double tileScaleConst = .5;
+        public static double tileScale = tileScaleConst;
+        public static Rectangle[,] TileFrame;
+        public static Rectangle OverflowRectangle = new Rectangle(3, 3, 100, 100);
+
+        public static Stopwatch LogicClock100 = new Stopwatch();
+        public static Stopwatch LogicClock250 = new Stopwatch();
         public static Stopwatch UpdateDestination = new Stopwatch();
 
         #region Build Menu Static Rectangle Grid Test Variables
@@ -123,8 +129,6 @@ namespace Game1
         public static Rectangle buildRect12 = new Rectangle(1250, 600, 50, 50);
         public static Rectangle buildRect13 = new Rectangle(900, 980, 200, 80);
         #endregion
-
-        public Rectangle[,] TileMap = new Rectangle[(int)(42 / tileScale), (int)(24 / tileScale)];
         
         public static string Username = "King Charles I";
         
@@ -216,6 +220,7 @@ namespace Game1
             #region Sprite Base
             white = new Texture2D(GraphicsDevice, 1, 1);
             white.SetData(new[] { Color.White });
+            outline = Content.Load<Texture2D>("Outline");
             land = Content.Load<Texture2D>("Land");
             water = Content.Load<Texture2D>("Water");
             player = Content.Load<Texture2D>("Player");
@@ -402,21 +407,21 @@ namespace Game1
             DrawingBoard.Blast[72] = Content.Load<Texture2D>("Blast (73)");
             DrawingBoard.Blast[73] = Content.Load<Texture2D>("Blast (74)");
 
-            DrawingBoard.Player[0, 0] = player;
-            DrawingBoard.Player[0, 1] = player;
-            DrawingBoard.Player[0, 2] = player;
-            DrawingBoard.Player[1, 0] = Content.Load<Texture2D>("Player1 (1)");
-            DrawingBoard.Player[1, 1] = Content.Load<Texture2D>("Player1 (2)");
-            DrawingBoard.Player[1, 2] = Content.Load<Texture2D>("Player1 (3)");
-            DrawingBoard.Player[2, 0] = Content.Load<Texture2D>("Player2 (1)");
-            DrawingBoard.Player[2, 1] = Content.Load<Texture2D>("Player2 (2)");
-            DrawingBoard.Player[2, 2] = Content.Load<Texture2D>("Player2 (3)");
-            DrawingBoard.Player[3, 0] = Content.Load<Texture2D>("Player3 (1)");
-            DrawingBoard.Player[3, 1] = Content.Load<Texture2D>("Player3 (2)");
-            DrawingBoard.Player[3, 2] = Content.Load<Texture2D>("Player3 (3)");
-            DrawingBoard.Player[4, 0] = Content.Load<Texture2D>("Player4 (1)");
-            DrawingBoard.Player[4, 1] = Content.Load<Texture2D>("Player4 (2)");
-            DrawingBoard.Player[4, 2] = Content.Load<Texture2D>("Player4 (3)");
+            DrawingBoard.Allies[0, 0, 0] = player;
+            DrawingBoard.Allies[0, 0, 1] = player;
+            DrawingBoard.Allies[0, 0, 2] = player;
+            DrawingBoard.Allies[0, 1, 0] = Content.Load<Texture2D>("Player1 (1)");
+            DrawingBoard.Allies[0, 1, 1] = Content.Load<Texture2D>("Player1 (2)");
+            DrawingBoard.Allies[0, 1, 2] = Content.Load<Texture2D>("Player1 (3)");
+            DrawingBoard.Allies[0, 2, 0] = Content.Load<Texture2D>("Player2 (1)");
+            DrawingBoard.Allies[0, 2, 1] = Content.Load<Texture2D>("Player2 (2)");
+            DrawingBoard.Allies[0, 2, 2] = Content.Load<Texture2D>("Player2 (3)");
+            DrawingBoard.Allies[0, 3, 0] = Content.Load<Texture2D>("Player3 (1)");
+            DrawingBoard.Allies[0, 3, 1] = Content.Load<Texture2D>("Player3 (2)");
+            DrawingBoard.Allies[0, 3, 2] = Content.Load<Texture2D>("Player3 (3)");
+            DrawingBoard.Allies[0, 4, 0] = Content.Load<Texture2D>("Player4 (1)");
+            DrawingBoard.Allies[0, 4, 1] = Content.Load<Texture2D>("Player4 (2)");
+            DrawingBoard.Allies[0, 4, 2] = Content.Load<Texture2D>("Player4 (3)");
 
             DrawingBoard.Enemies[0, 1, 0] = Content.Load<Texture2D>("Bug1");
             DrawingBoard.Enemies[0, 2, 0] = Content.Load<Texture2D>("Bug2");
@@ -451,9 +456,11 @@ namespace Game1
 
             // TODO: Add your update logic here
 
+            /*
             graphics.IsFullScreen = false;
             graphics.ApplyChanges();
-            /*if (this.IsActive != gameActive)
+            */
+            if (this.IsActive != gameActive)
             {
                 if (this.IsActive == false) {
                     graphics.IsFullScreen = false;
@@ -464,7 +471,7 @@ namespace Game1
                     graphics.IsFullScreen = true;
                     graphics.ApplyChanges();
                     gameActive = true; }
-            }*/
+            }
 
             ////////////////////////////////////////////
             // Check for Pressed Keys to Move 1 Space //
@@ -472,8 +479,8 @@ namespace Game1
             ////////////////////////////////////////////
 
             gestureHolder = 0;
-            if (actionPending == false)
-            {
+            //if (actionPending == false)
+            //{
                 if (TouchPanel.IsGestureAvailable) {
                     if (MainMenuOpen) {
                         if (NoMap) {
@@ -496,8 +503,8 @@ namespace Game1
                 if (newState != oldState) {
                     Control.Keyboard(); }
                 oldState = newState;
-            }
-            else { Control.GlobalCooldown(); }
+            //}
+            //else { Control.GlobalCooldown(); }
 
             if (playerAuto == true) {
                 Control.AutoAI(Player.player); }
@@ -522,10 +529,15 @@ namespace Game1
                         unit.ActionID = 0;
                     }}}
 
-            // Quarter Second Interval Recurring Logic
-            if (ScanTiles.ElapsedMilliseconds > 250)
+            // Tenth Second Interval Recurring Logic
+            if (LogicClock100.ElapsedMilliseconds > 100)
             {
-                // Scan Local Tiles for Logic Updates
+
+                LogicClock100.Restart();
+            }
+            // Quarter Second Interval Recurring Logic
+            else if (LogicClock250.ElapsedMilliseconds > 250)
+            {// Scan Local Tiles for Logic Updates
                 for (int y = 0; y < 100; y++)
                 {
                     for (int x = 0; x < 100; x++)
@@ -560,11 +572,11 @@ namespace Game1
                             landArray[x2, y2].IsResident = true;
                             Player.Enemies.Add(landArray[x2, y2].Resident);
                         }
-                        
                     }
                 }
 
-                ScanTiles.Restart();
+                Player.player.AnimationFrame = Check.LoopInt(Player.player.AnimationFrame + 1, 0, 2);
+                LogicClock250.Restart();
             }
 
             if (cantBuild.ElapsedMilliseconds > 2000) {

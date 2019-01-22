@@ -206,7 +206,9 @@ namespace Game1
             }
 
             MainMenuOpen = false;
-            ScanTiles.Start();
+            Show.CursorOutline = true;
+            LogicClock100.Start();
+            LogicClock250.Start();
             UpdateDestination.Start();
 
             /////////////////////
@@ -296,21 +298,25 @@ namespace Game1
                         if (landArray[x, y].biome != 3)
                         {
                             rnd = Random.Next(0, 1000);
+                            int node = 6;
+                            if (Random.Next(0, 6) == 5)
+                                node = Random.Next(10, 19);
+
                             if (landArray[Check.Min(x - 1, 0), y].land == 6 && rnd > 650)
                             {
-                                landArray[x, y].land = Random.Next(10, 19);
+                                landArray[x, y].land = node;
                             }
                             if (landArray[x, Check.Min(y - 1, 0)].land == 6 && rnd > 650)
                             {
-                                landArray[x, y].land = 6;
+                                landArray[x, y].land = node;
                             }
                             if (landArray[Check.Max(x + 1, 999), y].land == 6 && rnd > 650)
                             {
-                                landArray[x, y].land = 6;
+                                landArray[x, y].land = node;
                             }
                             if (landArray[x, Check.Max(y + 1, 999)].land == 6 && rnd > 650)
                             {
-                                landArray[x, y].land = 6;
+                                landArray[x, y].land = node;
                             }
                         }
                         if (checkTile.land != 5 && checkTile.land != 2)

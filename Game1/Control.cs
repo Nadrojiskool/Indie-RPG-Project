@@ -169,15 +169,36 @@ namespace Game1
                 Ctrl(); }
 
             else if (oldState.IsKeyUp(Keys.Space) && newState.IsKeyDown(Keys.Space)) {
-                if (IsResource(cameraLocationX + Player.player.tileX + MovementXY[Player.player.LastMove, 0],
-                    cameraLocationY + Player.player.tileY + MovementXY[Player.player.LastMove, 1])) {
+                if (actionTimer.IsRunning)
+                {
+                    if (Player.player.ActionID == 254)
+                    {
+                        Player.player.ActionCache = (int)actionTimer.ElapsedMilliseconds;
+                        actionTimer.Restart();
+                        Player.player.ActionID += 1;
+                    }
+                    else if (Player.player.ActionID == 255)
+                    {
+                        actionPending = false;
+                        actionTimer.Reset();
+                        actionValue = 0;
+                        Player.player.ActionID = 0;
+                        Player.player.ActionCache = 0;
+                        Mine(0);
+                    }
+                }
+                else if (IsResource(cameraLocationX + Player.player.tileX + MovementXY[Player.player.LastMove, 0],
+                    cameraLocationY + Player.player.tileY + MovementXY[Player.player.LastMove, 1]))
+                {
                     actionPending = true;
-                    actionTimer.Start(); }
+                    Player.player.ActionID = 254;
+                    actionTimer.Start();
+                }
                 else {
                     foreach (Unit unit in Player.LocalEnemies)
                     {
                         Player.player.CheckSlash(unit);
-                    }}}
+                    } } }
 
             else if (oldState.IsKeyUp(Keys.I) && newState.IsKeyDown(Keys.I)) {
                 if (invOpen == true) {
@@ -187,9 +208,15 @@ namespace Game1
 
             else if (oldState.IsKeyUp(Keys.M) && newState.IsKeyDown(Keys.M)) {
                 if (tileScale != .5) {
-                    tileScale = .5; }
+                    tileScale = .5;
+                    cameraLocationX -= 31;
+                    cameraLocationY -= 15;
+                }
                 else {
-                    tileScale = 2; }
+                    tileScale = 2;
+                    cameraLocationX += 31;
+                    cameraLocationY += 15;
+                }
                 /*ScaleTileMap();*/ }
 
             else if (oldState.IsKeyUp(Keys.B) && newState.IsKeyDown(Keys.B))
@@ -340,12 +367,14 @@ namespace Game1
 
         public static void GlobalCooldown()
         {
-            if (actionTimer.ElapsedMilliseconds > 100)
+            if (actionTimer.ElapsedMilliseconds > 3000)
             {
                 actionPending = false;
                 actionTimer.Reset();
-                Mine(actionValue);
                 actionValue = 0;
+                Player.player.ActionID = 0;
+                Player.player.ActionCache = 0;
+                Mine(0);
             }
         }
 

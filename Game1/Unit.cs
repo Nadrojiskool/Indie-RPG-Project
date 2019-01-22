@@ -22,8 +22,12 @@ namespace Game1
         /// 2: Follow Player
         /// 3: Gather Resources
         /// 4: Attack Target
-        /// 
+        /// 5:
+        /// 8:
         /// 9: Sleep
+        /// 10: 
+        /// 254: Chop Tree 1
+        /// 255: Chop Tree 2
         /// </summary>
 
 
@@ -282,6 +286,10 @@ namespace Game1
         public byte ActionID = 0;
         public Stopwatch ActionTime = new Stopwatch();
         public int ActionDuration { get; set; }
+        public byte ActionSpeed = 0;
+        public byte ActionProgress = 0;
+        public int ActionCache = 0;
+        public int AnimationFrame = 0;
         public float Rotation { get; set; }
         public int LastMove { get; set; }
         public int Depth { get; set; }
