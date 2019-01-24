@@ -325,6 +325,21 @@ namespace Game1
         // I can also create my own List-like class and manipulate the size and function of a 2D array to suit my local rendering needs
         // HashSet also looks like a simple all-around fix to my large-scale efficiency concerns
         // HashSet is amazing, and will be phenominal for storing the loads of infinite-scale objects required by the world
+        // I was reading this again on GitHub and am again very happy with the idea of HashSet as it meets most of my end-game performance expectations
+        // I currently don't know how to hash things, but a HashSet alone would allow for my desired indexing capabilities, especially regarding networking
+        // The worst case scenario is that clients will have to cache a public hash pointing to complex entities
+        // Here's an example (Is this.., "Blockchain?");
+        // Hashes of major entities will be commited globally, and pulled locally
+        // Depending on where information is ultimately cached locally, there will need to be a way to test the validity of a tile
+        // Each tile only points to a single, "Capitol," pointing to [eventually] a Domain's hash
+        // When we load in a tile owned by a Domain that hasn't been cached yet during run-time, 
+        // We can quickly check against the global HashSet to get the LastDomainChange (time)
+        // If they do not match, then the index handler will scan through the history (LIFO) and only return new changes to the domain
+        // Note that this has two current problems as described:
+        // 1. Tiles removed will not get synced unless the HashSet is actually a HashSet of transactions
+        // -- To remedy this, it may be possible to break the changes up when indexing into separate REMOVE FROM and ADD TO lists before sending
+        // 2. Another Domain will still hold (on disk, stored) an unsynced Domain list
+        // -- I don't believe this needs addressed as it will sync automatically when the relavent Domains are encountered again
         public List<int[]> Pathed { get; set; }
 
         // Job.TaskList (Action IDs) 

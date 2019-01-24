@@ -146,9 +146,9 @@ namespace Game1
             //            }
 
             graphics = new GraphicsDeviceManager(this);
-            // Note that visuals stutter occasionally, which is improved by disabling v-sync
+            // Note that visuals stutter occasionally, which is improved by disabling v-sync and setting IsFixedTimeStep to false
             // Suspected fix is to figure out how to increase platform clock resolution to [1 MS] and reduce, "catch-up"
-            //graphics.SynchronizeWithVerticalRetrace = false;
+            graphics.SynchronizeWithVerticalRetrace = false;
             graphics.PreferredBackBufferWidth = displayWidth;
             graphics.PreferredBackBufferHeight = displayHeight;
             graphics.IsFullScreen = true;
@@ -169,7 +169,7 @@ namespace Game1
 
         protected override void Initialize()
         {
-            this.IsFixedTimeStep = true;
+            this.IsFixedTimeStep = false;
             this.IsMouseVisible = true;
             TouchPanel.EnabledGestures = GestureType.Tap;
 
