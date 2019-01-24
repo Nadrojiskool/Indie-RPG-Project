@@ -292,6 +292,7 @@ namespace Game1
         public int AnimationFrame = 0;
         public float Rotation { get; set; }
         public int LastMove { get; set; }
+        public int Direction { get; set; }
         public int Depth { get; set; }
         public int AutoX { get; set; }
         public int AutoY { get; set; }
@@ -299,8 +300,31 @@ namespace Game1
         public int[] DestinationOffset = new int[2] { 0, 0 };
         public int[] OriginOffset = new int[2] { 0, 0 };
         public sbyte LeftOrRight = 0; // Cached Rotation (LastMove) // Negative (-) is FavorLeft // Positive (+) is FavorRight //
-        
+        //public int PathingTotalRotation = 0;
+        public int[] PathingCheckpoint = new int[2] { 0, 0 };
+
+        // I plan to implement the A* Pathing Algorithm for, "Smart," pathing
+        // Current bare-bones implementation (creature AI) paths in a direction (towards the destination)
+        // And when hitting an object, takes the shortest looking path around the object, blindly
+        // Current dumb pathing is questionable, but I don't plan for A* until AI scripting framework is getting established
         // Bloat for the following Test Pathing variable is concerning
+        // I scan through the Pathed list with each predicted movement for Left and Right when pathing around objects
+        // For the purpose of what? It appears to just stop pathing prediction early if a unit is enclosed
+        // Ironically, scanning this list would get heavier as the pathing distance grows anyway (currently max of 1000)
+        // But it technically makes it possible for a unit to path essentially blindly at infinite scale while still returning if pathing in a direction is impossible
+        // I've also been thinking about better list indexing and pulling and this variable may get more efficient:
+        // If a list is regularly refreshed so that an object hierarchy can be expected;
+        // - Firstly, you can stop searching through a list when you've gotten to objects that are out of range
+        // - Secondly, you could implement various methods to speed up list indexing until a certain range
+        // A List could be reorganized by Y value and then reorganized again by X value
+        // This would create a predictable hierachy which you could iterate more quickly if the list is long
+        // You iterate through until you're at the correct X, if you've gone too far, break
+        // You then iterate through until you're at the correct Y, and then return the object
+        // There may also be a way to efficiently swap two object's positions in an organized list
+        // This may need an additional variable for each Object that points directly to their list position
+        // I can also create my own List-like class and manipulate the size and function of a 2D array to suit my local rendering needs
+        // HashSet also looks like a simple all-around fix to my large-scale efficiency concerns
+        // HashSet is amazing, and will be phenominal for storing the loads of infinite-scale objects required by the world
         public List<int[]> Pathed { get; set; }
 
         // Job.TaskList (Action IDs) 

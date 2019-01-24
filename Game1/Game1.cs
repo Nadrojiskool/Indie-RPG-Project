@@ -92,24 +92,27 @@ namespace Game1
         protected static Land[,] tileArray = new Land[400, 250];
         protected static int cameraLocationX = 0;
         protected static int cameraLocationY = 0;
+        protected static int[] cameraOffsetXY = { 0, 0 };
         private int tilePointerX = 0;
         private int tilePointerY = 0;
-        private static Random Random = new Random();
+        public static Random Random = new Random();
         private double rnd;
         #endregion
 
         private bool gameActive = true;
         public static byte[] receivedBytes = new byte[50000];
-        protected static Keys[] KeysMovement = new Keys[] { Keys.D, Keys.S, Keys.A, Keys.W };
+        protected static List<Keys> KeysMovement = new List<Keys>() { Keys.D, Keys.S, Keys.A, Keys.W };
         public static int[,] MovementXY = new int[,] { { 0, 0 }, { 1, 0 }, { 0, 1 }, { -1, 0 }, { 0, -1 } };
         protected static List<Manor> LocalManors = new List<Manor>();
         public static int[] MovementSync = new int[2] { 0, 0 };
 
         public const double tileScaleConst = .5;
         public static double tileScale = tileScaleConst;
+        public static int CurrentTileSize = (int)(50 * tileScale);
         public static Rectangle[,] TileFrame;
         public static Rectangle OverflowRectangle = new Rectangle(3, 3, 100, 100);
 
+        public static Stopwatch LogicClock40 = new Stopwatch();
         public static Stopwatch LogicClock100 = new Stopwatch();
         public static Stopwatch LogicClock250 = new Stopwatch();
         public static Stopwatch UpdateDestination = new Stopwatch();
@@ -143,6 +146,9 @@ namespace Game1
             //            }
 
             graphics = new GraphicsDeviceManager(this);
+            // Note that visuals stutter occasionally, which is improved by disabling v-sync
+            // Suspected fix is to figure out how to increase platform clock resolution to [1 MS] and reduce, "catch-up"
+            //graphics.SynchronizeWithVerticalRetrace = false;
             graphics.PreferredBackBufferWidth = displayWidth;
             graphics.PreferredBackBufferHeight = displayHeight;
             graphics.IsFullScreen = true;
@@ -163,6 +169,7 @@ namespace Game1
 
         protected override void Initialize()
         {
+            this.IsFixedTimeStep = true;
             this.IsMouseVisible = true;
             TouchPanel.EnabledGestures = GestureType.Tap;
 
@@ -333,80 +340,83 @@ namespace Game1
             DrawingBoard.HPBar[0] = Content.Load<Texture2D>("ui_bar 50px");
             DrawingBoard.HPBar[1] = Content.Load<Texture2D>("ui_bar_hp 50px");
 
-            DrawingBoard.Blast[0] = Content.Load<Texture2D>("Blast (1)");
-            DrawingBoard.Blast[1] = Content.Load<Texture2D>("Blast (2)");
-            DrawingBoard.Blast[2] = Content.Load<Texture2D>("Blast (3)");
-            DrawingBoard.Blast[3] = Content.Load<Texture2D>("Blast (4)");
-            DrawingBoard.Blast[4] = Content.Load<Texture2D>("Blast (5)");
-            DrawingBoard.Blast[5] = Content.Load<Texture2D>("Blast (6)");
-            DrawingBoard.Blast[6] = Content.Load<Texture2D>("Blast (7)");
-            DrawingBoard.Blast[7] = Content.Load<Texture2D>("Blast (8)");
-            DrawingBoard.Blast[8] = Content.Load<Texture2D>("Blast (9)");
-            DrawingBoard.Blast[9] = Content.Load<Texture2D>("Blast (10)");
-            DrawingBoard.Blast[10] = Content.Load<Texture2D>("Blast (11)");
-            DrawingBoard.Blast[11] = Content.Load<Texture2D>("Blast (12)");
-            DrawingBoard.Blast[12] = Content.Load<Texture2D>("Blast (13)");
-            DrawingBoard.Blast[13] = Content.Load<Texture2D>("Blast (14)");
-            DrawingBoard.Blast[14] = Content.Load<Texture2D>("Blast (15)");
-            DrawingBoard.Blast[15] = Content.Load<Texture2D>("Blast (16)");
-            DrawingBoard.Blast[16] = Content.Load<Texture2D>("Blast (17)");
-            DrawingBoard.Blast[17] = Content.Load<Texture2D>("Blast (18)");
-            DrawingBoard.Blast[18] = Content.Load<Texture2D>("Blast (19)");
-            DrawingBoard.Blast[19] = Content.Load<Texture2D>("Blast (20)");
-            DrawingBoard.Blast[20] = Content.Load<Texture2D>("Blast (21)");
-            DrawingBoard.Blast[21] = Content.Load<Texture2D>("Blast (22)");
-            DrawingBoard.Blast[22] = Content.Load<Texture2D>("Blast (23)");
-            DrawingBoard.Blast[23] = Content.Load<Texture2D>("Blast (24)");
-            DrawingBoard.Blast[24] = Content.Load<Texture2D>("Blast (25)");
-            DrawingBoard.Blast[25] = Content.Load<Texture2D>("Blast (26)");
-            DrawingBoard.Blast[26] = Content.Load<Texture2D>("Blast (27)");
-            DrawingBoard.Blast[27] = Content.Load<Texture2D>("Blast (28)");
-            DrawingBoard.Blast[28] = Content.Load<Texture2D>("Blast (29)");
-            DrawingBoard.Blast[29] = Content.Load<Texture2D>("Blast (30)");
-            DrawingBoard.Blast[30] = Content.Load<Texture2D>("Blast (31)");
-            DrawingBoard.Blast[31] = Content.Load<Texture2D>("Blast (32)");
-            DrawingBoard.Blast[32] = Content.Load<Texture2D>("Blast (33)");
-            DrawingBoard.Blast[33] = Content.Load<Texture2D>("Blast (34)");
-            DrawingBoard.Blast[34] = Content.Load<Texture2D>("Blast (35)");
-            DrawingBoard.Blast[35] = Content.Load<Texture2D>("Blast (36)");
-            DrawingBoard.Blast[36] = Content.Load<Texture2D>("Blast (37)");
-            DrawingBoard.Blast[37] = Content.Load<Texture2D>("Blast (38)");
-            DrawingBoard.Blast[38] = Content.Load<Texture2D>("Blast (39)");
-            DrawingBoard.Blast[39] = Content.Load<Texture2D>("Blast (40)");
-            DrawingBoard.Blast[40] = Content.Load<Texture2D>("Blast (41)");
-            DrawingBoard.Blast[41] = Content.Load<Texture2D>("Blast (42)");
-            DrawingBoard.Blast[42] = Content.Load<Texture2D>("Blast (43)");
-            DrawingBoard.Blast[43] = Content.Load<Texture2D>("Blast (44)");
-            DrawingBoard.Blast[44] = Content.Load<Texture2D>("Blast (45)");
-            DrawingBoard.Blast[45] = Content.Load<Texture2D>("Blast (46)");
-            DrawingBoard.Blast[46] = Content.Load<Texture2D>("Blast (47)");
-            DrawingBoard.Blast[47] = Content.Load<Texture2D>("Blast (48)");
-            DrawingBoard.Blast[48] = Content.Load<Texture2D>("Blast (49)");
-            DrawingBoard.Blast[49] = Content.Load<Texture2D>("Blast (50)");
-            DrawingBoard.Blast[50] = Content.Load<Texture2D>("Blast (51)");
-            DrawingBoard.Blast[51] = Content.Load<Texture2D>("Blast (52)");
-            DrawingBoard.Blast[52] = Content.Load<Texture2D>("Blast (53)");
-            DrawingBoard.Blast[53] = Content.Load<Texture2D>("Blast (54)");
-            DrawingBoard.Blast[54] = Content.Load<Texture2D>("Blast (55)");
-            DrawingBoard.Blast[55] = Content.Load<Texture2D>("Blast (56)");
-            DrawingBoard.Blast[56] = Content.Load<Texture2D>("Blast (57)");
-            DrawingBoard.Blast[57] = Content.Load<Texture2D>("Blast (58)");
-            DrawingBoard.Blast[58] = Content.Load<Texture2D>("Blast (59)");
-            DrawingBoard.Blast[59] = Content.Load<Texture2D>("Blast (60)");
-            DrawingBoard.Blast[60] = Content.Load<Texture2D>("Blast (61)");
-            DrawingBoard.Blast[61] = Content.Load<Texture2D>("Blast (62)");
-            DrawingBoard.Blast[62] = Content.Load<Texture2D>("Blast (63)");
-            DrawingBoard.Blast[63] = Content.Load<Texture2D>("Blast (64)");
-            DrawingBoard.Blast[64] = Content.Load<Texture2D>("Blast (65)");
-            DrawingBoard.Blast[65] = Content.Load<Texture2D>("Blast (66)");
-            DrawingBoard.Blast[66] = Content.Load<Texture2D>("Blast (67)");
-            DrawingBoard.Blast[67] = Content.Load<Texture2D>("Blast (68)");
-            DrawingBoard.Blast[68] = Content.Load<Texture2D>("Blast (69)");
-            DrawingBoard.Blast[69] = Content.Load<Texture2D>("Blast (70)");
-            DrawingBoard.Blast[70] = Content.Load<Texture2D>("Blast (71)");
-            DrawingBoard.Blast[71] = Content.Load<Texture2D>("Blast (72)");
-            DrawingBoard.Blast[72] = Content.Load<Texture2D>("Blast (73)");
-            DrawingBoard.Blast[73] = Content.Load<Texture2D>("Blast (74)");
+            DrawingBoard.Animations.Add(new Texture2D[74]
+                {
+                    Content.Load<Texture2D>("Blast (1)"),
+                    Content.Load<Texture2D>("Blast (2)"),
+                    Content.Load<Texture2D>("Blast (3)"),
+                    Content.Load<Texture2D>("Blast (4)"),
+                    Content.Load<Texture2D>("Blast (5)"),
+                    Content.Load<Texture2D>("Blast (6)"),
+                    Content.Load<Texture2D>("Blast (7)"),
+                    Content.Load<Texture2D>("Blast (8)"),
+                    Content.Load<Texture2D>("Blast (9)"),
+                    Content.Load<Texture2D>("Blast (10)"),
+                    Content.Load<Texture2D>("Blast (11)"),
+                    Content.Load<Texture2D>("Blast (12)"),
+                    Content.Load<Texture2D>("Blast (13)"),
+                    Content.Load<Texture2D>("Blast (14)"),
+                    Content.Load<Texture2D>("Blast (15)"),
+                    Content.Load<Texture2D>("Blast (16)"),
+                    Content.Load<Texture2D>("Blast (17)"),
+                    Content.Load<Texture2D>("Blast (18)"),
+                    Content.Load<Texture2D>("Blast (19)"),
+                    Content.Load<Texture2D>("Blast (20)"),
+                    Content.Load<Texture2D>("Blast (21)"),
+                    Content.Load<Texture2D>("Blast (22)"),
+                    Content.Load<Texture2D>("Blast (23)"),
+                    Content.Load<Texture2D>("Blast (24)"),
+                    Content.Load<Texture2D>("Blast (25)"),
+                    Content.Load<Texture2D>("Blast (26)"),
+                    Content.Load<Texture2D>("Blast (27)"),
+                    Content.Load<Texture2D>("Blast (28)"),
+                    Content.Load<Texture2D>("Blast (29)"),
+                    Content.Load<Texture2D>("Blast (30)"),
+                    Content.Load<Texture2D>("Blast (31)"),
+                    Content.Load<Texture2D>("Blast (32)"),
+                    Content.Load<Texture2D>("Blast (33)"),
+                    Content.Load<Texture2D>("Blast (34)"),
+                    Content.Load<Texture2D>("Blast (35)"),
+                    Content.Load<Texture2D>("Blast (36)"),
+                    Content.Load<Texture2D>("Blast (37)"),
+                    Content.Load<Texture2D>("Blast (38)"),
+                    Content.Load<Texture2D>("Blast (39)"),
+                    Content.Load<Texture2D>("Blast (40)"),
+                    Content.Load<Texture2D>("Blast (41)"),
+                    Content.Load<Texture2D>("Blast (42)"),
+                    Content.Load<Texture2D>("Blast (43)"),
+                    Content.Load<Texture2D>("Blast (44)"),
+                    Content.Load<Texture2D>("Blast (45)"),
+                    Content.Load<Texture2D>("Blast (46)"),
+                    Content.Load<Texture2D>("Blast (47)"),
+                    Content.Load<Texture2D>("Blast (48)"),
+                    Content.Load<Texture2D>("Blast (49)"),
+                    Content.Load<Texture2D>("Blast (50)"),
+                    Content.Load<Texture2D>("Blast (51)"),
+                    Content.Load<Texture2D>("Blast (52)"),
+                    Content.Load<Texture2D>("Blast (53)"),
+                    Content.Load<Texture2D>("Blast (54)"),
+                    Content.Load<Texture2D>("Blast (55)"),
+                    Content.Load<Texture2D>("Blast (56)"),
+                    Content.Load<Texture2D>("Blast (57)"),
+                    Content.Load<Texture2D>("Blast (58)"),
+                    Content.Load<Texture2D>("Blast (59)"),
+                    Content.Load<Texture2D>("Blast (60)"),
+                    Content.Load<Texture2D>("Blast (61)"),
+                    Content.Load<Texture2D>("Blast (62)"),
+                    Content.Load<Texture2D>("Blast (63)"),
+                    Content.Load<Texture2D>("Blast (64)"),
+                    Content.Load<Texture2D>("Blast (65)"),
+                    Content.Load<Texture2D>("Blast (66)"),
+                    Content.Load<Texture2D>("Blast (67)"),
+                    Content.Load<Texture2D>("Blast (68)"),
+                    Content.Load<Texture2D>("Blast (69)"),
+                    Content.Load<Texture2D>("Blast (70)"),
+                    Content.Load<Texture2D>("Blast (71)"),
+                    Content.Load<Texture2D>("Blast (72)"),
+                    Content.Load<Texture2D>("Blast (73)"),
+                    Content.Load<Texture2D>("Blast (74)")
+                });
 
             DrawingBoard.Allies[0, 0, 0] = player;
             DrawingBoard.Allies[0, 0, 1] = player;
@@ -440,6 +450,18 @@ namespace Game1
             DrawingBoard.Enemies[0, 2, 0] = Content.Load<Texture2D>("Bug2");
             DrawingBoard.Enemies[0, 3, 0] = Content.Load<Texture2D>("Bug3");
             DrawingBoard.Enemies[0, 4, 0] = Content.Load<Texture2D>("Bug4");
+            DrawingBoard.Enemies[1, 1, 0] = Content.Load<Texture2D>("Dragon1 (1)");
+            DrawingBoard.Enemies[1, 1, 1] = Content.Load<Texture2D>("Dragon1 (2)");
+            DrawingBoard.Enemies[1, 1, 2] = Content.Load<Texture2D>("Dragon1 (3)");
+            DrawingBoard.Enemies[1, 2, 0] = Content.Load<Texture2D>("Dragon2 (1)");
+            DrawingBoard.Enemies[1, 2, 1] = Content.Load<Texture2D>("Dragon2 (2)");
+            DrawingBoard.Enemies[1, 2, 2] = Content.Load<Texture2D>("Dragon2 (3)");
+            DrawingBoard.Enemies[1, 3, 0] = Content.Load<Texture2D>("Dragon3 (1)");
+            DrawingBoard.Enemies[1, 3, 1] = Content.Load<Texture2D>("Dragon3 (2)");
+            DrawingBoard.Enemies[1, 3, 2] = Content.Load<Texture2D>("Dragon3 (3)");
+            DrawingBoard.Enemies[1, 4, 0] = Content.Load<Texture2D>("Dragon4 (1)");
+            DrawingBoard.Enemies[1, 4, 1] = Content.Load<Texture2D>("Dragon4 (2)");
+            DrawingBoard.Enemies[1, 4, 2] = Content.Load<Texture2D>("Dragon4 (3)");
             #endregion
         }
 
@@ -469,10 +491,10 @@ namespace Game1
 
             // TODO: Add your update logic here
 
-            /*
-            graphics.IsFullScreen = false;
-            graphics.ApplyChanges();
-            */
+            
+            //graphics.IsFullScreen = false;
+            //graphics.ApplyChanges();
+            
             if (this.IsActive != gameActive)
             {
                 if (this.IsActive == false) {
@@ -514,8 +536,28 @@ namespace Game1
 
                 newState = Keyboard.GetState();
                 if (newState != oldState) {
-                    Control.Keyboard(); }
-                oldState = newState;
+                    Control.Keyboard();
+            }
+            foreach (Keys key in KeysMovement)
+            {
+                if (newState.IsKeyDown(key))
+                {
+                    Player.player.LastMove = KeysMovement.IndexOf(key) + 1;
+                    //Player.player.Rotation = (float)Player.player.LastMove * ((float)Math.PI / 2.0f);
+
+                    if (landArray[cameraLocationX + Player.player.tileX + MovementXY[Player.player.LastMove, 0],
+                            cameraLocationY + Player.player.tileY + MovementXY[Player.player.LastMove, 1]].land == 0)
+                    {
+                        cameraOffsetXY[0] = Check.LoopInt2(cameraOffsetXY[0] - MovementXY[Player.player.LastMove, 0], 0, CurrentTileSize - 1);
+                        cameraOffsetXY[1] = Check.LoopInt2(cameraOffsetXY[1] - MovementXY[Player.player.LastMove, 1], 0, CurrentTileSize - 1);
+                        //else if (Math.Abs(cameraOffsetXY[0]) == 0 || Math.Abs(cameraOffsetXY[1]) == 0)
+                        //{
+
+                        //}
+                    }
+                }
+            }
+            oldState = newState;
             //}
             //else { Control.GlobalCooldown(); }
 
@@ -538,6 +580,11 @@ namespace Game1
                         unit.ActionID = 0;
                     }}}
 
+            if (LogicClock40.ElapsedMilliseconds > 40)
+            {
+
+                LogicClock40.Restart();
+            }
             // Tenth Second Interval Recurring Logic
             if (LogicClock100.ElapsedMilliseconds > 100)
             {
@@ -547,6 +594,14 @@ namespace Game1
             // Quarter Second Interval Recurring Logic
             else if (LogicClock250.ElapsedMilliseconds > 250)
             {
+                if (Player.Animations.Count > 0)
+                {
+                    foreach (Animation animation in Player.Animations)
+                    {
+
+                    }
+                }
+
                 if (Player.LocalWorkers.Count > 0)
                 {
                     foreach (Unit unit in Player.LocalWorkers)

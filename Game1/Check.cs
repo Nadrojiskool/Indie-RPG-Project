@@ -59,6 +59,24 @@ namespace Game1
 
             return (num);
         }
+        // LoopInt method with trigger method when executing
+        public static int LoopInt2(int num, int loopMin, int loopMax)
+        {
+            int loopSize = loopMax - (loopMin - 1);
+
+            if (num > loopMax)
+            {
+                num -= loopSize;
+                Control.PlayerMovement(Player.player);
+            }
+            else if (num < loopMin)
+            {
+                num += loopSize;
+                Control.PlayerMovement(Player.player);
+            }
+
+            return (num);
+        }
 
         public static Rectangle TileAtCursor(MouseState mouseState)
         {

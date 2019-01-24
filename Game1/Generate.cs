@@ -207,6 +207,7 @@ namespace Game1
 
             MainMenuOpen = false;
             Show.CursorOutline = true;
+            LogicClock40.Start();
             LogicClock100.Start();
             LogicClock250.Start();
             UpdateDestination.Start();

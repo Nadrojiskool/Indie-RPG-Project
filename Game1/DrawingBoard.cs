@@ -46,10 +46,10 @@ namespace Game1
          * 201: Kame House
          * 202: Mine
          */
-        public static Texture2D[,,] Enemies = new Texture2D[1, 5, 1]; // Enemy ID, Enemy Direction (LastMove), Enemy Frame
+        public static Texture2D[,,] Enemies = new Texture2D[2, 5, 3]; // Enemy ID, Enemy Direction (LastMove), Enemy Frame
         public static Texture2D[,,] Allies = new Texture2D[2, 5, 3]; // Ally ID, Ally Direction (LastMove), Ally Frame
         public static Texture2D[] HPBar = new Texture2D[2];
-        public static Texture2D[] Blast = new Texture2D[74];
+        public static List<Texture2D[]> Animations = new List<Texture2D[]>();
 
         public static void DrawObjects(Texture2D spr, Vector2 location, double scale, float rotate, Rectangle sourceRectangle)
         {

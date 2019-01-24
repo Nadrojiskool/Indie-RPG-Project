@@ -62,9 +62,12 @@ namespace Game1
         public bool IsActive = false;
         //public bool IsOccupied = false;
         public DateTime LastUpdate = new DateTime();
+
+        public bool IsOwned = false;
         public sbyte[] Manor { get; set; }
-        public Unit Resident { get; set; }
+
         public bool IsResident { get; set; }
+        public Unit Resident { get; set; }
 
         public Land()//int x, int y, int m)
         {

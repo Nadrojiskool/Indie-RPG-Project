@@ -116,7 +116,7 @@ namespace Game1
                 if (Player.player.ActionID == 254)
                     spriteBatch.Draw(DrawingBoard.HPBar[1], new Rectangle(805, 905, 310 * (Check.LoopInt((int)actionTimer.ElapsedMilliseconds, 1, 2000)) / 2000, 30), Color.White);
                 else if (Player.player.ActionID == 255)
-                    spriteBatch.Draw(DrawingBoard.HPBar[1], new Rectangle(805, 905, 310 * (1 - (Check.LoopInt((int)actionTimer.ElapsedMilliseconds, 1, 2000) / 2000)), 30), Color.White);
+                    spriteBatch.Draw(DrawingBoard.HPBar[1], new Rectangle(805, 905, 310 * (1 - ((int)(actionTimer.ElapsedMilliseconds - Player.player.ActionCache) / 1000)), 30), Color.White);
             }
             else if (CursorOutline == true)
             {
@@ -194,7 +194,7 @@ namespace Game1
                     if (land.land != 0)
                     {
                         spriteBatch.Draw(DrawingBoard.Tiles[0, land.biome, 5],
-                            new Rectangle((x * modifiedTileScale), (y * modifiedTileScale),
+                            new Rectangle((x * modifiedTileScale) + (int)cameraOffsetXY[0], (y * modifiedTileScale) + (int)cameraOffsetXY[1],
                                 modifiedTileScale, modifiedTileScale),
                             Color.White);
                     }
@@ -207,8 +207,8 @@ namespace Game1
                         fl = 2.0f; }
                     
                     spriteBatch.Draw(texture,
-                        new Vector2((x - ((obj.X / 50) - 1)) * (modifiedTileScale),
-                            (y - ((obj.Y / 50) - 1)) * (modifiedTileScale)),
+                        new Vector2((x - ((obj.X / 50) - 1)) * (modifiedTileScale) + (int)cameraOffsetXY[0],
+                            (y - ((obj.Y / 50) - 1)) * (modifiedTileScale) + (int)cameraOffsetXY[1]),
                         new Rectangle(0, 0, obj.X, obj.Y),
                         Color.White, 0, origin,
                         fl * (float)tileScale, SpriteEffects.None, 1);
@@ -361,7 +361,8 @@ namespace Game1
                     Animation animation = Player.Animations[i - count];
                     int x = (Player.player.DrawX - ((Player.player.X - animation.X) * modifiedTileScale));
                     int y = (Player.player.DrawY - ((Player.player.Y - animation.Y) * modifiedTileScale));
-                    spriteBatch.Draw(DrawingBoard.Blast[animation.Frame], new Rectangle(x - (modifiedTileScale / 2), y - (modifiedTileScale / 2), 5 * modifiedTileScale, 5 * modifiedTileScale), Color.White);
+                    spriteBatch.Draw(DrawingBoard.Animations[animation.ID][animation.Frame], new Rectangle(x - (modifiedTileScale / 2), y - (modifiedTileScale / 2), 5 * modifiedTileScale, 5 * modifiedTileScale), Color.White);
+
                     if (animation.Frame == 73)
                     {
                         Player.Animations.RemoveAt(i - count);

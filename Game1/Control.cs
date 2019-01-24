@@ -174,8 +174,7 @@ namespace Game1
                     if (Player.player.ActionID == 254)
                     {
                         Player.player.ActionCache = (int)actionTimer.ElapsedMilliseconds;
-                        actionTimer.Restart();
-                        Player.player.ActionID += 1;
+                        Player.player.ActionID = 255;
                     }
                     else if (Player.player.ActionID == 255)
                     {
@@ -233,18 +232,30 @@ namespace Game1
                     workerListOpen = true; }}
 
             else {
-                Keys[] keysHolder = newState.GetPressedKeys();
+
+                /*Keys[] keysHolder = newState.GetPressedKeys();
                 int keyCheck;
                 for (int i = 0; i < keysHolder.Length; i++)
                 {
                     keyCheck = Array.IndexOf(KeysMovement, keysHolder[i]);
-                    if (keyCheck >= 0 /*&& oldState.IsKeyUp(keysHolder[i])*/) {
+                    if (keyCheck >= 0 && oldState.IsKeyUp(keysHolder[i]))
+                    {
                         Player.player.LastMove = keyCheck + 1;
                         Player.player.Rotation = (float)Player.player.LastMove * ((float)Math.PI / 2.0f);
-                        if (landArray[cameraLocationX + Player.player.tileX + MovementXY[Player.player.LastMove, 0],
-                            cameraLocationY + Player.player.tileY + MovementXY[Player.player.LastMove, 1]].land == 0)
-                            { Movement(Player.player); }}
-                }}
+                        if (Math.Abs(cameraOffsetXY[0]) >= CurrentTileSize || Math.Abs(cameraOffsetXY[1]) >= CurrentTileSize)
+                        {
+                            if (landArray[cameraLocationX + Player.player.tileX + MovementXY[Player.player.LastMove, 0],
+                                cameraLocationY + Player.player.tileY + MovementXY[Player.player.LastMove, 1]].land == 0)
+                            { Movement(Player.player); }
+                        }
+                        else
+                        {
+                            cameraOffsetXY[0] -= MovementXY[Player.player.LastMove, 0] * 5;
+                            cameraOffsetXY[1] -= MovementXY[Player.player.LastMove, 1] * 5;
+                        }
+                    }
+                }*/
+            }
         }
 
         void Alt()
@@ -282,8 +293,28 @@ namespace Game1
         {
 
         }
+
+        public static void PlayerMovement(Unit unit)
+        {
+            if (cameraLocationX + MovementXY[unit.LastMove, 0] < 0 ||
+                cameraLocationX + MovementXY[unit.LastMove, 0] > 1000 ||
+                cameraLocationY + MovementXY[unit.LastMove, 1] < 0 ||
+                cameraLocationY + MovementXY[unit.LastMove, 1] > 1000)
+            {
+
+            }
+            else
+            {
+                cameraLocationX = cameraLocationX + MovementXY[unit.LastMove, 0];
+                cameraLocationY = cameraLocationY + MovementXY[unit.LastMove, 1];
+                Player.player.X = Player.player.X + MovementXY[unit.LastMove, 0];
+                Player.player.Y = Player.player.Y + MovementXY[unit.LastMove, 1];
+                MovementSync[0] = MovementSync[0] + MovementXY[unit.LastMove, 0];
+                MovementSync[1] = MovementSync[1] + MovementXY[unit.LastMove, 1];
+            }
+        }
         
-        static void Movement(Unit unit)
+        public static void Movement(Unit unit)
         {
             unit.Rotation = (float)unit.LastMove * ((float)Math.PI / 2.0f);
             if (unit == Player.player)
@@ -303,6 +334,14 @@ namespace Game1
                     Player.player.Y = Player.player.Y + MovementXY[unit.LastMove, 1];
                     MovementSync[0] = MovementSync[0] + MovementXY[unit.LastMove, 0];
                     MovementSync[1] = MovementSync[1] + MovementXY[unit.LastMove, 1];
+                    if (MovementXY[Player.player.LastMove, 0] != 0)
+                    {
+                        cameraOffsetXY[0] = 0;
+                    }
+                    else
+                    {
+                        cameraOffsetXY[1] = 0;
+                    }
                 }
             }
             else
@@ -326,6 +365,8 @@ namespace Game1
                             if (unit.OriginOffset[0] > 0)
                             {
                                 unit.LeftOrRight = 0;
+                                unit.PathingCheckpoint[0] = 0;
+                                unit.PathingCheckpoint[1] = 0;
                                 unit.OriginOffset[0] = 0;
                                 unit.OriginOffset[1] = 0;
                             }
@@ -335,6 +376,8 @@ namespace Game1
                             if (unit.OriginOffset[0] < 0)
                             {
                                 unit.LeftOrRight = 0;
+                                unit.PathingCheckpoint[0] = 0;
+                                unit.PathingCheckpoint[1] = 0;
                                 unit.OriginOffset[0] = 0;
                                 unit.OriginOffset[1] = 0;
                             }
@@ -347,6 +390,8 @@ namespace Game1
                             if (unit.OriginOffset[1] > 0)
                             {
                                 unit.LeftOrRight = 0;
+                                unit.PathingCheckpoint[0] = 0;
+                                unit.PathingCheckpoint[1] = 0;
                                 unit.OriginOffset[0] = 0;
                                 unit.OriginOffset[1] = 0;
                             }
@@ -356,9 +401,27 @@ namespace Game1
                             if (unit.OriginOffset[1] < 0)
                             {
                                 unit.LeftOrRight = 0;
+                                unit.PathingCheckpoint[0] = 0;
+                                unit.PathingCheckpoint[1] = 0;
                                 unit.OriginOffset[0] = 0;
                                 unit.OriginOffset[1] = 0;
                             }
+                        }
+                    }
+                    else if (unit.LastMove == sb)
+                    {
+                        if (unit.X == unit.PathingCheckpoint[0] && unit.Y == unit.PathingCheckpoint[1])
+                        {
+                            unit.LeftOrRight = 0;
+                            unit.PathingCheckpoint[0] = 0;
+                            unit.PathingCheckpoint[1] = 0;
+                            unit.OriginOffset[0] = 0;
+                            unit.OriginOffset[1] = 0;
+                        }
+                        else
+                        {
+                            unit.PathingCheckpoint[0] = unit.X;
+                            unit.PathingCheckpoint[1] = unit.Y;
                         }
                     }
                 }
@@ -736,6 +799,8 @@ namespace Game1
                         unit.DestinationOffset[0] = 0;
                         unit.DestinationOffset[1] = 0;
                         unit.LeftOrRight = 0;
+                        unit.PathingCheckpoint[0] = 0;
+                        unit.PathingCheckpoint[1] = 0;
                         unit.OriginOffset[0] = 0;
                         unit.OriginOffset[1] = 0;
                     }
@@ -747,14 +812,18 @@ namespace Game1
                     unit.ActionDuration = 1000;
                     if (unit.LeftOrRight != 0)
                     {
-                        unit.LastMove = Check.LoopInt((unit.LastMove - (unit.LeftOrRight / Math.Abs(unit.LeftOrRight))), 1, 4);
+                        int bias = (unit.LeftOrRight / Math.Abs(unit.LeftOrRight));
+                        unit.LastMove = Check.LoopInt((unit.LastMove - bias), 1, 4);
+                        //unit.PathingTotalRotation -= bias;
                     }
                 }
                 else
                 {
                     if (unit.LeftOrRight != 0)
                     {
-                        unit.LastMove = Check.LoopInt((unit.LastMove + (unit.LeftOrRight / Math.Abs(unit.LeftOrRight))), 1, 4);
+                        int bias = (unit.LeftOrRight / Math.Abs(unit.LeftOrRight));
+                        unit.LastMove = Check.LoopInt((unit.LastMove + bias), 1, 4);
+                        //unit.PathingTotalRotation += bias;
                     }
                     else
                     {
@@ -797,7 +866,9 @@ namespace Game1
             {
                 unit.LeftOrRight = Convert.ToSByte(unit.LastMove);
             }
-            
+            unit.PathingCheckpoint[0] = unit.X;
+            unit.PathingCheckpoint[1] = unit.Y;
+
             #region Generate Full Path (Not Implemented)
             //False Start, Not as Intended, Wanted "Blind Pathing"
             /*List<int[]> pathLeft = new List<int[]>();

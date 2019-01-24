@@ -74,6 +74,7 @@ namespace Game1.Client
                         }
                         Console.WriteLine($"Byte List Full!");
                         MainMenuOpen = false;
+                        LogicClock40.Start();
                         LogicClock100.Start();
                         LogicClock250.Start();
 
