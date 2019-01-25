@@ -18,6 +18,23 @@ namespace Game1.Client
 {
     public class Net : Game1
     {
+        // HashSet is amazing, and will be phenominal for storing the loads of infinite-scale objects required by the world
+        // The worst case scenario is that clients will have to cache a public hash pointing to complex entities
+        // Here's an example (Is this.., "Blockchain?");
+        // Hashes of major entities will be commited globally, and pulled locally
+        // Depending on where information is ultimately cached locally, there will need to be a way to test the validity of a tile
+        // Each tile only points to a single, "Capitol," pointing to [eventually] a Domain's hash
+        // When we load in a tile owned by a Domain that hasn't been cached yet during run-time, 
+        // We can quickly check against the global HashSet to get the LastDomainChange (time)
+        // If they do not match, then the index handler will scan through the history (LIFO) and only return new changes to the domain
+        // Note that this has two current problems as described:
+        // 1. Tiles removed will not get synced unless the HashSet is actually a HashSet of transactions
+        // -- To remedy this, it may be possible to break the changes up when indexing into separate REMOVE FROM and ADD TO lists before sending
+        // 2. Another Domain will still hold (on disk, stored) an unsynced Domain list
+        // -- I don't believe this needs addressed as it will sync automatically when the relavent Domains are encountered again
+
+        // The Full Async upgrade looms ever nearer, even if the outcome is unsure.
+
         public static bool AcceptConnections = true;
         public static bool messageReceived = false;
         public static bool messageConfirmation = false;

@@ -304,6 +304,77 @@ namespace Game1
         public int[] PathingCheckpoint = new int[2] { 0, 0 };
 
         // I plan to implement the A* Pathing Algorithm for, "Smart," pathing
+        // D* Lite may be an easy enough upgrade over A* to still consider this early
+        //
+        // Regardless, I still like expanding my pathing to dumb pathing 2.0;
+        // Current implementation doesn't path until an object is hit, but will need to path at pathing start
+        // When dumb pathing completes its first iteration we have a guaranteed path
+        // Preliminary proccessing can give our unit a direction pending further iteration
+        // This may only need to be activated in large scale pathing
+        // Initially we just want to find the node furthest in the oppsite direction of the unit
+        // Then we can run two more dumb pathings backwards with opposite bias until we reach both of the following:
+        // 1. The furthest node opposite the unit's direction
+        // 2. The full distance in the direction opposite of the unit (with an equal distance in direction + bias [x=y])
+        // -- Then travel to the furthest node in the unit's opposite direction
+        // Each time we will only keep the shortest path and then ammend that into the pathing STACK(maybe?)
+        // We'll now repeat the last process for the unit's direction WITHOUT bias until we've reached the destination
+        // We'll also update the STACK along the way and refresh the unit's checkpoint
+        // Updating the stack may not be necessary, plus other methods that don't require reindexing the list are desirable
+        // I think this actually lays out what I kind of expected from dumb pathing 2.0 already
+        //
+        // So we'll move on to dumb pathing 3.0;
+        // The process of trimming the path to actual nodes is currently undefined and may need dumber pathing implementation
+        // I also haven't outlined that the idea of STACKING the path is complimented by pathing FROM THE SOURCE/TARGET
+        // This is primarily complimented by the fact that a single source can re-use pathing elements for many aggro'd units
+        // Regardless, if we don't already have nodes, we need to cache and trim down our Pathing STACK
+        // This is a bit complicated to conceptualize this far in advance, but there are major issues currently
+        // 1. The biggest is that units will waste time inside of objects instead of, "hopping," nodes
+        // 2. Redundant movements in a single direction need removed at some point
+        // 3. Diagnol movements at this point have been completely ignored
+        // Overall, as I think about it, dumb pathing 3.0 will require a whole series of checks
+        // The goal being to maximize computational efficiencies by increasing pathing definition through gradual iteration
+        //
+        // It's also worth noting that this full-scale pathing method should be used very little
+        // The idea is to establish some sort of pathing hierarchy in the map itself
+        // All a unit has to look for is the nearest travel node which will connect the unit to a static path
+        // This is most obvious by simple roads and sign posts
+        // A unit is capable of finding the road independently
+        // A unit can then find the nearest post on the road (sign, town)
+        // The unit can then request [from the server] a node list from the current post/node to the destination node
+        // The unit can now simply follow the road in the direction of the next post
+        // Each node is required to hold either an index or the XY of each directly attached node
+        // Note that I'm playing with the idea of just using the hash of entities XY as their index
+        // This would also potentially require each road split (more than 2 adjacent roads) to be a post
+        // Which would further complicate things by making multi-tile single-roads difficult
+        // For this reason, I'll currently stick to keeping road size to a max of 1
+        // Actually, that's not a problem because each road is still just a single object [square]
+        // This would only come into play with roads that are composed of multiple individual assets
+        // Which is actually something I haven't currently expected to do, and don't plan to
+        //
+        // I thought I was done writing, but I still haven't outlined my, "Adaptive Paths," concept
+        // Each time a unit travels onto a tile, it would increase a path counter
+        // If the path counter gets high enough, the path level of the tile would increase
+        // As the path level increases, for example, the sprite frame advances
+        // This would be primarily to establish early dirt trading routes while roads are expensive
+        // The path level would not be synced with the server, and would remain local
+        // However, each level increase of a tile would ping the server's own path experience for the tile
+        // Both the global and local pathing experience would have gradual decay
+        // This means that the base tile will update globally based on public use
+        // However, you can utilize personal paths more quickly by using them locally
+        // Note that a path tile cannot advance in level if there are already two > 0 adjacent path tiles
+        // This only requires two additional local bytes for both the server and the client
+        // One byte for level and one byte for experience
+        // Also note that, "server," definition in this example is vague
+        // Decentralization would require actors to establish a shared picture on level and experience
+        // However, this is not actually true because if you're an independent manor, you don't need to sync roads
+        // Otherwise, it's your highest lord that will innevitably establish the global picture for the region
+        // I thought I was done again, but I forgot to include that the GOAL of this feature is better PATHING
+        // A unit can much more quickly establish a path to the nearest node if traversing by path level weight
+        // It's too early to say, but caching this data has the following potentially significant benefits;
+        // 1. Units can likely path entirely blindly to the nearest node, if desired
+        // 2. Using a path produced by level weight over long distances is more likely to be shorter
+        // 3. Integrating path weight into pathing AI may be beneficial, and the start of dumb pathing 4.0
+        //
         // Current bare-bones implementation (creature AI) paths in a direction (towards the destination)
         // And when hitting an object, takes the shortest looking path around the object, blindly
         // Current dumb pathing is questionable, but I don't plan for A* until AI scripting framework is getting established
@@ -312,7 +383,7 @@ namespace Game1
         // For the purpose of what? It appears to just stop pathing prediction early if a unit is enclosed
         // Ironically, scanning this list would get heavier as the pathing distance grows anyway (currently max of 1000)
         // But it technically makes it possible for a unit to path essentially blindly at infinite scale while still returning if pathing in a direction is impossible
-        // I've also been thinking about better list indexing and pulling and this variable may get more efficient:
+        // I've also been thinking about better list indexing and pulling and this method may get more efficient:
         // If a list is regularly refreshed so that an object hierarchy can be expected;
         // - Firstly, you can stop searching through a list when you've gotten to objects that are out of range
         // - Secondly, you could implement various methods to speed up list indexing until a certain range
@@ -324,22 +395,8 @@ namespace Game1
         // This may need an additional variable for each Object that points directly to their list position
         // I can also create my own List-like class and manipulate the size and function of a 2D array to suit my local rendering needs
         // HashSet also looks like a simple all-around fix to my large-scale efficiency concerns
-        // HashSet is amazing, and will be phenominal for storing the loads of infinite-scale objects required by the world
-        // I was reading this again on GitHub and am again very happy with the idea of HashSet as it meets most of my end-game performance expectations
-        // I currently don't know how to hash things, but a HashSet alone would allow for my desired indexing capabilities, especially regarding networking
-        // The worst case scenario is that clients will have to cache a public hash pointing to complex entities
-        // Here's an example (Is this.., "Blockchain?");
-        // Hashes of major entities will be commited globally, and pulled locally
-        // Depending on where information is ultimately cached locally, there will need to be a way to test the validity of a tile
-        // Each tile only points to a single, "Capitol," pointing to [eventually] a Domain's hash
-        // When we load in a tile owned by a Domain that hasn't been cached yet during run-time, 
-        // We can quickly check against the global HashSet to get the LastDomainChange (time)
-        // If they do not match, then the index handler will scan through the history (LIFO) and only return new changes to the domain
-        // Note that this has two current problems as described:
-        // 1. Tiles removed will not get synced unless the HashSet is actually a HashSet of transactions
-        // -- To remedy this, it may be possible to break the changes up when indexing into separate REMOVE FROM and ADD TO lists before sending
-        // 2. Another Domain will still hold (on disk, stored) an unsynced Domain list
-        // -- I don't believe this needs addressed as it will sync automatically when the relavent Domains are encountered again
+        // 
+
         public List<int[]> Pathed { get; set; }
 
         // Job.TaskList (Action IDs) 
