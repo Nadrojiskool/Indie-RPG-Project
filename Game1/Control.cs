@@ -208,13 +208,17 @@ namespace Game1
             else if (oldState.IsKeyUp(Keys.M) && newState.IsKeyDown(Keys.M)) {
                 if (tileScale != .5) {
                     tileScale = .5;
+                    CurrentTileSize = (int)(50 * tileScale);
                     cameraLocationX -= 31;
                     cameraLocationY -= 15;
+                    Set.GridDimensions();
                 }
                 else {
                     tileScale = 2;
+                    CurrentTileSize = (int)(50 * tileScale);
                     cameraLocationX += 31;
                     cameraLocationY += 15;
+                    Set.GridDimensions();
                 }
                 /*ScaleTileMap();*/ }
 

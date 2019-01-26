@@ -551,10 +551,6 @@ namespace Game1
                     {
                         Player.player.TileOffsetXY[0] = Check.LoopInt2(Player.player.TileOffsetXY[0], -MovementXY[Player.player.LastMove, 0], -halfTileSize, halfTileSize);
                         Player.player.TileOffsetXY[1] = Check.LoopInt2(Player.player.TileOffsetXY[1], -MovementXY[Player.player.LastMove, 1], -halfTileSize, halfTileSize);
-                        //else if (Math.Abs(cameraOffsetXY[0]) == 0 || Math.Abs(cameraOffsetXY[1]) == 0)
-                        //{
-
-                        //}
                     }
                     else
                     {
@@ -563,7 +559,7 @@ namespace Game1
                         {
                             if (Player.player.TileOffsetXY[axis] != 0 && (Player.player.TileOffsetXY[axis] / Math.Abs(Player.player.TileOffsetXY[axis])) == MovementXY[Player.player.LastMove, axis])
                             {
-                                Player.player.TileOffsetXY[axis] = Player.player.TileOffsetXY[0] - MovementXY[Player.player.LastMove, axis];
+                                Player.player.TileOffsetXY[axis] = Player.player.TileOffsetXY[axis] - MovementXY[Player.player.LastMove, axis];
                             }
                         }
                         else
@@ -598,6 +594,7 @@ namespace Game1
 
             if (LogicClock40.ElapsedMilliseconds > 40)
             {
+                Set.GridDimensions();
 
                 LogicClock40.Restart();
             }

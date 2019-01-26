@@ -42,22 +42,8 @@ namespace Game1
 
         public static void Initialize()
         {
-            // going to set rectangles for tileScale of .5
-            const int x = (int)(42 / tileScaleConst);
-            const int y = (int)(24 / tileScaleConst);
-            int tileSize = (int)(50 * tileScaleConst);
-            TileFrame = new Rectangle[x, y];
-            for (int y2 = 0; y2 < y; y2++)
-            {
-                for (int x2 = 0; x2 < x; x2++)
-                {
-                    TileFrame[x2, y2].X = x2 * tileSize;
-                    TileFrame[x2, y2].Y = y2 * tileSize;
-                    TileFrame[x2, y2].Width = tileSize;
-                    TileFrame[x2, y2].Height = tileSize;
-                }
-            }
-
+            Set.GridSize();
+            Set.GridDimensions();
 
             Objects[000] = new Object("Land", 50, 50, 1, 1);
             Objects[001] = new Object("Index 001", 50, 50, 1, 1);
