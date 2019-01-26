@@ -92,9 +92,14 @@ namespace Game1
         {
             Tiles();
 
-            int modifiedTileScale = (int)(50 * tileScale);
+            // Note that the order dictates that entities are currently always drawn over any tile
+            // While this may be a desirable tool, it's not ideal for the default setting
+            // The obvious solution is to implement layers, but instead of that, I'd like natural layering
+            // This means that each tile needs to store the hash of a unit in the local unit HashSet
+            // Then we can simply draw that unit from its cached data
+
             spriteBatch.Draw(DrawingBoard.Allies[0, Player.player.LastMove, Player.player.AnimationFrame], 
-                new Rectangle((Player.player.X - cameraLocationX) * modifiedTileScale, (Player.player.Y - cameraLocationY) * modifiedTileScale, modifiedTileScale, modifiedTileScale),
+                new Rectangle((Player.player.X - cameraLocationX) * CurrentTileSize, (Player.player.Y - cameraLocationY) * CurrentTileSize, CurrentTileSize, CurrentTileSize),
                 Color.White);
 
             LocalUnits(Player.LocalWorkers, Player.LocalEnemies);
@@ -194,7 +199,7 @@ namespace Game1
                     if (land.land != 0)
                     {
                         spriteBatch.Draw(DrawingBoard.Tiles[0, land.biome, 5],
-                            new Rectangle((x * modifiedTileScale) + (int)cameraOffsetXY[0], (y * modifiedTileScale) + (int)cameraOffsetXY[1],
+                            new Rectangle((x * modifiedTileScale) + Player.player.TileOffsetXY[0], (y * modifiedTileScale) + Player.player.TileOffsetXY[1],
                                 modifiedTileScale, modifiedTileScale),
                             Color.White);
                     }
@@ -207,8 +212,8 @@ namespace Game1
                         fl = 2.0f; }
                     
                     spriteBatch.Draw(texture,
-                        new Vector2((x - ((obj.X / 50) - 1)) * (modifiedTileScale) + (int)cameraOffsetXY[0],
-                            (y - ((obj.Y / 50) - 1)) * (modifiedTileScale) + (int)cameraOffsetXY[1]),
+                        new Vector2((x - ((obj.X / 50) - 1)) * (modifiedTileScale) + Player.player.TileOffsetXY[0],
+                            (y - ((obj.Y / 50) - 1)) * (modifiedTileScale) + Player.player.TileOffsetXY[1]),
                         new Rectangle(0, 0, obj.X, obj.Y),
                         Color.White, 0, origin,
                         fl * (float)tileScale, SpriteEffects.None, 1);
@@ -245,6 +250,7 @@ namespace Game1
             spriteBatch.DrawString(font, $"{ Player.player.Stats[1] }", new Vector2(50, 1000), Color.Red);
             spriteBatch.DrawString(font, $"{ Player.player.Stats[2] }", new Vector2(125, 1000), Color.DarkViolet);
             spriteBatch.DrawString(font, $"{ Player.player.Stats[3] }", new Vector2(200, 1000), Color.DarkViolet);
+            spriteBatch.DrawString(font, $"{ Player.player.TileOffsetXY[0] }", new Vector2(300, 1000), Color.DarkViolet);
             //spriteBatch.DrawString(font, $"{ testHP }//{ testVit }//{ testPhy }", new Vector2(300, 1000), Color.DarkViolet);
         }
 

@@ -92,7 +92,7 @@ namespace Game1
         protected static Land[,] tileArray = new Land[400, 250];
         protected static int cameraLocationX = 0;
         protected static int cameraLocationY = 0;
-        protected static int[] cameraOffsetXY = { 0, 0 };
+        //protected static int[] cameraOffsetXY = { 0, 0 };
         private int tilePointerX = 0;
         private int tilePointerY = 0;
         public static Random Random = new Random();
@@ -542,18 +542,34 @@ namespace Game1
             {
                 if (newState.IsKeyDown(key))
                 {
+                    int halfTileSize = CurrentTileSize / 2;
                     Player.player.LastMove = KeysMovement.IndexOf(key) + 1;
                     //Player.player.Rotation = (float)Player.player.LastMove * ((float)Math.PI / 2.0f);
 
                     if (landArray[cameraLocationX + Player.player.tileX + MovementXY[Player.player.LastMove, 0],
                             cameraLocationY + Player.player.tileY + MovementXY[Player.player.LastMove, 1]].land == 0)
                     {
-                        cameraOffsetXY[0] = Check.LoopInt2(cameraOffsetXY[0] - MovementXY[Player.player.LastMove, 0], 0, CurrentTileSize - 1);
-                        cameraOffsetXY[1] = Check.LoopInt2(cameraOffsetXY[1] - MovementXY[Player.player.LastMove, 1], 0, CurrentTileSize - 1);
+                        Player.player.TileOffsetXY[0] = Check.LoopInt2(Player.player.TileOffsetXY[0], -MovementXY[Player.player.LastMove, 0], -halfTileSize, halfTileSize);
+                        Player.player.TileOffsetXY[1] = Check.LoopInt2(Player.player.TileOffsetXY[1], -MovementXY[Player.player.LastMove, 1], -halfTileSize, halfTileSize);
                         //else if (Math.Abs(cameraOffsetXY[0]) == 0 || Math.Abs(cameraOffsetXY[1]) == 0)
                         //{
 
                         //}
+                    }
+                    else
+                    {
+                        int axis = Check.XOrY(Player.player.LastMove);
+                        if (Player.player.LastMove == 2)
+                        {
+                            if (Player.player.TileOffsetXY[axis] != 0 && (Player.player.TileOffsetXY[axis] / Math.Abs(Player.player.TileOffsetXY[axis])) == MovementXY[Player.player.LastMove, axis])
+                            {
+                                Player.player.TileOffsetXY[axis] = Player.player.TileOffsetXY[0] - MovementXY[Player.player.LastMove, axis];
+                            }
+                        }
+                        else
+                        {
+                            Player.player.TileOffsetXY[axis] = Check.Range((Player.player.TileOffsetXY[axis] - MovementXY[Player.player.LastMove, axis]), -halfTileSize, halfTileSize);
+                        }
                     }
                 }
             }

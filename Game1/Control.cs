@@ -311,6 +311,14 @@ namespace Game1
                 Player.player.Y = Player.player.Y + MovementXY[unit.LastMove, 1];
                 MovementSync[0] = MovementSync[0] + MovementXY[unit.LastMove, 0];
                 MovementSync[1] = MovementSync[1] + MovementXY[unit.LastMove, 1];
+                if (MovementXY[Player.player.LastMove, 0] != 0)
+                {
+                    Player.player.TileOffsetXY[0] = 0;
+                }
+                else
+                {
+                    Player.player.TileOffsetXY[1] = 0;
+                }
             }
         }
         
@@ -336,11 +344,11 @@ namespace Game1
                     MovementSync[1] = MovementSync[1] + MovementXY[unit.LastMove, 1];
                     if (MovementXY[Player.player.LastMove, 0] != 0)
                     {
-                        cameraOffsetXY[0] = 0;
+                        Player.player.TileOffsetXY[0] = 0;
                     }
                     else
                     {
-                        cameraOffsetXY[1] = 0;
+                        Player.player.TileOffsetXY[1] = 0;
                     }
                 }
             }

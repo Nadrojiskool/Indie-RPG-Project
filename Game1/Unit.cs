@@ -302,6 +302,7 @@ namespace Game1
         public sbyte LeftOrRight = 0; // Cached Rotation (LastMove) // Negative (-) is FavorLeft // Positive (+) is FavorRight //
         //public int PathingTotalRotation = 0;
         public int[] PathingCheckpoint = new int[2] { 0, 0 };
+        public int[] TileOffsetXY { get; set; }
 
         // I plan to implement the A* Pathing Algorithm for, "Smart," pathing
         // D* Lite may be an easy enough upgrade over A* to still consider this early
@@ -375,6 +376,20 @@ namespace Game1
         // 2. Using a path produced by level weight over long distances is more likely to be shorter
         // 3. Integrating path weight into pathing AI may be beneficial, and the start of dumb pathing 4.0
         //
+        // And here is one more similar pathing concept:
+        // You could add, "weight," to tiles while scanning an area for pathing
+        // This weight would get heavier, the further the tile is from any objects
+        // You then could favor the heavier nodes during pathing prediction
+        //
+        // Haha, I still forgot one pathing element; Swarms
+        // Certain units may be able to merge into swarms (or armies, eventually)
+        // Smaller, dumber enemies can essentially pack into a single tile and defer logic to a leader unit
+        // This is still another far-off concept, so specifics are hard to theorize
+        // Regardless, this is another attempt to try and pack the game with objects while maintaining minimal overhead
+        // It's likely that the swarm leader would have to manage influences and permutations over the entire swarm
+        // To what extent we can efficiently break the swarm back up while retaining logical consistancy is to be seen
+        // This highlights the trade-offs that are to be expected when theorizing large scales
+        //
         // Current bare-bones implementation (creature AI) paths in a direction (towards the destination)
         // And when hitting an object, takes the shortest looking path around the object, blindly
         // Current dumb pathing is questionable, but I don't plan for A* until AI scripting framework is getting established
@@ -410,6 +425,7 @@ namespace Game1
             this.Y = y;
             this.ID = id;
             this.Stats = array;
+            this.TileOffsetXY = new int[2] { 0, 0 };
         }
 
         public void Attack(Unit unit)
