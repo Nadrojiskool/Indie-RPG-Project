@@ -59,14 +59,14 @@ namespace Game1
 
         public static void GridDimensions()
         {
-            for (int y2 = 0; y2 < TileFrame.GetLength(1); y2++)
+            for (int y = 0; y < TileFrame.GetLength(1); y++)
             {
-                for (int x2 = 0; x2 < TileFrame.GetLength(0); x2++)
+                for (int x = 0; x < TileFrame.GetLength(0); x++)
                 {
-                    TileFrame[x2, y2].X = (x2 * CurrentTileSize) + Player.player.TileOffsetXY[0];
-                    TileFrame[x2, y2].Y = (y2 * CurrentTileSize) + Player.player.TileOffsetXY[1];
-                    TileFrame[x2, y2].Width = CurrentTileSize;
-                    TileFrame[x2, y2].Height = CurrentTileSize;
+                    TileFrame[x, y].X = (x * CurrentTileSize) + Player.player.TileOffsetXY[0];
+                    TileFrame[x, y].Y = (y * CurrentTileSize) + Player.player.TileOffsetXY[1];
+                    TileFrame[x, y].Width = CurrentTileSize;
+                    TileFrame[x, y].Height = CurrentTileSize;
                 }
             }
         }

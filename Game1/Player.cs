@@ -25,6 +25,10 @@ namespace Game1
         public int tileY { get; set; }
         public int DrawX { get; set; }
         public int DrawY { get; set; }
+        public Keys LastMovePressed { get; set; }
+        // I need to create methods to control and manipulate/animate units over time
+        // I also need to add and refine methods around unit actions (and queues)
+        // public Stopwatch LastRolled = new Stopwatch();
         public int[] resources = new int[1000];
         /* (Old resources pending removal)
          * 0: Experience

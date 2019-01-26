@@ -111,6 +111,7 @@ namespace Game1
         public static int CurrentTileSize = (int)(50 * tileScale);
         public static Rectangle[,] TileFrame;
         public static Rectangle OverflowRectangle = new Rectangle(3, 3, 100, 100);
+        //public static Keys LastMovePressed { get; set; }
 
         public static Stopwatch LogicClock40 = new Stopwatch();
         public static Stopwatch LogicClock100 = new Stopwatch();
@@ -546,7 +547,11 @@ namespace Game1
                     Player.player.LastMove = KeysMovement.IndexOf(key) + 1;
                     //Player.player.Rotation = (float)Player.player.LastMove * ((float)Math.PI / 2.0f);
 
-                    if (landArray[cameraLocationX + Player.player.tileX + MovementXY[Player.player.LastMove, 0],
+                    if (key == Player.player.LastMovePressed)
+                    {
+                        Control.PlayerMovement(Player.player);
+                    }
+                    else if (landArray[cameraLocationX + Player.player.tileX + MovementXY[Player.player.LastMove, 0],
                             cameraLocationY + Player.player.tileY + MovementXY[Player.player.LastMove, 1]].land == 0)
                     {
                         Player.player.TileOffsetXY[0] = Check.LoopInt2(Player.player.TileOffsetXY[0], -MovementXY[Player.player.LastMove, 0], -halfTileSize, halfTileSize);
@@ -567,6 +572,10 @@ namespace Game1
                             Player.player.TileOffsetXY[axis] = Check.Range((Player.player.TileOffsetXY[axis] - MovementXY[Player.player.LastMove, axis]), -halfTileSize, halfTileSize);
                         }
                     }
+                }
+                else if (Player.player.LastMove != 0 && key == KeysMovement[Player.player.LastMove - 1] && newState.IsKeyUp(key))
+                {
+                    Player.player.LastMovePressed = key;
                 }
             }
             oldState = newState;
