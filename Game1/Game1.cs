@@ -581,6 +581,8 @@ namespace Game1
             oldState = newState;
             //}
             //else { Control.GlobalCooldown(); }
+            
+            Set.GridDimensions();
 
             if (playerAuto == true) {
                 Control.AutoAI(Player.player); }
@@ -600,10 +602,9 @@ namespace Game1
                         Set.CoreStats(unit);
                         unit.ActionID = 0;
                     }}}
-
+            
             if (LogicClock40.ElapsedMilliseconds > 40)
             {
-                Set.GridDimensions();
 
                 LogicClock40.Restart();
             }

@@ -112,7 +112,7 @@ namespace Game1
             else if (CursorOutline == true)
             {
                 // Note: Need to separate cursor location logic from rendering methods
-                spriteBatch.Draw(outline, Check.TileAtCursor(newMouseState), Color.White);
+                spriteBatch.Draw(outline, Check.TileAtCursor(newMouseState), Color.Red);
                 spriteBatch.Draw(buildMenu, new Rectangle(1600, 10, 300, 200), Color.White);
                 spriteBatch.Draw(DrawingBoard.Tiles[CursorLand.land, CursorLand.biome, 5], new Rectangle(1825, 135, 50, 50), Color.White);
                 spriteBatch.DrawString(font, $"{ Objects[CursorLand.land].Name }", new Vector2(1635, 35), Color.DarkViolet);
@@ -143,9 +143,9 @@ namespace Game1
         {
             double rnd;
 
-            for (int y = 0; y < ((displayHeight / 50) / tileScale) + 2 / tileScale; y++)
+            for (int y = 0; y < (displayHeight / CurrentTileSize) + 2; y++)
             {
-                for (int x = 0; x < ((displayWidth / 50) / tileScale) + 2 / tileScale; x++)
+                for (int x = 0; x < (displayWidth / CurrentTileSize) + 2; x++)
                 {
                     /*rnd = Random.Next(0, 10000);
                     if (rnd == 5 || rnd == 9995 && landArray[cameraLocationX + x, cameraLocationY + y].land == 5)
@@ -178,15 +178,14 @@ namespace Game1
                     // Note of Intense Calculation in Visual Rendering Method // 
                     // Potential Optimization in Indexing or Off-Loading Redundant Math 
                     // Example: int modifiedTileScale = (int)(50 * tileScale);
-
-                    int modifiedTileScale = (int)(50 * tileScale);
+                    
                     Land land = landArray[cameraLocationX + x, cameraLocationY + y];
-
+                    
                     if (land.land != 0)
                     {
                         spriteBatch.Draw(DrawingBoard.Tiles[0, land.biome, 5],
-                            new Rectangle((x * modifiedTileScale) + Player.player.TileOffsetXY[0], (y * modifiedTileScale) + Player.player.TileOffsetXY[1],
-                                modifiedTileScale, modifiedTileScale),
+                            new Rectangle((x * CurrentTileSize) + Player.player.TileOffsetXY[0], (y * CurrentTileSize) + Player.player.TileOffsetXY[1],
+                                CurrentTileSize, CurrentTileSize),
                             Color.White);
                     }
 
@@ -198,11 +197,14 @@ namespace Game1
                         fl = 2.0f; }
                     
                     spriteBatch.Draw(texture,
-                        new Vector2((x - ((obj.X / 50) - 1)) * (modifiedTileScale) + Player.player.TileOffsetXY[0],
-                            (y - ((obj.Y / 50) - 1)) * (modifiedTileScale) + Player.player.TileOffsetXY[1]),
+                        new Vector2((x - ((obj.X / 50) - 1)) * (CurrentTileSize) + Player.player.TileOffsetXY[0],
+                            (y - ((obj.Y / 50) - 1)) * (CurrentTileSize) + Player.player.TileOffsetXY[1]),
                         new Rectangle(0, 0, obj.X, obj.Y),
                         Color.White, 0, origin,
                         fl * (float)tileScale, SpriteEffects.None, 1);
+
+                    if (land.IsOwned)
+                        spriteBatch.Draw(outline, TileFrame[Check.Max(x, TileFrame.GetLength(0) - 1), Check.Max(y, TileFrame.GetLength(1) - 1)], Color.White);
 
                     //spriteBatch.DrawString(TileInfoFont, Objects[land.land].Name, new Vector2(x * modifiedTileScale, y * modifiedTileScale), Color.Black);
                 }

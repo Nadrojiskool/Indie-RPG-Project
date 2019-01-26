@@ -95,9 +95,16 @@ namespace Game1
             }
         }
 
+        // I think I could speed this up by simply returning the rectangle at cursor position
+        // This would only require a
         public static Rectangle TileAtCursor(MouseState mouseState)
         {
-            for (int y = 0; y < (int)(24 / tileScaleConst); y++)
+            int x = (int)Math.Ceiling((double)((mouseState.X - Player.player.TileOffsetXY[0]) / CurrentTileSize));
+            int y = (int)Math.Ceiling((double)((mouseState.Y - Player.player.TileOffsetXY[1]) / CurrentTileSize));
+            Show.CursorLand = landArray[cameraLocationX + x, cameraLocationY + y];
+
+            return (TileFrame[x, y]);
+            /*for (int y = 0; y < (int)(24 / tileScaleConst); y++)
             {
                 for (int x = 0; x < (int)(42 / tileScaleConst); x++)
                 {
@@ -107,8 +114,8 @@ namespace Game1
                         return (TileFrame[x, y]);
                     }
                 }
-            }
-            return (OverflowRectangle);
+            }*/
+            //return (OverflowRectangle);
         }
     }
 }

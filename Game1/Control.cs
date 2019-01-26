@@ -33,8 +33,8 @@ namespace Game1
         {
             if (!MainMenuOpen && !invOpen && !buildMenuOpen && !workerListOpen) {
                 // Clear Land //
-                int spellX = (newMouseState.X / (int)(50 * tileScale) + cameraLocationX) - 2;
-                int spellY = (newMouseState.Y / (int)(50 * tileScale) + cameraLocationY) - 2;
+                int spellX = ((newMouseState.X - Player.player.TileOffsetXY[0]) / CurrentTileSize + cameraLocationX) - 2;
+                int spellY = ((newMouseState.Y - Player.player.TileOffsetXY[1]) / CurrentTileSize + cameraLocationY) - 2;
                 Manipulator(spellX, spellY, 5, 5, 0, false); }
 
             /*if (MainMenuOpen) {
@@ -121,8 +121,8 @@ namespace Game1
             {
                 // AOE Attack (5x5)
                 foreach (Unit unit in Player.LocalEnemies)
-                    Player.player.CheckAOE(unit, (newMouseState.X / (int)(50 * tileScale) + cameraLocationX) - 2, (newMouseState.Y / (int)(50 * tileScale) + cameraLocationY) - 2, 5, 5);
-                Player.Animations.Add(new Animation((newMouseState.X / (int)(50 * tileScale) + cameraLocationX) - 2, (newMouseState.Y / (int)(50 * tileScale) + cameraLocationY) - 2, 0, 0));
+                    Player.player.CheckAOE(unit, (newMouseState.X / CurrentTileSize + cameraLocationX) - 2, (newMouseState.Y / CurrentTileSize + cameraLocationY) - 2, 5, 5);
+                Player.Animations.Add(new Animation((newMouseState.X / CurrentTileSize + cameraLocationX) - 2, (newMouseState.Y / CurrentTileSize + cameraLocationY) - 2, 0, 0));
                 // Spawn Trees //
                 /*int spellX = (newMouseState.X / (int)(50 * tileScale) + cameraLocationX) - 2;
                 int spellY = (newMouseState.Y / (int)(50 * tileScale) + cameraLocationY) - 2;
@@ -524,6 +524,7 @@ namespace Game1
                             }
                             landArray[x - a, y - b].land = land;
                         }
+                        landArray[x - a, y - b].IsOwned = true;
                     }
                 }
             }
@@ -541,6 +542,7 @@ namespace Game1
                             }
                             landArray[x + a, y + b].land = land;
                         }
+                        landArray[x + a, y + b].IsOwned = true;
                     }
                 }
             }
