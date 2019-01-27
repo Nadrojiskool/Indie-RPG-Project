@@ -52,8 +52,8 @@ namespace Game1
         public static void GridSize()
         {
             // going to set rectangles for tileScale of .5
-            const int x = (int)(42 / tileScaleConst);
-            const int y = (int)(24 / tileScaleConst);
+            int x = (displayWidth / CurrentTileSize) + 2;
+            int y = (displayHeight / CurrentTileSize) + 2;
             TileFrame = new Rectangle[x, y];
         }
 

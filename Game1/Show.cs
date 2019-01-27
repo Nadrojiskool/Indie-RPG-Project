@@ -168,43 +168,45 @@ namespace Game1
                             }
                         }
                     }*/
-
-
-                    Texture2D texture = DrawingBoard.Tiles[landArray[cameraLocationX + x, cameraLocationY + y].land,
-                            landArray[cameraLocationX + x, cameraLocationY + y].biome,
-                            landArray[cameraLocationX + x, cameraLocationY + y].frame];
-                    Object obj = Objects[landArray[cameraLocationX + x, cameraLocationY + y].land];
-
-                    // Note of Intense Calculation in Visual Rendering Method // 
-                    // Potential Optimization in Indexing or Off-Loading Redundant Math 
-                    // Example: int modifiedTileScale = (int)(50 * tileScale);
                     
+                    ///
+                    // I can eventually make a Rectangle Container Class to just have them hold the tile information
+                    ///
+
                     Land land = landArray[cameraLocationX + x, cameraLocationY + y];
+                    Texture2D texture = DrawingBoard.Tiles[land.land, land.biome, land.frame];
+                    Object obj = Objects[landArray[cameraLocationX + x, cameraLocationY + y].land];
+                    int[] adjustLand = { 0, 0 };
                     
-                    if (land.land != 0)
-                    {
-                        spriteBatch.Draw(DrawingBoard.Tiles[0, land.biome, 5],
-                            new Rectangle((x * CurrentTileSize) + Player.player.TileOffsetXY[0], (y * CurrentTileSize) + Player.player.TileOffsetXY[1],
-                                CurrentTileSize, CurrentTileSize),
-                            Color.White);
-                    }
+                    if (land.land != 0) {
+                        spriteBatch.Draw(DrawingBoard.Tiles[0, land.biome, 5], TileFrame[x, y], Color.White); }
 
-                    float fl = 1.0f;
+                    if (land.land == 5) {
+                        int halfTileSize = CurrentTileSize / 2;
+                        adjustLand = new int[2] { halfTileSize, -(halfTileSize / 2) }; }
+
+                    spriteBatch.Draw(texture, 
+                        new Rectangle(TileFrame[x, y].X - (int)((obj.X - 50) * tileScale) + adjustLand[0], 
+                            TileFrame[x, y].Y - (int)((obj.Y - 50) * tileScale) + adjustLand[1],
+                            (int)(obj.X * tileScale), (int)(obj.Y * tileScale)), 
+                        Color.White);
+
+                    if (land.IsOwned) {
+                        spriteBatch.Draw(outline, TileFrame[x, y], Color.White); }
+
+                    /*float fl = 1.0f;
                     Vector2 origin = new Vector2(0, 0);
                     if (land.land == 5) {
                         origin.X = -12;
                         origin.Y = 8;
-                        fl = 2.0f; }
-                    
-                    spriteBatch.Draw(texture,
+                        fl = 2.0f; }*/
+
+                    /*spriteBatch.Draw(texture,
                         new Vector2((x - ((obj.X / 50) - 1)) * (CurrentTileSize) + Player.player.TileOffsetXY[0],
                             (y - ((obj.Y / 50) - 1)) * (CurrentTileSize) + Player.player.TileOffsetXY[1]),
                         new Rectangle(0, 0, obj.X, obj.Y),
                         Color.White, 0, origin,
-                        fl * (float)tileScale, SpriteEffects.None, 1);
-
-                    if (land.IsOwned)
-                        spriteBatch.Draw(outline, TileFrame[Check.Max(x, TileFrame.GetLength(0) - 1), Check.Max(y, TileFrame.GetLength(1) - 1)], Color.White);
+                        fl * (float)tileScale, SpriteEffects.None, 1);*/
 
                     //spriteBatch.DrawString(TileInfoFont, Objects[land.land].Name, new Vector2(x * modifiedTileScale, y * modifiedTileScale), Color.Black);
                 }
