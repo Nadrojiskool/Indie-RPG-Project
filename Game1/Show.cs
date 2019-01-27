@@ -168,31 +168,57 @@ namespace Game1
                             }
                         }
                     }*/
-                    
+
                     ///
                     // I can eventually make a Rectangle Container Class to just have them hold the tile information
                     ///
-
+                    
                     Land land = landArray[cameraLocationX + x, cameraLocationY + y];
                     Texture2D texture = DrawingBoard.Tiles[land.land, land.biome, land.frame];
-                    Object obj = Objects[landArray[cameraLocationX + x, cameraLocationY + y].land];
+                    Object obj = Objects[land.land];
+                    Rectangle tile = TileFrame[x, y];
                     int[] adjustLand = { 0, 0 };
                     
-                    if (land.land != 0) {
-                        spriteBatch.Draw(DrawingBoard.Tiles[0, land.biome, 5], TileFrame[x, y], Color.White); }
+                    if (land.land != 0)
+                    {
+                        if (land.biome == 1)
+                        {
+                            int grass = Check.LoopIntPos((cameraLocationX + x) + (cameraLocationY + y), 1, 4);
+                            spriteBatch.Draw(DrawingBoard.Tiles[0, land.biome, grass], tile, Color.White);
+                        }
+                        else
+                        {
+                            spriteBatch.Draw(DrawingBoard.Tiles[0, land.biome, 5], tile, Color.White);
+                        }
 
-                    if (land.land == 5) {
-                        int halfTileSize = CurrentTileSize / 2;
-                        adjustLand = new int[2] { halfTileSize, -(halfTileSize / 2) }; }
+                        if (land.land == 5)
+                        {
+                            int halfTileSize = CurrentTileSize / 2;
+                            adjustLand = new int[2] { halfTileSize, -(halfTileSize / 2) };
+                        }
 
-                    spriteBatch.Draw(texture, 
-                        new Rectangle(TileFrame[x, y].X - (int)((obj.X - 50) * tileScale) + adjustLand[0], 
-                            TileFrame[x, y].Y - (int)((obj.Y - 50) * tileScale) + adjustLand[1],
-                            (int)(obj.X * tileScale), (int)(obj.Y * tileScale)), 
-                        Color.White);
+                        spriteBatch.Draw(texture,
+                            new Rectangle(tile.X - (int)((obj.X - 50) * tileScale) + adjustLand[0],
+                                tile.Y - (int)((obj.Y - 50) * tileScale) + adjustLand[1],
+                                (int)(obj.X * tileScale), (int)(obj.Y * tileScale)),
+                            Color.White);
+                    }
+                    else
+                    {
+                        if (land.biome == 1)
+                        {
+                            int grass = Check.LoopIntPos((cameraLocationX + x) + (cameraLocationY + y), 1, 4);
+                            spriteBatch.Draw(DrawingBoard.Tiles[0, land.biome, grass], tile, Color.White);
+                        }
+                        else
+                        {
+                            spriteBatch.Draw(DrawingBoard.Tiles[0, land.biome, 5], tile, Color.White);
+                        }
+                    }
+
 
                     if (land.IsOwned) {
-                        spriteBatch.Draw(outline, TileFrame[x, y], Color.White); }
+                        spriteBatch.Draw(outline, tile, Color.White); }
 
                     /*float fl = 1.0f;
                     Vector2 origin = new Vector2(0, 0);
@@ -211,6 +237,11 @@ namespace Game1
                     //spriteBatch.DrawString(TileInfoFont, Objects[land.land].Name, new Vector2(x * modifiedTileScale, y * modifiedTileScale), Color.Black);
                 }
             }
+        }
+
+        static void Land()
+        {
+
         }
 
         static void Text(/*string text, int width, int height*/)

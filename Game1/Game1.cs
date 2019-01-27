@@ -103,15 +103,13 @@ namespace Game1
         public static byte[] receivedBytes = new byte[50000];
         protected static List<Keys> KeysMovement = new List<Keys>() { Keys.D, Keys.S, Keys.A, Keys.W };
         public static int[,] MovementXY = new int[,] { { 0, 0 }, { 1, 0 }, { 0, 1 }, { -1, 0 }, { 0, -1 } };
-        protected static List<Manor> LocalManors = new List<Manor>();
-        public static int[] MovementSync = new int[2] { 0, 0 };
+        //protected static List<Manor> LocalManors = new List<Manor>();
 
         public const double tileScaleConst = .5;
         public static double tileScale = tileScaleConst;
         public static int CurrentTileSize = (int)(50 * tileScale);
         public static Rectangle[,] TileFrame;
         public static Rectangle OverflowRectangle = new Rectangle(3, 3, 100, 100);
-        //public static Keys LastMovePressed { get; set; }
 
         public static Stopwatch LogicClock40 = new Stopwatch();
         public static Stopwatch LogicClock100 = new Stopwatch();
@@ -269,6 +267,11 @@ namespace Game1
             #endregion
 
             #region Sprite Array
+            DrawingBoard.Tiles[0, 1, 0] = Content.Load<Texture2D>("tileable-img_0062-dark"); 
+            DrawingBoard.Tiles[0, 1, 1] = Content.Load<Texture2D>("grass1");
+            DrawingBoard.Tiles[0, 1, 2] = Content.Load<Texture2D>("grass2");
+            DrawingBoard.Tiles[0, 1, 3] = Content.Load<Texture2D>("grass3");
+            DrawingBoard.Tiles[0, 1, 4] = Content.Load<Texture2D>("grass4");
             DrawingBoard.Tiles[0, 1, 5] = land;
             DrawingBoard.Tiles[0, 2, 5] = snow;
             DrawingBoard.Tiles[1, 1, 5] = land;

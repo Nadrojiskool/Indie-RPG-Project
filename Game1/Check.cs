@@ -82,6 +82,19 @@ namespace Game1
 
             return (num);
         }
+        // Must be positive
+        public static int LoopIntPos(int num, int loopMin, int loopMax)
+        {
+            int loopSize = loopMax - (loopMin - 1);
+
+            if (num > loopMax)
+            {
+                int num2 = num / loopSize;
+                num = 1 + num - (num2 * loopSize);
+            }
+
+            return (num);
+        }
 
         public static int XOrY(int i)
         {

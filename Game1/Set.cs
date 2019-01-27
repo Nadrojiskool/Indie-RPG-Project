@@ -63,10 +63,10 @@ namespace Game1
             {
                 for (int x = 0; x < TileFrame.GetLength(0); x++)
                 {
-                    TileFrame[x, y].X = (x * CurrentTileSize) + Player.player.TileOffsetXY[0];
-                    TileFrame[x, y].Y = (y * CurrentTileSize) + Player.player.TileOffsetXY[1];
-                    TileFrame[x, y].Width = CurrentTileSize;
-                    TileFrame[x, y].Height = CurrentTileSize;
+                    TileFrame[x, y] = new Rectangle(
+                        (x * CurrentTileSize) + Player.player.TileOffsetXY[0], 
+                        (y * CurrentTileSize) + Player.player.TileOffsetXY[1], 
+                        CurrentTileSize, CurrentTileSize);
                 }
             }
         }

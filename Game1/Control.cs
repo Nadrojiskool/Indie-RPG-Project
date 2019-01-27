@@ -85,7 +85,7 @@ namespace Game1
                 else if (buildRect11.Contains(newMouseState.X, newMouseState.Y) && Player.player.resources[5] >= 0)
                 {
                     //Player.player.resources[6] = Player.player.resources[6] - 200;
-                    Generate.Village(100, Player.player.X + MovementXY[Player.player.LastMove, 0], Player.player.Y + MovementXY[Player.player.LastMove, 1]);
+                    Generate.Village(50, Player.player.X + MovementXY[Player.player.LastMove, 0], Player.player.Y + MovementXY[Player.player.LastMove, 1]);
                 }
                 else if (buildRect12.Contains(newMouseState.X, newMouseState.Y) && Player.player.resources[5] >= 0)
                 {
@@ -313,8 +313,6 @@ namespace Game1
                 cameraLocationY = cameraLocationY + MovementXY[unit.LastMove, 1];
                 Player.player.X = Player.player.X + MovementXY[unit.LastMove, 0];
                 Player.player.Y = Player.player.Y + MovementXY[unit.LastMove, 1];
-                MovementSync[0] = MovementSync[0] + MovementXY[unit.LastMove, 0];
-                MovementSync[1] = MovementSync[1] + MovementXY[unit.LastMove, 1];
             }
         }
         
@@ -336,8 +334,6 @@ namespace Game1
                     cameraLocationY = cameraLocationY + MovementXY[unit.LastMove, 1];
                     Player.player.X = Player.player.X + MovementXY[unit.LastMove, 0];
                     Player.player.Y = Player.player.Y + MovementXY[unit.LastMove, 1];
-                    MovementSync[0] = MovementSync[0] + MovementXY[unit.LastMove, 0];
-                    MovementSync[1] = MovementSync[1] + MovementXY[unit.LastMove, 1];
                 }
             }
             else
@@ -508,7 +504,7 @@ namespace Game1
             }
         }
 
-        public static void Manipulator(int x, int y, int width, int height, int land, bool inversion)
+        public static void Manipulator(int x, int y, int width, int height, int landValue, bool inversion)
         {
             if (inversion == true)
             {
@@ -516,15 +512,17 @@ namespace Game1
                 {
                     for (int b = 0; b < width; b++)
                     {
-                        if (landArray[x - a, y - b].land != land)
+                        Land land = landArray[x - a, y - b];
+                        if (land.land != landValue)
                         {
-                            if (landArray[x - a, y - b].land != 0)
+                            if (land.land != 0)
                             {
                                 Gather(x - a, y - b, Player.player);
                             }
-                            landArray[x - a, y - b].land = land;
+                            land.land = landValue;
                         }
-                        landArray[x - a, y - b].IsOwned = true;
+                        Player.Domain.Add(land);
+                        land.IsOwned = true;
                     }
                 }
             }
@@ -534,15 +532,17 @@ namespace Game1
                 {
                     for (int b = 0; b < width; b++)
                     {
-                        if (landArray[x + a, y + b].land != land)
+                        Land land = landArray[x + a, y + b];
+                        if (land.land != landValue)
                         {
-                            if (landArray[x + a, y + b].land != 0)
+                            if (land.land != 0)
                             {
                                 Gather(x + a, y + b, Player.player);
                             }
-                            landArray[x + a, y + b].land = land;
+                            land.land = landValue;
                         }
-                        landArray[x + a, y + b].IsOwned = true;
+                        Player.Domain.Add(land);
+                        land.IsOwned = true;
                     }
                 }
             }
