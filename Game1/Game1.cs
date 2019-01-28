@@ -103,6 +103,7 @@ namespace Game1
         public static byte[] receivedBytes = new byte[50000];
         protected static List<Keys> KeysMovement = new List<Keys>() { Keys.D, Keys.S, Keys.A, Keys.W };
         public static int[,] MovementXY = new int[,] { { 0, 0 }, { 1, 0 }, { 0, 1 }, { -1, 0 }, { 0, -1 } };
+        public static int[,] MovementXY2 = new int[,] { { 0, -1 }, { 1, 0 }, { 0, 1 }, { -1, 0 } };
         //protected static List<Manor> LocalManors = new List<Manor>();
 
         public const double tileScaleConst = .5;
@@ -274,6 +275,9 @@ namespace Game1
             DrawingBoard.Tiles[0, 1, 4] = Content.Load<Texture2D>("grass4");
             DrawingBoard.Tiles[0, 1, 5] = land;
             DrawingBoard.Tiles[0, 2, 5] = snow;
+            DrawingBoard.Tiles[0, 2, 1] = Content.Load<Texture2D>("Snow1");
+            DrawingBoard.Tiles[0, 2, 2] = Content.Load<Texture2D>("Snow2");
+            DrawingBoard.Tiles[0, 2, 3] = Content.Load<Texture2D>("Snow3");
             DrawingBoard.Tiles[1, 1, 5] = land;
             DrawingBoard.Tiles[1, 2, 5] = snow;
             DrawingBoard.Tiles[2, 1, 5] = water;
@@ -340,6 +344,23 @@ namespace Game1
             DrawingBoard.Tiles[201, 2, 5] = house_kame;
             DrawingBoard.Tiles[202, 1, 5] = mine;
             DrawingBoard.Tiles[202, 2, 5] = mine;
+
+            DrawingBoard.Borders[2, 0] = player;
+            DrawingBoard.Borders[2, 1] = Content.Load<Texture2D>("SnowCorner1");
+            DrawingBoard.Borders[2, 2] = Content.Load<Texture2D>("SnowCorner2");
+            DrawingBoard.Borders[2, 3] = Content.Load<Texture2D>("SnowCorner3");
+            DrawingBoard.Borders[2, 4] = Content.Load<Texture2D>("SnowCorner4");
+            DrawingBoard.Borders[2, 5] = player;
+            DrawingBoard.Borders[2, 6] = player;
+            DrawingBoard.Borders[2, 7] = player;
+            DrawingBoard.Borders[2, 8] = player;
+            DrawingBoard.Borders[2, 9] = player;
+            DrawingBoard.Borders[2, 10] = player;
+            DrawingBoard.Borders[2, 11] = player;
+            DrawingBoard.Borders[2, 12] = player;
+            DrawingBoard.Borders[2, 13] = player;
+            DrawingBoard.Borders[2, 14] = player;
+            DrawingBoard.Borders[2, 15] = player;
 
             DrawingBoard.HPBar[0] = Content.Load<Texture2D>("ui_bar 50px");
             DrawingBoard.HPBar[1] = Content.Load<Texture2D>("ui_bar_hp 50px");
@@ -449,6 +470,18 @@ namespace Game1
             DrawingBoard.Allies[1, 4, 0] = Content.Load<Texture2D>("Ally4 (1)");
             DrawingBoard.Allies[1, 4, 1] = Content.Load<Texture2D>("Ally4 (2)");
             DrawingBoard.Allies[1, 4, 2] = Content.Load<Texture2D>("Ally4 (3)");
+            DrawingBoard.Allies[2, 1, 0] = Content.Load<Texture2D>("Panda1 (1)");
+            DrawingBoard.Allies[2, 1, 1] = Content.Load<Texture2D>("Panda1 (2)");
+            DrawingBoard.Allies[2, 1, 2] = Content.Load<Texture2D>("Panda1 (3)");
+            DrawingBoard.Allies[2, 2, 0] = Content.Load<Texture2D>("Panda2 (1)");
+            DrawingBoard.Allies[2, 2, 1] = Content.Load<Texture2D>("Panda2 (2)");
+            DrawingBoard.Allies[2, 2, 2] = Content.Load<Texture2D>("Panda2 (3)");
+            DrawingBoard.Allies[2, 3, 0] = Content.Load<Texture2D>("Panda3 (1)");
+            DrawingBoard.Allies[2, 3, 1] = Content.Load<Texture2D>("Panda3 (2)");
+            DrawingBoard.Allies[2, 3, 2] = Content.Load<Texture2D>("Panda3 (3)");
+            DrawingBoard.Allies[2, 4, 0] = Content.Load<Texture2D>("Panda4 (1)");
+            DrawingBoard.Allies[2, 4, 1] = Content.Load<Texture2D>("Panda4 (2)");
+            DrawingBoard.Allies[2, 4, 2] = Content.Load<Texture2D>("Panda4 (3)");
 
             DrawingBoard.Enemies[0, 1, 0] = Content.Load<Texture2D>("Bug1");
             DrawingBoard.Enemies[0, 2, 0] = Content.Load<Texture2D>("Bug2");

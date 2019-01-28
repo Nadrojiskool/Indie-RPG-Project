@@ -185,6 +185,13 @@ namespace Game1
                         {
                             int grass = Check.LoopIntPos((cameraLocationX + x) + (cameraLocationY + y), 1, 4);
                             spriteBatch.Draw(DrawingBoard.Tiles[0, land.biome, grass], tile, Color.White);
+                            if (land.IsBorder)
+                                spriteBatch.Draw(DrawingBoard.Borders[2, land.Border], tile, Color.White);
+                        }
+                        else if (land.biome == 2)
+                        {
+                            int snow = Check.LoopIntPos((cameraLocationX + x) + (cameraLocationY + y), 1, 3);
+                            spriteBatch.Draw(DrawingBoard.Tiles[0, land.biome, snow], tile, Color.White);
                         }
                         else
                         {
@@ -209,6 +216,13 @@ namespace Game1
                         {
                             int grass = Check.LoopIntPos((cameraLocationX + x) + (cameraLocationY + y), 1, 4);
                             spriteBatch.Draw(DrawingBoard.Tiles[0, land.biome, grass], tile, Color.White);
+                            if (land.IsBorder)
+                                spriteBatch.Draw(DrawingBoard.Borders[2, land.Border], tile, Color.White);
+                        }
+                        else if (land.biome == 2)
+                        {
+                            int snow = Check.LoopIntPos((cameraLocationX + x) + (cameraLocationY + y), 1, 3);
+                            spriteBatch.Draw(DrawingBoard.Tiles[0, land.biome, snow], tile, Color.White);
                         }
                         else
                         {
@@ -355,7 +369,7 @@ namespace Game1
                     int modifiedTileScale = (int)(50 * tileScale);
                     int x = Check.Range((Player.player.DrawX - ((Player.player.X - unit.X) * modifiedTileScale)), modifiedTileScale, (int)(1920 - modifiedTileScale));
                     int y = Check.Range((Player.player.DrawY - ((Player.player.Y - unit.Y) * modifiedTileScale)), modifiedTileScale, (int)(1080 - modifiedTileScale));
-                    spriteBatch.Draw(DrawingBoard.Allies[1, unit.LastMove, unit.AnimationFrame], 
+                    spriteBatch.Draw(DrawingBoard.Allies[2, unit.LastMove, unit.AnimationFrame], 
                         new Rectangle(x - (modifiedTileScale / 2), y - (modifiedTileScale / 2), modifiedTileScale, modifiedTileScale), Color.White);
                     DrawingBoard.DrawObjects(DrawingBoard.HPBar[0], new Vector2(x, y + modifiedTileScale), tileScale, 0, new Rectangle(0, 0, 50, 10));
                     DrawingBoard.DrawObjects(DrawingBoard.HPBar[1], new Vector2(x, y + modifiedTileScale + (int)(2 * tileScale)), tileScale, 0, new Rectangle(0, 0, 50, 6));

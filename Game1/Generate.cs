@@ -347,6 +347,37 @@ namespace Game1
                     }
                 }
             }
+            
+            for (int y = 1; y < 999; y++)
+            {
+                for (int x = 1; x < 999; x++)
+                {
+                    Land land = landArray[x, y];
+                    if (land.biome == 1)
+                    {
+                        int border = 0;
+                        for (int i = 0; i < 4; i++)
+                        {
+                            if (landArray[x + MovementXY2[i, 0], y + MovementXY2[i, 1]].biome == 2)
+                            {
+                                border += (int)Math.Pow(2, i);
+                            }
+                        }
+                        if (border > 0 && border % 3 == 0)
+                        {
+                            if (border == 15)
+                            {
+                                land.biome = 2;
+                            }
+                            else
+                            {
+                                land.IsBorder = true;
+                                land.Border = border / 3;
+                            }
+                        }
+                    }
+                }
+            }
         }
 
         public void ExpandBiome(int d)

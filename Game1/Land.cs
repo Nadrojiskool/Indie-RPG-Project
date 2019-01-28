@@ -88,6 +88,9 @@ namespace Game1
         public bool IsResident { get; set; }
         public Unit Resident { get; set; }
 
+        public bool IsBorder = false;
+        public int Border { get; set; }
+
         public Land()//int x, int y, int m)
         {
             //X = x;

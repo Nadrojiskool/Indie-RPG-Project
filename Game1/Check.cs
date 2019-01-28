@@ -130,5 +130,20 @@ namespace Game1
             }*/
             //return (OverflowRectangle);
         }
+
+        
+        public static int AdjacentBiomes(int x, int y, int value)
+        {
+            int bitmap = 0;
+            for (int i = 1; i <= 4; i++)
+            {
+                if (landArray[x + MovementXY[i, 0], y + MovementXY[i, 0]].biome == value)
+                {
+                    value += (int)Math.Pow(2, i - 1);
+                }
+            }
+            return bitmap;
+        }
+        
     }
 }
