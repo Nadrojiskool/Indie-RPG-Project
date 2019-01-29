@@ -347,32 +347,60 @@ namespace Game1
                     }
                 }
             }
-            
-            for (int y = 1; y < 999; y++)
+
+            for (int definition = 0; definition < 2; definition++)
             {
-                for (int x = 1; x < 999; x++)
+                for (int y = 1; y < 999; y++)
                 {
-                    Land land = landArray[x, y];
-                    if (land.biome == 1)
+                    for (int x = 1; x < 999; x++)
                     {
-                        int border = 0;
-                        for (int i = 0; i < 4; i++)
+                        Land land = landArray[x, y];
+                        if (land.biome == 1)
                         {
-                            if (landArray[x + MovementXY2[i, 0], y + MovementXY2[i, 1]].biome == 2)
+                            int border = 0;
+                            for (int i = 0; i < 4; i++)
                             {
-                                border += (int)Math.Pow(2, i);
+                                if (landArray[x + MovementXY2[i, 0], y + MovementXY2[i, 1]].biome == 2)
+                                {
+                                    border += (int)Math.Pow(2, i);
+                                }
+                            }
+                            if (border > 0 && border % 3 == 0)
+                            {
+                                if (border == 15)
+                                {
+                                    land.biome = 2;
+                                }
+                                else
+                                {
+                                    land.IsBorder = true;
+                                    land.Border = border / 3;
+                                }
                             }
                         }
-                        if (border > 0 && border % 3 == 0)
+                        else if (land.biome == 2)
                         {
-                            if (border == 15)
+                            int border = 0;
+                            for (int i = 0; i < 4; i++)
                             {
-                                land.biome = 2;
+                                Land adjacentLand = landArray[x - MovementXY2[i, 0], y - MovementXY2[i, 1]];
+                                if (!adjacentLand.IsBorder && (adjacentLand.biome != 2 || adjacentLand.IsBorder))
+                                {
+                                    border += (int)Math.Pow(2, i);
+                                }
                             }
-                            else
+                            if (border > 0 && border % 3 == 0)
                             {
-                                land.IsBorder = true;
-                                land.Border = border / 3;
+                                if (border == 15)
+                                {
+                                    land.biome = 2;
+                                }
+                                else
+                                {
+                                    land.biome = 1;
+                                    land.IsBorder = true;
+                                    land.Border = border / 3;
+                                }
                             }
                         }
                     }

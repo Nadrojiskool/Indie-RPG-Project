@@ -100,10 +100,12 @@ namespace Game1
         #endregion
 
         private bool gameActive = true;
+        public static int framerate = 0;
         public static byte[] receivedBytes = new byte[50000];
         protected static List<Keys> KeysMovement = new List<Keys>() { Keys.D, Keys.S, Keys.A, Keys.W };
         public static int[,] MovementXY = new int[,] { { 0, 0 }, { 1, 0 }, { 0, 1 }, { -1, 0 }, { 0, -1 } };
         public static int[,] MovementXY2 = new int[,] { { 0, -1 }, { 1, 0 }, { 0, 1 }, { -1, 0 } };
+        public static int[,] MovementXY3 = new int[,] { { 0, 1 }, { -1, 0 }, { 0, -1 }, { 1, 0 } };
         //protected static List<Manor> LocalManors = new List<Manor>();
 
         public const double tileScaleConst = .5;
@@ -346,10 +348,10 @@ namespace Game1
             DrawingBoard.Tiles[202, 2, 5] = mine;
 
             DrawingBoard.Borders[2, 0] = player;
-            DrawingBoard.Borders[2, 1] = Content.Load<Texture2D>("SnowCorner1");
-            DrawingBoard.Borders[2, 2] = Content.Load<Texture2D>("SnowCorner2");
-            DrawingBoard.Borders[2, 3] = Content.Load<Texture2D>("SnowCorner3");
-            DrawingBoard.Borders[2, 4] = Content.Load<Texture2D>("SnowCorner4");
+            DrawingBoard.Borders[2, 1] = Content.Load<Texture2D>("SnowCornerRoundTip1");
+            DrawingBoard.Borders[2, 2] = Content.Load<Texture2D>("SnowCornerRoundTip2");
+            DrawingBoard.Borders[2, 3] = Content.Load<Texture2D>("SnowCornerRoundTip3");
+            DrawingBoard.Borders[2, 4] = Content.Load<Texture2D>("SnowCornerRoundTip4");
             DrawingBoard.Borders[2, 5] = player;
             DrawingBoard.Borders[2, 6] = player;
             DrawingBoard.Borders[2, 7] = player;
@@ -647,7 +649,7 @@ namespace Game1
             // Tenth Second Interval Recurring Logic
             if (LogicClock100.ElapsedMilliseconds > 100)
             {
-
+                framerate = (int)(1 / gameTime.ElapsedGameTime.TotalSeconds);
                 LogicClock100.Restart();
             }
             // Quarter Second Interval Recurring Logic

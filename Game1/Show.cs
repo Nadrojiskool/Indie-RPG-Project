@@ -286,6 +286,7 @@ namespace Game1
             spriteBatch.DrawString(font, $"{ Player.player.Stats[2] }", new Vector2(125, 1000), Color.DarkViolet);
             spriteBatch.DrawString(font, $"{ Player.player.Stats[3] }", new Vector2(200, 1000), Color.DarkViolet);
             spriteBatch.DrawString(font, $"{ Player.player.TileOffsetXY[0] }", new Vector2(300, 1000), Color.DarkViolet);
+            spriteBatch.DrawString(font, $"{ framerate }", new Vector2(1850, 1000), Color.Red);
             //spriteBatch.DrawString(font, $"{ testHP }//{ testVit }//{ testPhy }", new Vector2(300, 1000), Color.DarkViolet);
         }
 
