@@ -105,7 +105,6 @@ namespace Game1
         protected static List<Keys> KeysMovement = new List<Keys>() { Keys.D, Keys.S, Keys.A, Keys.W };
         public static int[,] MovementXY = new int[,] { { 0, 0 }, { 1, 0 }, { 0, 1 }, { -1, 0 }, { 0, -1 } };
         public static int[,] MovementXY2 = new int[,] { { 0, -1 }, { 1, 0 }, { 0, 1 }, { -1, 0 } };
-        public static int[,] MovementXY3 = new int[,] { { 0, 1 }, { -1, 0 }, { 0, -1 }, { 1, 0 } };
         //protected static List<Manor> LocalManors = new List<Manor>();
 
         public const double tileScaleConst = .5;
@@ -270,6 +269,7 @@ namespace Game1
             #endregion
 
             #region Sprite Array
+            // ID // Biome // Frame (Default 5) //
             DrawingBoard.Tiles[0, 1, 0] = Content.Load<Texture2D>("tileable-img_0062-dark"); 
             DrawingBoard.Tiles[0, 1, 1] = Content.Load<Texture2D>("grass1");
             DrawingBoard.Tiles[0, 1, 2] = Content.Load<Texture2D>("grass2");
@@ -280,14 +280,19 @@ namespace Game1
             DrawingBoard.Tiles[0, 2, 1] = Content.Load<Texture2D>("Snow1");
             DrawingBoard.Tiles[0, 2, 2] = Content.Load<Texture2D>("Snow2");
             DrawingBoard.Tiles[0, 2, 3] = Content.Load<Texture2D>("Snow3");
+            DrawingBoard.Tiles[0, 3, 5] = player;
             DrawingBoard.Tiles[1, 1, 5] = land;
             DrawingBoard.Tiles[1, 2, 5] = snow;
+            DrawingBoard.Tiles[1, 3, 5] = player;
             DrawingBoard.Tiles[2, 1, 5] = water;
             DrawingBoard.Tiles[2, 2, 5] = water;
+            DrawingBoard.Tiles[2, 3, 5] = water;
             DrawingBoard.Tiles[3, 1, 5] = bush;
-            DrawingBoard.Tiles[3, 2, 5] = snowBush;
+            DrawingBoard.Tiles[3, 2, 5] = bush;
+            DrawingBoard.Tiles[3, 3, 5] = bush;
             DrawingBoard.Tiles[4, 1, 5] = deer;
             DrawingBoard.Tiles[4, 2, 5] = deer;
+            DrawingBoard.Tiles[4, 3, 5] = deer;
             DrawingBoard.Tiles[5, 1, 0] = tree0;
             DrawingBoard.Tiles[5, 1, 1] = tree1;
             DrawingBoard.Tiles[5, 1, 2] = tree2;
@@ -300,52 +305,100 @@ namespace Game1
             DrawingBoard.Tiles[5, 2, 3] = snowTree;
             DrawingBoard.Tiles[5, 2, 4] = snowTree;
             DrawingBoard.Tiles[5, 2, 5] = snowTree;
+            DrawingBoard.Tiles[5, 3, 5] = tree5;
             DrawingBoard.Tiles[6, 1, 5] = nodeStone;
             DrawingBoard.Tiles[6, 2, 5] = nodeStone;
+            DrawingBoard.Tiles[6, 3, 5] = nodeStone;
             DrawingBoard.Tiles[10, 1, 5] = Content.Load<Texture2D>("Ore 1");
             DrawingBoard.Tiles[10, 2, 5] = Content.Load<Texture2D>("Ore 1 Snow");
+            DrawingBoard.Tiles[10, 3, 5] = Content.Load<Texture2D>("Ore 1 Snow");
             DrawingBoard.Tiles[11, 1, 5] = Content.Load<Texture2D>("Ore 2");
             DrawingBoard.Tiles[11, 2, 5] = Content.Load<Texture2D>("Ore 2 Snow");
+            DrawingBoard.Tiles[11, 3, 5] = Content.Load<Texture2D>("Ore 2 Snow");
             DrawingBoard.Tiles[12, 1, 5] = Content.Load<Texture2D>("Ore 3");
             DrawingBoard.Tiles[12, 2, 5] = Content.Load<Texture2D>("Ore 3 Snow");
+            DrawingBoard.Tiles[12, 3, 5] = Content.Load<Texture2D>("Ore 3 Snow");
             DrawingBoard.Tiles[13, 1, 5] = Content.Load<Texture2D>("Ore 4");
             DrawingBoard.Tiles[13, 2, 5] = Content.Load<Texture2D>("Ore 4 Snow");
+            DrawingBoard.Tiles[13, 3, 5] = Content.Load<Texture2D>("Ore 4 Snow");
             DrawingBoard.Tiles[14, 1, 5] = Content.Load<Texture2D>("Ore 5");
             DrawingBoard.Tiles[14, 2, 5] = Content.Load<Texture2D>("Ore 5 Snow");
+            DrawingBoard.Tiles[14, 3, 5] = Content.Load<Texture2D>("Ore 5 Snow");
             DrawingBoard.Tiles[15, 1, 5] = Content.Load<Texture2D>("Ore 6");
             DrawingBoard.Tiles[15, 2, 5] = Content.Load<Texture2D>("Ore 6 Snow");
+            DrawingBoard.Tiles[15, 3, 5] = Content.Load<Texture2D>("Ore 6 Snow");
             DrawingBoard.Tiles[16, 1, 5] = Content.Load<Texture2D>("Ore 7");
             DrawingBoard.Tiles[16, 2, 5] = Content.Load<Texture2D>("Ore 7 Snow");
+            DrawingBoard.Tiles[16, 3, 5] = Content.Load<Texture2D>("Ore 7 Snow");
             DrawingBoard.Tiles[17, 1, 5] = Content.Load<Texture2D>("Ore 8");
             DrawingBoard.Tiles[17, 2, 5] = Content.Load<Texture2D>("Ore 8 Snow");
+            DrawingBoard.Tiles[17, 3, 5] = Content.Load<Texture2D>("Ore 8 Snow");
             DrawingBoard.Tiles[18, 1, 5] = Content.Load<Texture2D>("Ore 9");
             DrawingBoard.Tiles[18, 2, 5] = Content.Load<Texture2D>("Ore 9 Snow");
+            DrawingBoard.Tiles[18, 3, 5] = Content.Load<Texture2D>("Ore 9 Snow");
             DrawingBoard.Tiles[19, 1, 5] = Content.Load<Texture2D>("Ore 10");
             DrawingBoard.Tiles[19, 2, 5] = Content.Load<Texture2D>("Ore 10 Snow");
+            DrawingBoard.Tiles[19, 3, 5] = Content.Load<Texture2D>("Ore 10 Snow");
             DrawingBoard.Tiles[100, 1, 4] = Content.Load<Texture2D>("Campfire 1");
             DrawingBoard.Tiles[100, 2, 4] = Content.Load<Texture2D>("Campfire 1");
+            DrawingBoard.Tiles[100, 3, 4] = Content.Load<Texture2D>("Campfire 1");
             DrawingBoard.Tiles[100, 1, 5] = Content.Load<Texture2D>("Campfire 2");
             DrawingBoard.Tiles[100, 2, 5] = Content.Load<Texture2D>("Campfire 2");
+            DrawingBoard.Tiles[100, 3, 5] = Content.Load<Texture2D>("Campfire 2");
             DrawingBoard.Tiles[100, 1, 6] = Content.Load<Texture2D>("Campfire 3");
             DrawingBoard.Tiles[100, 2, 6] = Content.Load<Texture2D>("Campfire 3");
+            DrawingBoard.Tiles[100, 3, 6] = Content.Load<Texture2D>("Campfire 3");
             DrawingBoard.Tiles[101, 1, 5] = WallWoodHorizontal;
             DrawingBoard.Tiles[101, 2, 5] = WallWoodHorizontal;
+            DrawingBoard.Tiles[101, 3, 5] = WallWoodHorizontal;
             DrawingBoard.Tiles[102, 1, 5] = WallWoodVertical;
             DrawingBoard.Tiles[102, 2, 5] = WallWoodVertical;
+            DrawingBoard.Tiles[102, 3, 5] = WallWoodVertical;
             DrawingBoard.Tiles[103, 1, 5] = WallWoodCornerLeft;
             DrawingBoard.Tiles[103, 2, 5] = WallWoodCornerLeft;
+            DrawingBoard.Tiles[103, 3, 5] = WallWoodCornerLeft;
             DrawingBoard.Tiles[104, 1, 5] = WallWoodCornerRight;
             DrawingBoard.Tiles[104, 2, 5] = WallWoodCornerRight;
+            DrawingBoard.Tiles[104, 3, 5] = WallWoodCornerRight;
             DrawingBoard.Tiles[105, 1, 5] = WallWoodBackLeft;
             DrawingBoard.Tiles[105, 2, 5] = WallWoodBackLeft;
+            DrawingBoard.Tiles[105, 3, 5] = WallWoodBackLeft;
             DrawingBoard.Tiles[106, 1, 5] = WallWoodBackRight;
             DrawingBoard.Tiles[106, 2, 5] = WallWoodBackRight;
+            DrawingBoard.Tiles[106, 3, 5] = WallWoodBackRight;
             DrawingBoard.Tiles[200, 1, 5] = cabin1;
             DrawingBoard.Tiles[200, 2, 5] = cabin1;
+            DrawingBoard.Tiles[200, 3, 5] = cabin1;
             DrawingBoard.Tiles[201, 1, 5] = house_kame;
             DrawingBoard.Tiles[201, 2, 5] = house_kame;
+            DrawingBoard.Tiles[201, 3, 5] = house_kame;
             DrawingBoard.Tiles[202, 1, 5] = mine;
             DrawingBoard.Tiles[202, 2, 5] = mine;
+            DrawingBoard.Tiles[202, 3, 5] = mine;
+            
+            // Load the 600 tile Desert background
+            int count = 0;
+            string str;
+            for (int y = 0; y < 20; y++)
+            {
+                for (int x = 0; x < 30; x++)
+                {
+                    if (count < 10)
+                    {
+                        str = $"tile00{count}";
+                    }
+                    else if (count < 100)
+                    {
+                        str = $"tile0{count}";
+                    }
+                    else
+                    {
+                        str = $"tile{count}";
+                    }
+                    DrawingBoard.Biomes[3, x, y] = Content.Load<Texture2D>(str);
+                    count++;
+                }
+            }
 
             DrawingBoard.Borders[2, 0] = player;
             DrawingBoard.Borders[2, 1] = Content.Load<Texture2D>("SnowCornerRoundTip1");
@@ -363,6 +416,10 @@ namespace Game1
             DrawingBoard.Borders[2, 13] = player;
             DrawingBoard.Borders[2, 14] = player;
             DrawingBoard.Borders[2, 15] = player;
+            DrawingBoard.Borders[3, 1] = Content.Load<Texture2D>("SandCorner1");
+            DrawingBoard.Borders[3, 2] = Content.Load<Texture2D>("SandCorner2");
+            DrawingBoard.Borders[3, 3] = Content.Load<Texture2D>("SandCorner3");
+            DrawingBoard.Borders[3, 4] = Content.Load<Texture2D>("SandCorner4");
 
             DrawingBoard.HPBar[0] = Content.Load<Texture2D>("ui_bar 50px");
             DrawingBoard.HPBar[1] = Content.Load<Texture2D>("ui_bar_hp 50px");
@@ -729,7 +786,8 @@ namespace Game1
         /// <param name="gameTime">Provides a snapshot of timing values.</param>
         protected override void Draw(GameTime gameTime)
         {
-            spriteBatch.Begin();
+            // Setting SpriteSortMode to Texture massively improves performance
+            spriteBatch.Begin(SpriteSortMode.Immediate);
             if (MainMenuOpen) {
                 Show.MainMenu(); }
             else {

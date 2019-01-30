@@ -170,8 +170,8 @@ namespace Game1
                     }*/
 
                     ///
-                    // I can eventually make a Rectangle Container Class to just have them hold the tile information
-                    ///
+                    // I may be eventually make a Rectangle Container Class to just have them hold the tile information
+                    // I may also be able to pre-pack tiles into 16:9 chunks?
                     
                     Land land = landArray[cameraLocationX + x, cameraLocationY + y];
                     Texture2D texture = DrawingBoard.Tiles[land.land, land.biome, land.frame];
@@ -186,12 +186,18 @@ namespace Game1
                             int grass = Check.LoopIntPos((cameraLocationX + x) + (cameraLocationY + y), 1, 4);
                             spriteBatch.Draw(DrawingBoard.Tiles[0, land.biome, grass], tile, Color.White);
                             if (land.IsBorder)
-                                spriteBatch.Draw(DrawingBoard.Borders[2, land.Border], tile, Color.White);
+                                spriteBatch.Draw(DrawingBoard.Borders[land.BorderBiome, land.Border], tile, Color.White);
                         }
                         else if (land.biome == 2)
                         {
                             int snow = Check.LoopIntPos((cameraLocationX + x) + (cameraLocationY + y), 1, 3);
                             spriteBatch.Draw(DrawingBoard.Tiles[0, land.biome, snow], tile, Color.White);
+                        }
+                        else if (land.biome == 3)
+                        {
+                            int sandX = Check.LoopIntPos((cameraLocationX + x), 0, 28);
+                            int sandY = Check.LoopIntPos((cameraLocationY + y), 0, 18);
+                            spriteBatch.Draw(DrawingBoard.Biomes[3, sandX, sandY], tile, Color.White);
                         }
                         else
                         {
@@ -217,12 +223,18 @@ namespace Game1
                             int grass = Check.LoopIntPos((cameraLocationX + x) + (cameraLocationY + y), 1, 4);
                             spriteBatch.Draw(DrawingBoard.Tiles[0, land.biome, grass], tile, Color.White);
                             if (land.IsBorder)
-                                spriteBatch.Draw(DrawingBoard.Borders[2, land.Border], tile, Color.White);
+                                spriteBatch.Draw(DrawingBoard.Borders[land.BorderBiome, land.Border], tile, Color.White);
                         }
                         else if (land.biome == 2)
                         {
                             int snow = Check.LoopIntPos((cameraLocationX + x) + (cameraLocationY + y), 1, 3);
                             spriteBatch.Draw(DrawingBoard.Tiles[0, land.biome, snow], tile, Color.White);
+                        }
+                        else if (land.biome == 3)
+                        {
+                            int sandX = Check.LoopIntPos((cameraLocationX + x), 0, 28);
+                            int sandY = Check.LoopIntPos((cameraLocationY + y), 0, 18);
+                            spriteBatch.Draw(DrawingBoard.Biomes[3, sandX, sandY], tile, Color.White);
                         }
                         else
                         {
@@ -231,8 +243,8 @@ namespace Game1
                     }
 
 
-                    if (land.IsOwned) {
-                        spriteBatch.Draw(outline, tile, Color.White); }
+                    /*if (land.IsOwned) {
+                        spriteBatch.Draw(outline, tile, Color.White); }*/
 
                     /*float fl = 1.0f;
                     Vector2 origin = new Vector2(0, 0);

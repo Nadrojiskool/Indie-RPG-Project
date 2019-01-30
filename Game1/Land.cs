@@ -90,6 +90,7 @@ namespace Game1
 
         public bool IsBorder = false;
         public int Border { get; set; }
+        public int BorderBiome { get; set; }
 
         public Land()//int x, int y, int m)
         {

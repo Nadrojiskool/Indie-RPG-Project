@@ -145,5 +145,38 @@ namespace Game1
             return bitmap;
         }
         
+        public static int FirstDigit(int value)
+        {
+            int firstDigit;
+
+            if (value < 10)
+                firstDigit = value;
+            else if (value < 100)
+                firstDigit = value / 10;
+            else if (value < 1000)
+                firstDigit = value / 100;
+            else if (value < 10000)
+                firstDigit = value / 1000;
+            else if (value < 100000)
+                firstDigit = value / 10000;
+            else if (value < 1000000)
+                firstDigit = value / 100000;
+            else if (value < 10000000)
+                firstDigit = value / 1000000;
+            else if (value < 100000000)
+                firstDigit = value / 10000000;
+            else if (value < 1000000000)
+                firstDigit = value / 100000000;
+            else
+                firstDigit = value / 1000000000;
+
+            return (firstDigit);
+        }
+
+        public static int[] LandFrame(int x, int y)
+        {
+
+            return (new int[] { 0, 0 });
+        }
     }
 }

@@ -30,7 +30,7 @@ namespace Game1
          * and set tile biome values to the passed biome ID b until to scale
          */
 
-        public static void Biome(int tempCameraX, int tempCameraY, int d, Land[,] landArray)
+        public static void Biome(int tempCameraX, int tempCameraY, int biome, Land[,] landArray)
         {
             double rnd = Random.Next(5, 17);
 
@@ -41,22 +41,22 @@ namespace Game1
                     for (int ii = 0; ii < i * 2; ii++)
                     {
                         tempCameraX++;
-                        landArray[tempCameraX, tempCameraY].biome = d;
+                        landArray[tempCameraX, tempCameraY].biome = biome;
                     }
                     for (int ii = 0; ii < i * 2; ii++)
                     {
                         tempCameraY++;
-                        landArray[tempCameraX, tempCameraY].biome = d;
+                        landArray[tempCameraX, tempCameraY].biome = biome;
                     }
                     for (int ii = 0; ii < i * 2; ii++)
                     {
                         tempCameraX--;
-                        landArray[tempCameraX, tempCameraY].biome = d;
+                        landArray[tempCameraX, tempCameraY].biome = biome;
                     }
                     for (int ii = 0; ii < i * 2; ii++)
                     {
                         tempCameraY--;
-                        landArray[tempCameraX, tempCameraY].biome = d;
+                        landArray[tempCameraX, tempCameraY].biome = biome;
                     }
                     tempCameraX--;
                     tempCameraY--;
@@ -171,16 +171,16 @@ namespace Game1
                     // Realistic Water //
                     /////////////////////
 
-                    if (landArray[Check.Min(x - 1, 0), y].land == 2 && rnd < 5500)
+                    if (landArray[Check.Min(x - 1, 0), y].land == 2 && rnd < 5300)
                     {
                         landArray[x, y].land = 2;
 
                     }
-                    else if (landArray[x, Check.Min(y - 1, 0)].land == 2 && rnd < 5500)
+                    else if (landArray[x, Check.Min(y - 1, 0)].land == 2 && rnd < 5300)
                     {
                         landArray[x, y].land = 2;
                     }
-                    else if (landArray[x, Check.Min(y - 1, 0)].land == 2 && landArray[Check.Min(x - 1, 0), y].land == 2 && rnd < 9920)
+                    else if (landArray[x, Check.Min(y - 1, 0)].land == 2 && landArray[Check.Min(x - 1, 0), y].land == 2 && rnd < 9900)
                     {
                         landArray[x, y].land = 2;
                     }
@@ -222,11 +222,8 @@ namespace Game1
                 {
                     if (landArray[x, y].biome == 0)
                     {
-                        rnd = Random.Next(2, 3);
-                        if (rnd == 2)
-                        {
-                            landArray[x, y].biome = 2;
-                        }
+                        rnd = Random.Next(2, 4);
+                        landArray[x, y].biome = (int)rnd;
                         Biome(x - 1, y - 1, (int)rnd, landArray);
                     }
                     if (landArray[x, y].land == -6)
@@ -237,12 +234,54 @@ namespace Game1
                 }
             }
 
+            /////////////////////////////////////
+            // Expanded Deserts || Default i < 50 //
+            /////////////////////////////////////
+
+            for (int i = 0; i < 30; i++)
+            {
+                for (int y = 0; y < 1000; y++)
+                {
+                    for (int x = 0; x < 1000; x++)
+                    {
+                        checkTile = landArray[x, y];
+                        checkPosX = landArray[Check.Max(x + 1, 999), y];
+                        checkPosY = landArray[x, Check.Max(y + 1, 999)];
+                        checkNegX = landArray[Check.Min(x - 1, 0), y];
+                        checkNegY = landArray[x, Check.Min(y - 1, 0)];
+                        if (checkTile.biome != 3)
+                        {
+                            rnd = Random.Next(0, 1000);
+                            if (checkNegX.biome == 3)
+                            {
+                                rnd = rnd * 1.25;
+                            }
+                            if (checkNegY.biome == 3)
+                            {
+                                rnd = rnd * 1.25;
+                            }
+                            if (checkPosX.biome == 3)
+                            {
+                                rnd = rnd * 1.25;
+                            }
+                            if (checkPosY.biome == 3)
+                            {
+                                rnd = rnd * 1.25;
+                            }
+                            if (rnd > 1120)
+                            {
+                                landArray[x, y].biome = 3;
+                            }
+                        }
+                    }
+                }
+            }
 
             /////////////////////////////////////
             // Expanded Snow || Default i < 50 //
             /////////////////////////////////////
 
-            for (int i = 0; i < 50; i++)
+            for (int i = 0; i < 40; i++)
             {
                 for (int y = 0; y < 1000; y++)
                 {
@@ -348,6 +387,7 @@ namespace Game1
                 }
             }
 
+            // Draw Edges Around Snow
             for (int definition = 0; definition < 2; definition++)
             {
                 for (int y = 1; y < 999; y++)
@@ -374,6 +414,7 @@ namespace Game1
                                 else
                                 {
                                     land.IsBorder = true;
+                                    land.BorderBiome = 2;
                                     land.Border = border / 3;
                                 }
                             }
@@ -399,6 +440,69 @@ namespace Game1
                                 {
                                     land.biome = 1;
                                     land.IsBorder = true;
+                                    land.BorderBiome = 2;
+                                    land.Border = border / 3;
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+            
+            // Draw Edges Around Sand
+            for (int definition = 0; definition < 2; definition++)
+            {
+                for (int y = 1; y < 999; y++)
+                {
+                    for (int x = 1; x < 999; x++)
+                    {
+                        Land land = landArray[x, y];
+                        if (land.biome == 1 && !land.IsBorder)
+                        {
+                            int border = 0;
+                            for (int i = 0; i < 4; i++)
+                            {
+                                if (landArray[x + MovementXY2[i, 0], y + MovementXY2[i, 1]].biome == 3)
+                                {
+                                    border += (int)Math.Pow(2, i);
+                                }
+                            }
+                            if (border > 0 && border % 3 == 0)
+                            {
+                                if (border == 15)
+                                {
+                                    land.biome = 3;
+                                }
+                                else
+                                {
+                                    land.IsBorder = true;
+                                    land.BorderBiome = 3;
+                                    land.Border = border / 3;
+                                }
+                            }
+                        }
+                        else if (land.biome == 3)
+                        {
+                            int border = 0;
+                            for (int i = 0; i < 4; i++)
+                            {
+                                Land adjacentLand = landArray[x - MovementXY2[i, 0], y - MovementXY2[i, 1]];
+                                if (!adjacentLand.IsBorder && (adjacentLand.biome != 3 || adjacentLand.IsBorder))
+                                {
+                                    border += (int)Math.Pow(2, i);
+                                }
+                            }
+                            if (border > 0 && border % 3 == 0)
+                            {
+                                if (border == 15)
+                                {
+                                    land.biome = 3;
+                                }
+                                else
+                                {
+                                    land.biome = 1;
+                                    land.IsBorder = true;
+                                    land.BorderBiome = 3;
                                     land.Border = border / 3;
                                 }
                             }
