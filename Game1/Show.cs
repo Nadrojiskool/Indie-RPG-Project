@@ -142,6 +142,7 @@ namespace Game1
         static void Tiles()
         {
             double rnd;
+            Color color = Color.White;
 
             for (int y = 0; y < (displayHeight / CurrentTileSize) + 2; y++)
             {
@@ -172,6 +173,11 @@ namespace Game1
                     ///
                     // I may be eventually make a Rectangle Container Class to just have them hold the tile information
                     // I may also be able to pre-pack tiles into 16:9 chunks?
+                    //
+                    // I think this is how I'm going to do it:
+                    // First of all we need three separate layers; Biome, Unit, Object
+                    // We then need to call these in order, likely in different spriteBatch.End() calls
+                    // The biome layer and maybe object (building) layer could then be pre-packed (or rendered)
                     
                     Land land = landArray[cameraLocationX + x, cameraLocationY + y];
                     Texture2D texture = DrawingBoard.Tiles[land.land, land.biome, land.frame];
@@ -210,11 +216,16 @@ namespace Game1
                             adjustLand = new int[2] { halfTileSize, -(halfTileSize / 2) };
                         }
 
-                        spriteBatch.Draw(texture,
-                            new Rectangle(tile.X - (int)((obj.X - 50) * tileScale) + adjustLand[0],
+                        Rectangle rectangle = new Rectangle(tile.X - (int)((obj.X - 50) * tileScale) + adjustLand[0],
                                 tile.Y - (int)((obj.Y - 50) * tileScale) + adjustLand[1],
-                                (int)(obj.X * tileScale), (int)(obj.Y * tileScale)),
-                            Color.White);
+                                (int)(obj.X * tileScale), (int)(obj.Y * tileScale));
+
+                        if (rectangle.Contains(Player.player.DrawX, Player.player.DrawY))
+                            color = new Color(Color.Black, 0.2f);
+                        else
+                            color = Color.White;
+
+                        spriteBatch.Draw(texture, rectangle, color);
                     }
                     else
                     {
