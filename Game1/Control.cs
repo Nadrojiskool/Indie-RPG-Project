@@ -235,30 +235,18 @@ namespace Game1
                 else {
                     workerListOpen = true; }}
 
-            else {
 
-                /*Keys[] keysHolder = newState.GetPressedKeys();
-                int keyCheck;
-                for (int i = 0; i < keysHolder.Length; i++)
+            else if (oldState.IsKeyUp(Keys.T) && newState.IsKeyDown(Keys.T))
+            {
+                // Performance testing zone
+                for (int i = 0; i < 10; i++)
                 {
-                    keyCheck = Array.IndexOf(KeysMovement, keysHolder[i]);
-                    if (keyCheck >= 0 && oldState.IsKeyUp(keysHolder[i]))
-                    {
-                        Player.player.LastMove = keyCheck + 1;
-                        Player.player.Rotation = (float)Player.player.LastMove * ((float)Math.PI / 2.0f);
-                        if (Math.Abs(cameraOffsetXY[0]) >= CurrentTileSize || Math.Abs(cameraOffsetXY[1]) >= CurrentTileSize)
-                        {
-                            if (landArray[cameraLocationX + Player.player.tileX + MovementXY[Player.player.LastMove, 0],
-                                cameraLocationY + Player.player.tileY + MovementXY[Player.player.LastMove, 1]].land == 0)
-                            { Movement(Player.player); }
-                        }
-                        else
-                        {
-                            cameraOffsetXY[0] -= MovementXY[Player.player.LastMove, 0] * 5;
-                            cameraOffsetXY[1] -= MovementXY[Player.player.LastMove, 1] * 5;
-                        }
-                    }
-                }*/
+                    DrawingBoard.Text.Add(Check.Benchmark().ToString());
+                }
+            }
+
+            else {
+                
             }
         }
 

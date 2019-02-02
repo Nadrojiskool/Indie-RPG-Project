@@ -142,7 +142,7 @@ namespace Game1
         static void Tiles()
         {
             double rnd;
-            Color color = Color.White;
+            Color color = new Color(Color.Black, 0.2f);
 
             for (int y = 0; y < (displayHeight / CurrentTileSize) + 2; y++)
             {
@@ -189,20 +189,20 @@ namespace Game1
                     {
                         if (land.biome == 1)
                         {
-                            int grass = Check.LoopIntPos((cameraLocationX + x) + (cameraLocationY + y), 1, 4);
+                            int grass = Check.LoopIntPos((cameraLocationX + x) + (cameraLocationY + y), 0, 3);
                             spriteBatch.Draw(DrawingBoard.Tiles[0, land.biome, grass], tile, Color.White);
                             if (land.IsBorder)
                                 spriteBatch.Draw(DrawingBoard.Borders[land.BorderBiome, land.Border], tile, Color.White);
                         }
                         else if (land.biome == 2)
                         {
-                            int snow = Check.LoopIntPos((cameraLocationX + x) + (cameraLocationY + y), 1, 3);
+                            int snow = Check.LoopIntPos((cameraLocationX + x) + (cameraLocationY + y), 0, 2);
                             spriteBatch.Draw(DrawingBoard.Tiles[0, land.biome, snow], tile, Color.White);
                         }
                         else if (land.biome == 3)
                         {
-                            int sandX = Check.LoopIntPos((cameraLocationX + x), 0, 28);
-                            int sandY = Check.LoopIntPos((cameraLocationY + y), 0, 18);
+                            int sandX = Check.LoopIntPos((cameraLocationX + x), 0, 29);
+                            int sandY = Check.LoopIntPos((cameraLocationY + y), 0, 19);
                             spriteBatch.Draw(DrawingBoard.Biomes[3, sandX, sandY], tile, Color.White);
                         }
                         else
@@ -220,31 +220,32 @@ namespace Game1
                                 tile.Y - (int)((obj.Y - 50) * tileScale) + adjustLand[1],
                                 (int)(obj.X * tileScale), (int)(obj.Y * tileScale));
 
-                        if (rectangle.Contains(Player.player.DrawX, Player.player.DrawY))
-                            color = new Color(Color.Black, 0.2f);
+                        if (Math.Abs(Player.player.tileX - x) < 5 && Math.Abs(Player.player.tileY - y) < 5 
+                            && rectangle.Contains(Player.player.DrawX, Player.player.DrawY))
+                        {
+                            spriteBatch.Draw(texture, rectangle, color);
+                        }
                         else
-                            color = Color.White;
-
-                        spriteBatch.Draw(texture, rectangle, color);
+                            spriteBatch.Draw(texture, rectangle, Color.White);
                     }
                     else
                     {
                         if (land.biome == 1)
                         {
-                            int grass = Check.LoopIntPos((cameraLocationX + x) + (cameraLocationY + y), 1, 4);
+                            int grass = Check.LoopIntPos((cameraLocationX + x) + (cameraLocationY + y), 0, 3);
                             spriteBatch.Draw(DrawingBoard.Tiles[0, land.biome, grass], tile, Color.White);
                             if (land.IsBorder)
                                 spriteBatch.Draw(DrawingBoard.Borders[land.BorderBiome, land.Border], tile, Color.White);
                         }
                         else if (land.biome == 2)
                         {
-                            int snow = Check.LoopIntPos((cameraLocationX + x) + (cameraLocationY + y), 1, 3);
+                            int snow = Check.LoopIntPos((cameraLocationX + x) + (cameraLocationY + y), 0, 2);
                             spriteBatch.Draw(DrawingBoard.Tiles[0, land.biome, snow], tile, Color.White);
                         }
                         else if (land.biome == 3)
                         {
-                            int sandX = Check.LoopIntPos((cameraLocationX + x), 0, 28);
-                            int sandY = Check.LoopIntPos((cameraLocationY + y), 0, 18);
+                            int sandX = Check.LoopIntPos((cameraLocationX + x), 0, 29);
+                            int sandY = Check.LoopIntPos((cameraLocationY + y), 0, 19);
                             spriteBatch.Draw(DrawingBoard.Biomes[3, sandX, sandY], tile, Color.White);
                         }
                         else
@@ -283,6 +284,11 @@ namespace Game1
 
         static void Text(/*string text, int width, int height*/)
         {
+            for (int i = 0; i < DrawingBoard.Text.Count; i++)
+            {
+                spriteBatch.DrawString(font, DrawingBoard.Text[i], new Vector2(1000, 10 + (i * 30)), Color.AntiqueWhite);
+            }
+
             if (cantBuild.IsRunning == true) {
                 string output = "Not Enough Resources!";
                 Vector2 FontOrigin = font.MeasureString(output) / 2;

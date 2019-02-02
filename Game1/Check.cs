@@ -82,7 +82,7 @@ namespace Game1
 
             return (num);
         }
-        // Must be positive
+        // Must be positive and must start at zero
         public static int LoopIntPos(int num, int loopMin, int loopMax)
         {
             int loopSize = loopMax - (loopMin - 1);
@@ -90,26 +90,30 @@ namespace Game1
             if (num > loopMax)
             {
                 int num2 = num / loopSize;
-                num = 1 + num - (num2 * loopSize);
+                num = num - (num2 * loopSize);
             }
 
             return (num);
         }
 
-        public static int XOrY(int i)
+        // Positive integers only //
+        public static bool IsDivisibleBy(int num, int divBy)
         {
-            if (i % 2 != 0)
-            {
-                return 0;
-            }
-            else
-            {
-                return 1;
-            }
+            return (num - ((int)(num / divBy) * divBy)) == 0 ? true : false;
         }
 
-        // I think I could speed this up by simply returning the rectangle at cursor position
-        // This would only require a
+        /*
+        public static bool IsDivisibleBy(int num, int divBy)
+        {
+            return num % divBy == 0 ? true : false;
+        }
+        */
+        
+        public static int XOrY(int direction)
+        {
+            return direction == 1 || direction == 3 ? 0 : 1;
+        }
+
         public static Rectangle TileAtCursor(MouseState mouseState)
         {
             int x = (int)Math.Ceiling((double)((mouseState.X - Player.player.TileOffsetXY[0]) / CurrentTileSize));
@@ -117,18 +121,6 @@ namespace Game1
             Show.CursorLand = landArray[cameraLocationX + x, cameraLocationY + y];
 
             return (TileFrame[x, y]);
-            /*for (int y = 0; y < (int)(24 / tileScaleConst); y++)
-            {
-                for (int x = 0; x < (int)(42 / tileScaleConst); x++)
-                {
-                    if (TileFrame[x, y].Contains(mouseState.X, mouseState.Y))
-                    {
-                        Show.CursorLand = landArray[cameraLocationX + x, cameraLocationY + y];
-                        return (TileFrame[x, y]);
-                    }
-                }
-            }*/
-            //return (OverflowRectangle);
         }
 
         
@@ -177,6 +169,20 @@ namespace Game1
         {
 
             return (new int[] { 0, 0 });
+        }
+
+        public static int Benchmark()
+        {
+            Stopwatch sw = new Stopwatch();
+            sw.Start();
+
+            for (int i = 0; i < 10000000; i++)
+            {
+                // Run Functions
+                //XOrYNew(1 + (i % 4));
+            }
+
+            return ((int)sw.ElapsedMilliseconds);
         }
     }
 }

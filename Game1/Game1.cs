@@ -270,16 +270,15 @@ namespace Game1
 
             #region Sprite Array
             // ID // Biome // Frame (Default 5) //
-            DrawingBoard.Tiles[0, 1, 0] = Content.Load<Texture2D>("tileable-img_0062-dark"); 
-            DrawingBoard.Tiles[0, 1, 1] = Content.Load<Texture2D>("grass1");
-            DrawingBoard.Tiles[0, 1, 2] = Content.Load<Texture2D>("grass2");
-            DrawingBoard.Tiles[0, 1, 3] = Content.Load<Texture2D>("grass3");
-            DrawingBoard.Tiles[0, 1, 4] = Content.Load<Texture2D>("grass4");
+            DrawingBoard.Tiles[0, 1, 0] = Content.Load<Texture2D>("grass1");
+            DrawingBoard.Tiles[0, 1, 1] = Content.Load<Texture2D>("grass2");
+            DrawingBoard.Tiles[0, 1, 2] = Content.Load<Texture2D>("grass3");
+            DrawingBoard.Tiles[0, 1, 3] = Content.Load<Texture2D>("grass4");
             DrawingBoard.Tiles[0, 1, 5] = land;
+            DrawingBoard.Tiles[0, 2, 0] = Content.Load<Texture2D>("Snow1");
+            DrawingBoard.Tiles[0, 2, 1] = Content.Load<Texture2D>("Snow2");
+            DrawingBoard.Tiles[0, 2, 2] = Content.Load<Texture2D>("Snow3");
             DrawingBoard.Tiles[0, 2, 5] = snow;
-            DrawingBoard.Tiles[0, 2, 1] = Content.Load<Texture2D>("Snow1");
-            DrawingBoard.Tiles[0, 2, 2] = Content.Load<Texture2D>("Snow2");
-            DrawingBoard.Tiles[0, 2, 3] = Content.Load<Texture2D>("Snow3");
             DrawingBoard.Tiles[0, 3, 5] = player;
             DrawingBoard.Tiles[1, 1, 5] = land;
             DrawingBoard.Tiles[1, 2, 5] = snow;
