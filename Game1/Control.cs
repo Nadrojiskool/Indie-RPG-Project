@@ -169,6 +169,8 @@ namespace Game1
                 Ctrl(); }
 
             else if (oldState.IsKeyUp(Keys.Space) && newState.IsKeyDown(Keys.Space)) {
+                int x = cameraLocationX + Player.player.tileX + MovementXY[Player.player.LastMove, 0];
+                int y = cameraLocationY + Player.player.tileY + MovementXY[Player.player.LastMove, 1];
                 if (actionTimer.IsRunning)
                 {
                     if (Player.player.ActionID == 254)
@@ -186,14 +188,18 @@ namespace Game1
                         Mine(0);
                     }
                 }
-                else if (IsResource(cameraLocationX + Player.player.tileX + MovementXY[Player.player.LastMove, 0],
-                    cameraLocationY + Player.player.tileY + MovementXY[Player.player.LastMove, 1]))
+                else if (Check.IsResource(x, y))
                 {
                     actionPending = true;
                     Player.player.ActionID = 254;
                     actionTimer.Start();
                 }
-                else {
+                else if (Player.WorldItems.ContainsKey(new GPS(x, y, 0)))
+                {
+                    Player.WorldItems.Remove(new GPS(x, y, 0));
+                }
+                else
+                {
                     foreach (Unit unit in Player.LocalEnemies)
                     {
                         Player.player.CheckSlash(unit);
@@ -1236,19 +1242,10 @@ namespace Game1
 
         public static bool CheckSetDestination(Unit unit, int x, int y)
         {
-            if (IsResource(x, y) && !landArray[x, y].IsActive)
+            if (Check.IsResource(x, y) && !landArray[x, y].IsActive)
             {
                 unit.DestinationOffset[0] = unit.X - x;
                 unit.DestinationOffset[1] = unit.Y - y;
-                return true;
-            }
-            else { return false; }
-        }
-
-        public static bool IsResource(int x, int y)
-        {
-            if (landArray[x, y].land > 2 && landArray[x, y].land < 100)
-            {
                 return true;
             }
             else { return false; }

@@ -510,6 +510,8 @@ namespace Game1
                     }
                 }
             }
+
+            Player.WorldItems.Add(new GPS(50, 50, 0), 0);
         }
 
         public void ExpandBiome(int d)

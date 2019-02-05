@@ -319,6 +319,11 @@ namespace Game1
             //spriteBatch.DrawString(font, $"{ testHP }//{ testVit }//{ testPhy }", new Vector2(300, 1000), Color.DarkViolet);
         }
 
+        static void ChatBox()
+        {
+            //spriteBatch.Draw(new Texture2D(graphics, 600, 400), new Vector2(1320, 680), Color.White);
+        }
+
         static void Inventory()
         {
             DrawingBoard.DrawObjects(inventory, new Vector2(1400, 200), 5, 0, new Rectangle(0, 0, 122, 174));
@@ -396,13 +401,12 @@ namespace Game1
             {
                 foreach (Unit unit in localWorkers)
                 {
-                    int modifiedTileScale = (int)(50 * tileScale);
-                    int x = Check.Range((Player.player.DrawX - ((Player.player.X - unit.X) * modifiedTileScale)), modifiedTileScale, (int)(1920 - modifiedTileScale));
-                    int y = Check.Range((Player.player.DrawY - ((Player.player.Y - unit.Y) * modifiedTileScale)), modifiedTileScale, (int)(1080 - modifiedTileScale));
+                    int x = Check.Range((Player.player.DrawX - ((Player.player.X - unit.X) * CurrentTileSize)), CurrentTileSize, (int)(1920 - CurrentTileSize));
+                    int y = Check.Range((Player.player.DrawY - ((Player.player.Y - unit.Y) * CurrentTileSize)), CurrentTileSize, (int)(1080 - CurrentTileSize));
                     spriteBatch.Draw(DrawingBoard.Allies[2, unit.LastMove, unit.AnimationFrame], 
-                        new Rectangle(x - (modifiedTileScale / 2), y - (modifiedTileScale / 2), modifiedTileScale, modifiedTileScale), Color.White);
-                    DrawingBoard.DrawObjects(DrawingBoard.HPBar[0], new Vector2(x, y + modifiedTileScale), tileScale, 0, new Rectangle(0, 0, 50, 10));
-                    DrawingBoard.DrawObjects(DrawingBoard.HPBar[1], new Vector2(x, y + modifiedTileScale + (int)(2 * tileScale)), tileScale, 0, new Rectangle(0, 0, 50, 6));
+                        new Rectangle(x - (CurrentTileSize / 2), y - (CurrentTileSize / 2), CurrentTileSize, CurrentTileSize), Color.White);
+                    DrawingBoard.DrawObjects(DrawingBoard.HPBar[0], new Vector2(x, y + CurrentTileSize), tileScale, 0, new Rectangle(0, 0, 50, 10));
+                    DrawingBoard.DrawObjects(DrawingBoard.HPBar[1], new Vector2(x, y + CurrentTileSize + (int)(2 * tileScale)), tileScale, 0, new Rectangle(0, 0, 50, 6));
                 }
             }
 
@@ -410,14 +414,13 @@ namespace Game1
             {
                 foreach (Unit unit in localEnemies)
                 {
-                    int modifiedTileScale = (int)(50 * tileScale);
-                    int x = Check.Range((Player.player.DrawX - ((Player.player.X - unit.X) * modifiedTileScale)), modifiedTileScale, (int)(1920 - modifiedTileScale));
-                    int y = Check.Range((Player.player.DrawY - ((Player.player.Y - unit.Y) * modifiedTileScale)), modifiedTileScale, (int)(1080 - modifiedTileScale));
+                    int x = Check.Range((Player.player.DrawX - ((Player.player.X - unit.X) * CurrentTileSize)), CurrentTileSize, (int)(1920 - CurrentTileSize));
+                    int y = Check.Range((Player.player.DrawY - ((Player.player.Y - unit.Y) * CurrentTileSize)), CurrentTileSize, (int)(1080 - CurrentTileSize));
                     DrawingBoard.DrawObjects(DrawingBoard.Enemies[0, unit.LastMove, 0], new Vector2(x, y), tileScale, 0, new Rectangle(0, 0, 50, 50));
-                    DrawingBoard.DrawObjects(DrawingBoard.HPBar[0], new Vector2(x, y + modifiedTileScale), tileScale, 0, new Rectangle(0, 0, 50, 10));
+                    DrawingBoard.DrawObjects(DrawingBoard.HPBar[0], new Vector2(x, y + CurrentTileSize), tileScale, 0, new Rectangle(0, 0, 50, 10));
                     int maxHP = 10 * (2 + unit.Stats[11] + unit.Stats[12]);
                     spriteBatch.Draw(DrawingBoard.HPBar[1], 
-                            new Rectangle(x - (modifiedTileScale / 2), y - (modifiedTileScale / 2) + modifiedTileScale, 
+                            new Rectangle(x - (CurrentTileSize / 2), y - (CurrentTileSize / 2) + CurrentTileSize, 
                             (int)((48 * ((double)unit.Stats[1] / maxHP)) * tileScale), (int)(6 * tileScale)), 
                         Color.White);
                 }
@@ -428,11 +431,10 @@ namespace Game1
                 int count = 0;
                 for (int i = 0; i < Player.Animations.Count(); i++)
                 {
-                    int modifiedTileScale = (int)(50 * tileScale);
                     Animation animation = Player.Animations[i - count];
-                    int x = (Player.player.DrawX - ((Player.player.X - animation.X) * modifiedTileScale));
-                    int y = (Player.player.DrawY - ((Player.player.Y - animation.Y) * modifiedTileScale));
-                    spriteBatch.Draw(DrawingBoard.Animations[animation.ID][animation.Frame], new Rectangle(x - (modifiedTileScale / 2), y - (modifiedTileScale / 2), 5 * modifiedTileScale, 5 * modifiedTileScale), Color.White);
+                    int x = (Player.player.DrawX - ((Player.player.X - animation.X) * CurrentTileSize));
+                    int y = (Player.player.DrawY - ((Player.player.Y - animation.Y) * CurrentTileSize));
+                    spriteBatch.Draw(DrawingBoard.Animations[animation.ID][animation.Frame], new Rectangle(x - (CurrentTileSize / 2), y - (CurrentTileSize / 2), 5 * CurrentTileSize, 5 * CurrentTileSize), Color.White);
 
                     if (animation.Frame == 73)
                     {
@@ -443,6 +445,16 @@ namespace Game1
                     {
                         animation.Frame += 1;
                     }
+                }
+            }
+
+            if (Player.WorldItems.Count > 0)
+            {
+                foreach (KeyValuePair<GPS, int> item in Player.WorldItems)
+                {
+                    int x = (item.Key.X - cameraLocationX) * CurrentTileSize;
+                    int y = (item.Key.Y - cameraLocationY) * CurrentTileSize;
+                    spriteBatch.Draw(DrawingBoard.Items[item.Value], new Rectangle(x, y, CurrentTileSize, CurrentTileSize), Color.White);
                 }
             }
         }

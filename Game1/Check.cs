@@ -108,7 +108,13 @@ namespace Game1
             return num % divBy == 0 ? true : false;
         }
         */
-        
+
+        // Returns 0 if Parse fails
+        public static int StringToInt(string str, int i = 0)
+        {
+            return Int32.TryParse(str, out i) ? i : 0;
+        }
+
         public static int XOrY(int direction)
         {
             return direction == 1 || direction == 3 ? 0 : 1;
@@ -169,6 +175,15 @@ namespace Game1
         {
 
             return (new int[] { 0, 0 });
+        }
+
+        public static bool IsResource(int x, int y)
+        {
+            if (landArray[x, y].land > 2 && landArray[x, y].land < 100)
+            {
+                return true;
+            }
+            else { return false; }
         }
 
         public static int Benchmark()

@@ -65,6 +65,7 @@ namespace Game1
         //public static List<Asset> Assets = new List<Asset>();
         public static List<Animation> Animations = new List<Animation>();
         public static List<Item> ItemIndex = new List<Item>();
+        public static Dictionary<GPS, int> WorldItems = new Dictionary<GPS, int>();
         public static HashSet<Land> Domain = new HashSet<Land>();
 
         public Player (int x, int y, int[] array) : base(x, y, 0, array)

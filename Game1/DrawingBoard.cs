@@ -52,6 +52,7 @@ namespace Game1
         public static Texture2D[,,] Allies = new Texture2D[3, 5, 3]; // Ally ID, Ally Direction (LastMove), Ally Frame
         public static Texture2D[] HPBar = new Texture2D[2];
         public static List<Texture2D[]> Animations = new List<Texture2D[]>();
+        public static Texture2D[] Items = new Texture2D[10];
         public static List<string> Text = new List<string>();
 
         public static void DrawObjects(Texture2D spr, Vector2 location, double scale, float rotate, Rectangle sourceRectangle)

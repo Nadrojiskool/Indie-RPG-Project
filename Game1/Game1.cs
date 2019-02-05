@@ -21,6 +21,7 @@ namespace Game1
 {
     public class Game1 : Game
     {
+        public static int[] ho = new int[2] { 50, 50 };
         protected static bool NoMap = true;
         protected static bool MainMenuOpen = true;
 
@@ -398,6 +399,8 @@ namespace Game1
                     count++;
                 }
             }
+
+            DrawingBoard.Items[0] = Content.Load<Texture2D>("HoeSteel");
 
             DrawingBoard.Borders[2, 0] = player;
             DrawingBoard.Borders[2, 1] = Content.Load<Texture2D>("SnowCornerRoundTip1");
