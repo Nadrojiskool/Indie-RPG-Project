@@ -43,7 +43,7 @@ namespace Game1
         protected static Texture2D house_kame;
         protected static Texture2D mine;
         protected static Texture2D cabin1;
-        protected static Texture2D orbPillar;
+        protected static Texture2D orbPurple;
         protected static Texture2D WallWoodHorizontal;
         protected static Texture2D WallWoodVertical;
         protected static Texture2D WallWoodCornerLeft;
@@ -135,8 +135,9 @@ namespace Game1
         public static Rectangle buildRect11 = new Rectangle(700, 980, 200, 80);
         public static Rectangle buildRect12 = new Rectangle(1250, 600, 50, 50);
         public static Rectangle buildRect13 = new Rectangle(900, 980, 200, 80);
+        public static Rectangle buildRect14 = new Rectangle(600, 850, 200, 80);
         #endregion
-        
+
         public static string Username = "King Charles I";
         
         public Game1()
@@ -264,7 +265,7 @@ namespace Game1
             house_kame = Content.Load<Texture2D>("House (Kame)");
             mine = Content.Load<Texture2D>("Mine");
             cabin1 = Content.Load<Texture2D>("Cabin1");
-            orbPillar = Content.Load<Texture2D>("Orb Pillar");
+            orbPurple = Content.Load<Texture2D>("OrbPurple");
             WallWoodHorizontal = Content.Load<Texture2D>("Wall Wood");
             WallWoodVertical = Content.Load<Texture2D>("WallWoodVertical");
             WallWoodCornerLeft = Content.Load<Texture2D>("WallWoodCornerLeft");
@@ -382,7 +383,10 @@ namespace Game1
             DrawingBoard.Tiles[202, 1, 5] = mine;
             DrawingBoard.Tiles[202, 2, 5] = mine;
             DrawingBoard.Tiles[202, 3, 5] = mine;
-            
+            DrawingBoard.Tiles[300, 1, 5] = orbPurple;
+            DrawingBoard.Tiles[300, 2, 5] = orbPurple;
+            DrawingBoard.Tiles[300, 3, 5] = orbPurple;
+
             // Load the 600 tile Desert background
             int count = 0;
             string str;
@@ -735,6 +739,17 @@ namespace Game1
                     {
                         Control.UnitManager(unit);
                         unit.AnimationFrame = Check.LoopInt(unit.AnimationFrame + 1, 0, 2);
+                    }
+                }
+
+                if (Player.Towers.Count > 0)
+                {
+                    foreach (Tower tower in Player.Towers.Values)
+                    {
+                        if (tower.TimeIdle.ElapsedMilliseconds > tower.Speed)
+                        {
+                            tower.Scan(tower.Range);
+                        }
                     }
                 }
 

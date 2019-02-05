@@ -18,6 +18,12 @@ namespace Game1
 {
     public class Set : Game1
     {
+        public static void Rotation(Unit unit, int movement)
+        {
+            unit.Rotation = movement * (float)Math.PI / 2.0f;
+            unit.LastMove = movement;
+        }
+
         public static void Land(int[,] blueprint, int x, int y)
         {
             for (int y2 = 0; y2 < blueprint.GetLength(0); y2++)

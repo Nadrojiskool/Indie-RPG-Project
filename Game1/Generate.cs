@@ -539,7 +539,7 @@ namespace Game1
             {
                 for (int x2 = 0; x2 < 1 + (2 * size); x2++)
                 {
-                    Build.Cabin(x + (4 * x2) + (2 * offset), y + (4 * y2));
+                    Build.DoubleWithSpace(x + (4 * x2) + (2 * offset), y + (4 * y2), 200);
                 }
                 offset = Check.LoopInt(offset + 1, 0, 1);
             }

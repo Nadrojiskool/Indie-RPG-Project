@@ -106,6 +106,7 @@
     <Compile Include="Land.cs" />
     <Compile Include="Spawn.cs" />
     <Compile Include="Tile.cs" />
+    <Compile Include="Tower.cs" />
     <Compile Include="Unit.cs" />
   </ItemGroup>
   <ItemGroup>

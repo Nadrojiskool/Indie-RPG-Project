@@ -36,7 +36,7 @@ namespace Game1
         public static bool CursorOutline = false;
         public static bool ActiveDialogue = false;
         public static Land CursorLand { get; set; }
-        public static Object[] Objects = new Object[250];
+        public static Object[] Objects = new Object[1000];
         public static Object[] InterfaceObjects = new Object[100];
         static Random Random = new Random();
         
@@ -74,6 +74,7 @@ namespace Game1
             Objects[200] = new Object("Cabin", 100, 100, 2, 2);
             Objects[201] = new Object("Kame House", 100, 150, 2, 2);
             Objects[202] = new Object("Mine", 100, 100, 2, 2);
+            Objects[300] = new Object("OrbPurple", 50, 50, 1, 1);
         }
 
         public static void Interface()
@@ -386,7 +387,8 @@ namespace Game1
             DrawingBoard.DrawObjects(WallWoodBackRight, new Vector2(1000, 650), 1, 0, new Rectangle(0, 0, 50, 100));
             DrawingBoard.DrawObjects(mine, new Vector2(1050, 650), 1, 0, new Rectangle(0, 0, 100, 100));
             DrawingBoard.DrawObjects(cabin1, new Vector2(1150, 650), 1, 0, new Rectangle(0, 0, 100, 100));
-            DrawingBoard.DrawObjects(DrawingBoard.Tiles[100, 1, 5], new Vector2(1275, 650), 1, 0, new Rectangle(0, 0, 50, 50));
+            spriteBatch.Draw(DrawingBoard.Tiles[100, 1, 5], new Vector2(1250, 600), Color.White);
+            spriteBatch.Draw(DrawingBoard.Tiles[300, 1, 5], new Vector2(600, 850), Color.White);
             spriteBatch.DrawString(font, $"Spawn Camp", new Vector2(500, 980), Color.DarkViolet);
             spriteBatch.DrawString(font, $"Spawn Village", new Vector2(700, 980), Color.DarkViolet);
             spriteBatch.DrawString(font, $"Spawn Bonfire", new Vector2(900, 980), Color.DarkViolet);

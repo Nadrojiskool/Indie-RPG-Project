@@ -57,35 +57,51 @@ namespace Game1
                 invOpen = false; }
 
             if (buildMenuOpen) {
-                if (buildRect1.Contains(newMouseState.X, newMouseState.Y) && Player.player.resources[5] >= 0) {
+                // This build menu seriously needs standardized and refactored
+                if (buildRect1.Contains(newMouseState.X, newMouseState.Y) && Player.player.resources[5] >= 0)
+                {
                     //Player.player.resources[5] = Player.player.resources[5] - 200;
-                    Mine(201); }
-                else if (buildRect2.Contains(newMouseState.X, newMouseState.Y) && Player.player.resources[5] >= 0) {
+                    Build.DoubleWithSpace(Player.player.X + MovementXY[Player.player.LastMove, 0], Player.player.Y + MovementXY[Player.player.LastMove, 1], 201);
+                }
+                else if (buildRect2.Contains(newMouseState.X, newMouseState.Y) && Player.player.resources[5] >= 0)
+                {
                     //Player.player.resources[5] = Player.player.resources[5] - 50;
-                    Mine(101); }
-                else if (buildRect3.Contains(newMouseState.X, newMouseState.Y) && Player.player.resources[5] >= 0) {
+                    Build.Single(Player.player.X + MovementXY[Player.player.LastMove, 0], Player.player.Y + MovementXY[Player.player.LastMove, 1], 101);
+                }
+                else if (buildRect3.Contains(newMouseState.X, newMouseState.Y) && Player.player.resources[5] >= 0)
+                {
                     //Player.player.resources[5] = Player.player.resources[5] - 50;
-                    Mine(102); }
-                else if (buildRect4.Contains(newMouseState.X, newMouseState.Y) && Player.player.resources[5] >= 0) {
+                    Build.Single(Player.player.X + MovementXY[Player.player.LastMove, 0], Player.player.Y + MovementXY[Player.player.LastMove, 1], 102);
+                }
+                else if (buildRect4.Contains(newMouseState.X, newMouseState.Y) && Player.player.resources[5] >= 0)
+                {
                     //Player.player.resources[5] = Player.player.resources[5] - 50;
-                    Mine(103); }
-                else if (buildRect5.Contains(newMouseState.X, newMouseState.Y) && Player.player.resources[5] >= 0) {
+                    Build.Single(Player.player.X + MovementXY[Player.player.LastMove, 0], Player.player.Y + MovementXY[Player.player.LastMove, 1], 103);
+                }
+                else if (buildRect5.Contains(newMouseState.X, newMouseState.Y) && Player.player.resources[5] >= 0)
+                {
                     //Player.player.resources[5] = Player.player.resources[5] - 50;
-                    Mine(104); }
-                else if (buildRect6.Contains(newMouseState.X, newMouseState.Y) && Player.player.resources[5] >= 0) {
+                    Build.Single(Player.player.X + MovementXY[Player.player.LastMove, 0], Player.player.Y + MovementXY[Player.player.LastMove, 1], 104);
+                }
+                else if (buildRect6.Contains(newMouseState.X, newMouseState.Y) && Player.player.resources[5] >= 0)
+                {
                     //Player.player.resources[5] = Player.player.resources[5] - 50;
-                    Mine(105); }
-                else if (buildRect7.Contains(newMouseState.X, newMouseState.Y) && Player.player.resources[5] >= 0) {
+                    Build.Single(Player.player.X + MovementXY[Player.player.LastMove, 0], Player.player.Y + MovementXY[Player.player.LastMove, 1], 105);
+                }
+                else if (buildRect7.Contains(newMouseState.X, newMouseState.Y) && Player.player.resources[5] >= 0)
+                {
                     //Player.player.resources[5] = Player.player.resources[5] - 50;
-                    Mine(106); }
-                else if (buildRect8.Contains(newMouseState.X, newMouseState.Y) && Player.player.resources[6] >= 0) {
+                    Build.Single(Player.player.X + MovementXY[Player.player.LastMove, 0], Player.player.Y + MovementXY[Player.player.LastMove, 1], 106);
+                }
+                else if (buildRect8.Contains(newMouseState.X, newMouseState.Y) && Player.player.resources[6] >= 0)
+                {
                     //Player.player.resources[6] = Player.player.resources[6] - 200;
-                    Mine(202);
+                    Build.DoubleWithSpace(Player.player.X + MovementXY[Player.player.LastMove, 0], Player.player.Y + MovementXY[Player.player.LastMove, 1], 202);
                 }
                 else if (buildRect9.Contains(newMouseState.X, newMouseState.Y) && Player.player.resources[5] >= 0)
                 {
                     //Player.player.resources[6] = Player.player.resources[6] - 200;
-                    Build.Cabin(Player.player.X + MovementXY[Player.player.LastMove, 0], Player.player.Y + MovementXY[Player.player.LastMove, 1]);
+                    Build.DoubleWithSpace(Player.player.X + MovementXY[Player.player.LastMove, 0], Player.player.Y + MovementXY[Player.player.LastMove, 1], 200);
                 }
                 else if (buildRect10.Contains(newMouseState.X, newMouseState.Y) && Player.player.resources[5] >= 0)
                 {
@@ -105,11 +121,16 @@ namespace Game1
                 }
                 else if (buildRect13.Contains(newMouseState.X, newMouseState.Y) && Player.player.resources[5] >= 0)
                 {
-                    //Player.player.resources[6] = Player.player.resources[6] - 200;
                     Generate.Bonfire(100, Player.player.X + MovementXY[Player.player.LastMove, 0], Player.player.Y + MovementXY[Player.player.LastMove, 1]);
                 }
-                else {
-                    cantBuild.Start(); }
+                else if (buildRect14.Contains(newMouseState.X, newMouseState.Y) && Player.player.resources[5] >= 0)
+                {
+                    Build.Single(Player.player.X + MovementXY[Player.player.LastMove, 0], Player.player.Y + MovementXY[Player.player.LastMove, 1], 300);
+                }
+                else
+                {
+                    cantBuild.Start();
+                }
 
                 buildMenuOpen = false;
             }
@@ -764,22 +785,22 @@ namespace Game1
                     {
                         if (unit.DestinationOffset[0] > 0)
                         {
-                            SetRotation(unit, 3);
+                            Set.Rotation(unit, 3);
                         }
                         else if (unit.DestinationOffset[0] < 0)
                         {
-                            SetRotation(unit, 1);
+                            Set.Rotation(unit, 1);
                         }
                     }
                     else if (Math.Abs(unit.DestinationOffset[1]) > Math.Abs(unit.DestinationOffset[0]))
                     {
                         if (unit.DestinationOffset[1] > 0)
                         {
-                            SetRotation(unit, 4);
+                            Set.Rotation(unit, 4);
                         }
                         else if (unit.DestinationOffset[1] < 0)
                         {
-                            SetRotation(unit, 2);
+                            Set.Rotation(unit, 2);
                         }
                     }
                 }
@@ -1096,12 +1117,6 @@ namespace Game1
             return (length);
         }
 
-        public static void SetRotation(Unit unit, int movement)
-        {
-            unit.Rotation = movement * (float)Math.PI / 2.0f;
-            unit.LastMove = movement;
-        }
-
         public static void UnitManager(Unit unit)
         {
             if (unit.ActionID == 1)
@@ -1115,7 +1130,7 @@ namespace Game1
             {
                 unit.X = Player.player.X - MovementXY[Player.player.LastMove, 0];
                 unit.Y = Player.player.Y - MovementXY[Player.player.LastMove, 1];
-                SetRotation(unit, Player.player.LastMove);
+                Set.Rotation(unit, Player.player.LastMove);
             }
             else if (unit.ActionID == 3)
             {
