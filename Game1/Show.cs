@@ -34,6 +34,7 @@ namespace Game1
     public class Show : Game1
     {
         public static bool CursorOutline = false;
+        public static bool ActiveDialogue = false;
         public static Land CursorLand { get; set; }
         public static Object[] Objects = new Object[250];
         public static Object[] InterfaceObjects = new Object[100];
@@ -52,6 +53,7 @@ namespace Game1
             Objects[004] = new Object("Deer", 50, 50, 1, 1);
             Objects[005] = new Object("Tree", 100, 100, 1, 1);
             Objects[006] = new Object("Rock", 50, 50, 1, 1);
+            Objects[007] = new Object("Plot", 50, 50, 1, 1);
             Objects[010] = new Object("Ore 1", 50, 50, 1, 1);
             Objects[011] = new Object("Ore 2", 50, 50, 1, 1);
             Objects[012] = new Object("Ore 3", 50, 50, 1, 1);
@@ -90,13 +92,16 @@ namespace Game1
 
             LocalUnits(Player.LocalWorkers, Player.LocalEnemies);
 
-            if (invOpen == true) {
+            if (ActiveDialogue) {
+                DialogueBox(); }
+
+            if (invOpen) {
                 Inventory(); }
 
-            if (buildMenuOpen == true) {
+            if (buildMenuOpen) {
                 Blueprints(); }
 
-            if (workerListOpen == true) {
+            if (workerListOpen) {
                 WorkerList(); }
 
             Text();
@@ -322,6 +327,12 @@ namespace Game1
         static void ChatBox()
         {
             //spriteBatch.Draw(new Texture2D(graphics, 600, 400), new Vector2(1320, 680), Color.White);
+        }
+
+        static void DialogueBox()
+        {
+            spriteBatch.Draw(boxPink, new Rectangle(600, 600, 720, 405), Color.White);
+            spriteBatch.DrawString(font, Check.WrapText("How convenient that somebody left this Hoe here.", 600), new Vector2(670, 620), Color.Black);
         }
 
         static void Inventory()

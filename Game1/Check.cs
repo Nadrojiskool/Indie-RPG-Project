@@ -129,7 +129,6 @@ namespace Game1
             return (TileFrame[x, y]);
         }
 
-        
         public static int AdjacentBiomes(int x, int y, int value)
         {
             int bitmap = 0;
@@ -184,6 +183,32 @@ namespace Game1
                 return true;
             }
             else { return false; }
+        }
+
+        public static string WrapText(string text, int maxLineWidth)
+        {
+            string[] words = text.Split(' ');
+            StringBuilder sb = new StringBuilder();
+            int lineWidth = 0;
+            int spaceWidth = (int)font.MeasureString(" ").X;
+
+            foreach (string word in words)
+            {
+                Vector2 size = font.MeasureString(word);
+
+                if (lineWidth + size.X < maxLineWidth)
+                {
+                    sb.Append(word + " ");
+                    lineWidth += (int)size.X + spaceWidth;
+                }
+                else
+                {
+                    sb.Append("\n" + word + " ");
+                    lineWidth = (int)size.X + spaceWidth;
+                }
+            }
+
+            return sb.ToString();
         }
 
         public static int Benchmark()

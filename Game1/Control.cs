@@ -32,16 +32,26 @@ namespace Game1
         public static void Click()
         {
             if (!MainMenuOpen && !invOpen && !buildMenuOpen && !workerListOpen) {
-                // Clear Land //
-                int spellX = ((newMouseState.X - Player.player.TileOffsetXY[0]) / CurrentTileSize + cameraLocationX) - 2;
-                int spellY = ((newMouseState.Y - Player.player.TileOffsetXY[1]) / CurrentTileSize + cameraLocationY) - 2;
-                Manipulator(spellX, spellY, 5, 5, 0, false); }
+                if (Player.player.ToolBelt[1] != 0)
+                {
+                    Set.LandAtCursor(oldMouseState, 7);
+                }
+                else
+                {
+                    // Clear Land //
+                    int spellX = ((newMouseState.X - Player.player.TileOffsetXY[0]) / CurrentTileSize + cameraLocationX) - 2;
+                    int spellY = ((newMouseState.Y - Player.player.TileOffsetXY[1]) / CurrentTileSize + cameraLocationY) - 2;
+                    Manipulator(spellX, spellY, 5, 5, 0, false);
+                }}
 
             /*if (MainMenuOpen) {
                 Client.Job job = new Client.Job((byte)Client.Net.UserList[0].JobList.Count(), 5, Client.Net.UserList[0].Endpoint, Client.Net.Endpoint);
                 Console.WriteLine($"Starting Job ID {Client.Net.UserList[0].JobList.Count()}");
                 Client.Net.UserList[0].JobList.Add(job);
                 var t = Task.Run(() => Client.Net.JobManager(job)); }*/
+
+            if (Show.ActiveDialogue) {
+                Show.ActiveDialogue = false; }
 
             if (invOpen) {
                 invOpen = false; }
@@ -131,6 +141,9 @@ namespace Game1
 
             if (MainMenuOpen) {
                 var t = Task.Run(() => Generate.All()); }
+            
+            if (Show.ActiveDialogue) {
+                Show.ActiveDialogue = false; }
 
             if (invOpen) {
                 /*invOpen = false;*/ }
@@ -197,6 +210,8 @@ namespace Game1
                 else if (Player.WorldItems.ContainsKey(new GPS(x, y, 0)))
                 {
                     Player.WorldItems.Remove(new GPS(x, y, 0));
+                    Show.ActiveDialogue = true;
+                    Player.player.ToolBelt[1]++;
                 }
                 else
                 {

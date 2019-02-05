@@ -70,5 +70,12 @@ namespace Game1
                 }
             }
         }
+
+        public static void LandAtCursor(MouseState mouseState, int land)
+        {
+            int x = (int)Math.Ceiling((double)((mouseState.X - Player.player.TileOffsetXY[0]) / CurrentTileSize));
+            int y = (int)Math.Ceiling((double)((mouseState.Y - Player.player.TileOffsetXY[1]) / CurrentTileSize));
+            landArray[cameraLocationX + x, cameraLocationY + y].land = land;
+        }
     }
 }

@@ -289,6 +289,7 @@ namespace Game1
         /// </summary>
 
         public int[] Stats = new int[200];
+        public int[] ToolBelt = new int[10];
         public int ID { get; set; }
         public byte ActionID = 0;
         public Stopwatch ActionTime = new Stopwatch();

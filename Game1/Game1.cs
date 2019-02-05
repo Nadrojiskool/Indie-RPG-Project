@@ -31,6 +31,7 @@ namespace Game1
         public static SpriteFont font;
         public static SpriteFont TileInfoFont;
         protected static Texture2D outline;
+        protected static Texture2D boxPink;
         protected static Texture2D inventory;
         protected static Texture2D idCard;
         protected static Texture2D idCardBack;
@@ -68,6 +69,7 @@ namespace Game1
         private Texture2D nodeCopper;
         private Texture2D nodeTin;
         private Texture2D nodeIron;
+        private Texture2D dirtPlot;
         #endregion
 
         #region UI Variables
@@ -231,6 +233,7 @@ namespace Game1
             white = new Texture2D(GraphicsDevice, 1, 1);
             white.SetData(new[] { Color.White });
             outline = Content.Load<Texture2D>("Outline");
+            boxPink = Content.Load<Texture2D>("pink_box");
             land = Content.Load<Texture2D>("Land");
             water = Content.Load<Texture2D>("Water");
             player = Content.Load<Texture2D>("Player");
@@ -251,6 +254,7 @@ namespace Game1
             nodeCopper = Content.Load<Texture2D>("NodeCopper");
             nodeTin = Content.Load<Texture2D>("NodeTin");
             nodeIron = Content.Load<Texture2D>("NodeIron");
+            dirtPlot = Content.Load<Texture2D>("DirtPlot");
             BGFinalFantasy = Content.Load<Texture2D>("BGFinalFantasy");
             inventory = Content.Load<Texture2D>("Inventory");
             idCard = Content.Load<Texture2D>("IDCard");
@@ -309,6 +313,9 @@ namespace Game1
             DrawingBoard.Tiles[6, 1, 5] = nodeStone;
             DrawingBoard.Tiles[6, 2, 5] = nodeStone;
             DrawingBoard.Tiles[6, 3, 5] = nodeStone;
+            DrawingBoard.Tiles[7, 1, 5] = dirtPlot;
+            DrawingBoard.Tiles[7, 2, 5] = dirtPlot;
+            DrawingBoard.Tiles[7, 3, 5] = dirtPlot;
             DrawingBoard.Tiles[10, 1, 5] = Content.Load<Texture2D>("Ore 1");
             DrawingBoard.Tiles[10, 2, 5] = Content.Load<Texture2D>("Ore 1 Snow");
             DrawingBoard.Tiles[10, 3, 5] = Content.Load<Texture2D>("Ore 1 Snow");
