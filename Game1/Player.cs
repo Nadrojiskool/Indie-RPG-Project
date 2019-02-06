@@ -59,9 +59,9 @@ namespace Game1
         // I'm concerned with the way I implemented these lists
         // I would also like them to just be pointers to the unit at their residence to prevent additional syncing
         public static List<Unit> Workers = new List<Unit>();
-        public static List<Unit> Enemies = new List<Unit>();
         public static List<Unit> LocalWorkers = new List<Unit>();
-        public static List<Unit> LocalEnemies = new List<Unit>();
+        public static List<Unit> Enemies = new List<Unit>();
+        public static Dictionary<GPS, Unit> LocalEnemies = new Dictionary<GPS, Unit>();
         //public static List<Asset> Assets = new List<Asset>();
         public static List<Animation> Animations = new List<Animation>();
         public static List<Item> ItemIndex = new List<Item>();

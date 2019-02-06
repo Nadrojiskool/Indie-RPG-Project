@@ -91,7 +91,7 @@ namespace Game1
                 new Rectangle((Player.player.X - cameraLocationX) * CurrentTileSize, (Player.player.Y - cameraLocationY) * CurrentTileSize, CurrentTileSize, CurrentTileSize),
                 Color.White);
 
-            LocalUnits(Player.LocalWorkers, Player.LocalEnemies);
+            LocalUnits(Player.LocalWorkers, Player.LocalEnemies.Values.ToList());
 
             if (ActiveDialogue) {
                 DialogueBox(); }
@@ -300,10 +300,8 @@ namespace Game1
                 Vector2 FontOrigin = font.MeasureString(output) / 2;
                 spriteBatch.DrawString(font, output, new Vector2(1000, 450), Color.Red, 0, FontOrigin, 1.0f, SpriteEffects.None, 0.5f); }
 
-            if (Player.LocalEnemies.Count > 0) {
+            /*if (Player.LocalEnemies.Count > 0) {
                 //int[] array = Player.LocalEnemies[0].Stats;
-                spriteBatch.DrawString(font, $"{ Player.player.X }", new Vector2(50, 10), Color.DarkViolet);
-                spriteBatch.DrawString(font, $"{ Player.player.Y }", new Vector2(100, 10), Color.DarkViolet);
                 spriteBatch.DrawString(font, $"{ Player.LocalEnemies[0].LeftOrRight }", new Vector2(50, 50), Color.DarkViolet);
                 spriteBatch.DrawString(font, $"{ Player.LocalEnemies[0].ActionID }", new Vector2(100, 50), Color.DarkViolet);
                 spriteBatch.DrawString(font, $"{ Player.LocalEnemies[0].Stats[1] }", new Vector2(150, 50), Color.DarkViolet);
@@ -313,7 +311,10 @@ namespace Game1
                 spriteBatch.DrawString(font, $"{ Player.LocalEnemies[0].DestinationOffset[1] }", new Vector2(100, 150), Color.DarkViolet);
                 spriteBatch.DrawString(font, $"{ Player.LocalEnemies[0].OriginOffset[0] }", new Vector2(50, 200), Color.DarkViolet);
                 spriteBatch.DrawString(font, $"{ Player.LocalEnemies[0].OriginOffset[1] }", new Vector2(100, 200), Color.DarkViolet);
-            }
+            }*/
+
+            spriteBatch.DrawString(font, $"{ Player.player.X }", new Vector2(50, 10), Color.DarkViolet);
+            spriteBatch.DrawString(font, $"{ Player.player.Y }", new Vector2(100, 10), Color.DarkViolet);
 
             spriteBatch.DrawString(font, $"Total Enemies: { Player.Enemies.Count() }", new Vector2(50, 900), Color.Red);
             spriteBatch.DrawString(font, $"Total Active Enemies: { Player.LocalEnemies.Count() }", new Vector2(50, 950), Color.Red);

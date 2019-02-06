@@ -18,14 +18,14 @@ namespace Game1
 {
     public class Tower
     {
-        public Action<int> Scan { get; set; }
+        //public Action<int> Scan { get; set; }
         public int Range { get; set; }
         public int Speed { get; set; }
         public Stopwatch TimeIdle = new Stopwatch();
 
-        public Tower(Action<int> scan, int range, int speed)
+        public Tower(/*Action<int> scan, */int range, int speed)
         {
-            Scan = scan;
+            //Scan = scan;
             Range = range;
             Speed = speed;
             TimeIdle.Start();

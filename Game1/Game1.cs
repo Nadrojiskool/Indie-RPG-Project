@@ -694,22 +694,6 @@ namespace Game1
 
             if (playerAuto == true) {
                 Control.AutoAI(Player.player); }
-
-            rnd = Random.Next(0, 10000);
-            if (rnd < 50 && Player.player.Stats[100] > Player.Workers.Count) { // INCREASED WORKER SPAWN RATE FROM 5
-                Player.Workers.Add(new Unit(0, 0, Player.Workers.Count, Generate.Worker())); }
-            
-            if (Player.LocalEnemies.Count > 0) {
-                foreach (Unit unit in Player.LocalEnemies) {
-                    Control.UnitManager(unit); }}
-
-            if (Player.Enemies.Count > 0) {
-                foreach (Unit unit in Player.Enemies) {
-                    if (unit.Stats[1] < 1) {
-                        Player.LocalEnemies.Remove(unit);
-                        Set.CoreStats(unit);
-                        unit.ActionID = 0;
-                    }}}
             
             if (LogicClock40.ElapsedMilliseconds > 40)
             {
@@ -744,11 +728,57 @@ namespace Game1
 
                 if (Player.Towers.Count > 0)
                 {
-                    foreach (Tower tower in Player.Towers.Values)
+                    foreach (KeyValuePair<GPS, Tower> tower in Player.Towers)
                     {
-                        if (tower.TimeIdle.ElapsedMilliseconds > tower.Speed)
+                        if (tower.Value.TimeIdle.ElapsedMilliseconds > tower.Value.Speed)
                         {
-                            tower.Scan(tower.Range);
+                            Unit unit = Check.SurroundingUnits(tower.Key.X, tower.Key.Y, tower.Value.Range);
+                            if (unit != Player.player)
+                            {
+                                Check.Attack(unit);
+                            }
+                            tower.Value.TimeIdle.Restart();
+                        }
+                    }
+                }
+
+                rnd = Random.Next(0, 10000);
+                if (rnd < 50 && Player.player.Stats[100] > Player.Workers.Count)
+                { // INCREASED WORKER SPAWN RATE FROM 5
+                    Player.Workers.Add(new Unit(0, 0, Player.Workers.Count, Generate.Worker()));
+                }
+
+                if (Player.LocalEnemies.Count > 0)
+                {
+                    foreach (Unit unit in Player.LocalEnemies.Values)
+                    {
+                        Control.UnitManager(unit);
+                    }
+
+                    List<GPS> keys = Player.LocalEnemies.Keys.ToList();
+                    List<Unit> values = Player.LocalEnemies.Values.ToList();
+                    //int count = 0;
+                    for (int i = 0; i < Player.LocalEnemies.Count(); i++)
+                    {
+                        GPS gps = keys[i];
+                        Unit unit = values[i];
+                        if (gps.X != unit.X || gps.Y != unit.Y)
+                        {
+                            Player.LocalEnemies.Remove(gps);
+                            Player.LocalEnemies.Add(new GPS(unit.X, unit.Y, 0), unit);
+                        }
+                    }
+                }
+
+                if (Player.Enemies.Count > 0)
+                {
+                    foreach (Unit unit in Player.Enemies)
+                    {
+                        if (unit.Stats[1] < 1)
+                        {
+                            Player.LocalEnemies.Remove(new GPS(unit.X, unit.Y, 0));
+                            Set.CoreStats(unit);
+                            unit.ActionID = 0;
                         }
                     }
                 }
@@ -768,10 +798,14 @@ namespace Game1
                             // who will emerge from their Residence and attack if player is closer than 20 tiles
                             if (Math.Abs(Player.player.X - x2) < 20 && Math.Abs(Player.player.Y - y2) < 20 && land.Resident.ActionID == 9)
                             {
-                                Player.LocalEnemies.Add(land.Resident);
-                                Player.LocalEnemies[Player.LocalEnemies.Count - 1].Y += 1;
-                                Player.LocalEnemies[Player.LocalEnemies.Count - 1].LastMove = 2;
-                                Player.LocalEnemies[Player.LocalEnemies.Count - 1].ActionID = 4;
+                                land.Resident.Y += 1;
+                                land.Resident.LastMove = 2;
+                                land.Resident.ActionID = 4;
+                                GPS gps = new GPS(land.Resident.X, land.Resident.Y, 0);
+                                Player.LocalEnemies.Add(gps, land.Resident);
+                                //Player.LocalEnemies.Values[Player.LocalEnemies.Values.Count - 1].Y += 1;
+                                //Player.LocalEnemies[Player.LocalEnemies.Count - 1].LastMove = 2;
+                                //Player.LocalEnemies[Player.LocalEnemies.Count - 1].ActionID = 4;
                                 // landArray[x2, y2].Resident.ActionID = 0; // WHEN ENABLED ALSO CHANGED VALUE IN LOCALENEMIES, ARE VARIABLES LINKED?? //
                             }
                         }

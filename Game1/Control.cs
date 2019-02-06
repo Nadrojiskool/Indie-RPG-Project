@@ -125,7 +125,11 @@ namespace Game1
                 }
                 else if (buildRect14.Contains(newMouseState.X, newMouseState.Y) && Player.player.resources[5] >= 0)
                 {
-                    Build.Single(Player.player.X + MovementXY[Player.player.LastMove, 0], Player.player.Y + MovementXY[Player.player.LastMove, 1], 300);
+                    int x = Player.player.X + MovementXY[Player.player.LastMove, 0];
+                    int y = Player.player.Y + MovementXY[Player.player.LastMove, 1];
+                    Build.Single(x, y, 300);
+                    if (!Player.Towers.ContainsKey(new GPS(x, y, 0)))
+                        Player.Towers.Add(new GPS(x, y, 0), new Tower(5, 3000));
                 }
                 else
                 {
@@ -151,7 +155,7 @@ namespace Game1
             if (!MainMenuOpen && !invOpen && !buildMenuOpen && !workerListOpen)
             {
                 // AOE Attack (5x5)
-                foreach (Unit unit in Player.LocalEnemies)
+                /*foreach (Unit unit in Player.LocalEnemies)
                     Player.player.CheckAOE(unit, (newMouseState.X / CurrentTileSize + cameraLocationX) - 2, (newMouseState.Y / CurrentTileSize + cameraLocationY) - 2, 5, 5);
                 Player.Animations.Add(new Animation((newMouseState.X / CurrentTileSize + cameraLocationX) - 2, (newMouseState.Y / CurrentTileSize + cameraLocationY) - 2, 0, 0));
                 // Spawn Trees //
@@ -236,10 +240,10 @@ namespace Game1
                 }
                 else
                 {
-                    foreach (Unit unit in Player.LocalEnemies)
+                    /*foreach (Unit unit in Player.LocalEnemies)
                     {
                         Player.player.CheckSlash(unit);
-                    } } }
+                    }*/ } }
 
             else if (oldState.IsKeyUp(Keys.I) && newState.IsKeyDown(Keys.I)) {
                 if (invOpen == true) {
@@ -370,7 +374,7 @@ namespace Game1
             {
                 unit.X = Check.Range(unit.X + MovementXY[unit.LastMove, 0], 0, 1000);
                 unit.Y = Check.Range(unit.Y + MovementXY[unit.LastMove, 1], 0, 1000);
-                
+
                 unit.DestinationOffset[0] += MovementXY[unit.LastMove, 0];
                 unit.DestinationOffset[1] += MovementXY[unit.LastMove, 1];
 

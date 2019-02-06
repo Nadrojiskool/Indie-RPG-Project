@@ -129,6 +129,35 @@ namespace Game1
             return (TileFrame[x, y]);
         }
 
+        public static Unit SurroundingUnits(int x, int y, int range)
+        {
+            x--;
+            y--;
+            GPS gps;
+
+            for (int count = 1; count <= range; count++)
+            {
+                for (int i = 1; i <= 4; i++)
+                {
+                    for (int ii = 0; ii < count * 2; ii++)
+                    {
+                        x = x + MovementXY[i, 0];
+                        y = y + MovementXY[i, 1];
+                        gps = new GPS(x, y, 0);
+                        if (Player.LocalEnemies.ContainsKey(gps))
+                            return (Player.LocalEnemies[gps]);
+                    }
+                }
+            }
+
+            return (Player.player);
+        }
+
+        public static void Attack(Unit unit, int attack = 30)
+        {
+            unit.Stats[1] -= Min(attack - unit.Stats[3], 1);
+        }
+
         public static int AdjacentBiomes(int x, int y, int value)
         {
             int bitmap = 0;
