@@ -129,7 +129,87 @@ namespace Game1
                     int y = Player.player.Y + MovementXY[Player.player.LastMove, 1];
                     Build.Single(x, y, 300);
                     if (!Player.Towers.ContainsKey(new GPS(x, y, 0)))
-                        Player.Towers.Add(new GPS(x, y, 0), new Tower(5, 3000));
+                        Player.Towers.Add(new GPS(x, y, 0), new Tower(5, 10, 3000));
+                }
+                else if (buildRect15.Contains(newMouseState.X, newMouseState.Y) && Player.player.resources[5] >= 0)
+                {
+                    int x = Player.player.X + MovementXY[Player.player.LastMove, 0];
+                    int y = Player.player.Y + MovementXY[Player.player.LastMove, 1];
+                    Build.Single(x, y, 301);
+                    if (!Player.Towers.ContainsKey(new GPS(x, y, 0)))
+                        Player.Towers.Add(new GPS(x, y, 0), new Tower(3, 10, 2));
+                }
+                else if (buildRect16.Contains(newMouseState.X, newMouseState.Y) && Player.player.resources[5] >= 0)
+                {
+                    int x = Player.player.X + MovementXY[Player.player.LastMove, 0];
+                    int y = Player.player.Y + MovementXY[Player.player.LastMove, 1];
+                    Build.Single(x, y, 302);
+                    if (!Player.Towers.ContainsKey(new GPS(x, y, 0)))
+                        Player.Towers.Add(new GPS(x, y, 0), new Tower(7, 5, 3));
+                }
+                else if (buildRect17.Contains(newMouseState.X, newMouseState.Y) && Player.player.resources[5] >= 0)
+                {
+                    int x = Player.player.X + MovementXY[Player.player.LastMove, 0];
+                    int y = Player.player.Y + MovementXY[Player.player.LastMove, 1];
+                    Build.Single(x, y, 303);
+                    if (!Player.Towers.ContainsKey(new GPS(x, y, 0)))
+                        Player.Towers.Add(new GPS(x, y, 0), new Tower(10, 3, 5));
+                }
+                else if (buildRect18.Contains(newMouseState.X, newMouseState.Y) && Player.player.resources[5] >= 0)
+                {
+                    int x = Player.player.X + MovementXY[Player.player.LastMove, 0];
+                    int y = Player.player.Y + MovementXY[Player.player.LastMove, 1];
+                    Build.Single(x, y, 304);
+                    if (!Player.Towers.ContainsKey(new GPS(x, y, 0)))
+                        Player.Towers.Add(new GPS(x, y, 0), new Tower(5, 5, 5));
+                }
+                else if (buildRect19.Contains(newMouseState.X, newMouseState.Y) && Player.player.resources[5] >= 0)
+                {
+                    int x = Player.player.X + MovementXY[Player.player.LastMove, 0];
+                    int y = Player.player.Y + MovementXY[Player.player.LastMove, 1];
+                    Build.Single(x, y, 305);
+                    if (!Player.Towers.ContainsKey(new GPS(x, y, 0)))
+                        Player.Towers.Add(new GPS(x, y, 0), new Tower(7, 3, 5));
+                }
+                else if (buildRect20.Contains(newMouseState.X, newMouseState.Y) && Player.player.resources[5] >= 0)
+                {
+                    int x = Player.player.X + MovementXY[Player.player.LastMove, 0];
+                    int y = Player.player.Y + MovementXY[Player.player.LastMove, 1];
+                    Build.Single(x, y, 306);
+                    if (!Player.Towers.ContainsKey(new GPS(x, y, 0)))
+                        Player.Towers.Add(new GPS(x, y, 0), new Tower(3, 5, 7));
+                }
+                else if (buildRect21.Contains(newMouseState.X, newMouseState.Y) && Player.player.resources[5] >= 0)
+                {
+                    int x = Player.player.X + MovementXY[Player.player.LastMove, 0];
+                    int y = Player.player.Y + MovementXY[Player.player.LastMove, 1];
+                    Build.Single(x, y, 307);
+                    if (!Player.Towers.ContainsKey(new GPS(x, y, 0)))
+                        Player.Towers.Add(new GPS(x, y, 0), new Tower(15, 2, 8));
+                }
+                else if (buildRect22.Contains(newMouseState.X, newMouseState.Y) && Player.player.resources[5] >= 0)
+                {
+                    int x = Player.player.X + MovementXY[Player.player.LastMove, 0];
+                    int y = Player.player.Y + MovementXY[Player.player.LastMove, 1];
+                    Build.Single(x, y, 308);
+                    if (!Player.Towers.ContainsKey(new GPS(x, y, 0)))
+                        Player.Towers.Add(new GPS(x, y, 0), new Tower(5, 18, 2));
+                }
+                else if (buildRect23.Contains(newMouseState.X, newMouseState.Y) && Player.player.resources[5] >= 0)
+                {
+                    int x = Player.player.X + MovementXY[Player.player.LastMove, 0];
+                    int y = Player.player.Y + MovementXY[Player.player.LastMove, 1];
+                    Build.Single(Player.Spawner.X, Player.Spawner.Y, 0);
+                    Build.Single(x, y, 398);
+                    Player.Spawner = new GPS(x, y, 0);
+                }
+                else if (buildRect24.Contains(newMouseState.X, newMouseState.Y) && Player.player.resources[5] >= 0)
+                {
+                    int x = Player.player.X + MovementXY[Player.player.LastMove, 0];
+                    int y = Player.player.Y + MovementXY[Player.player.LastMove, 1];
+                    Build.Single(Player.Goal.X, Player.Goal.Y, 0);
+                    Build.Single(x, y, 399);
+                    Player.Goal = new GPS(x, y, 0);
                 }
                 else
                 {
@@ -152,6 +232,9 @@ namespace Game1
 
         public static void ClickRight()
         {
+            if (Show.CursorBuilding != 0)
+                Show.CursorBuilding = 0;
+
             if (!MainMenuOpen && !invOpen && !buildMenuOpen && !workerListOpen)
             {
                 // AOE Attack (5x5)
@@ -240,10 +323,11 @@ namespace Game1
                 }
                 else
                 {
-                    /*foreach (Unit unit in Player.LocalEnemies)
+                    List<Unit> units = Player.LocalEnemies.Values.ToList();
+                    foreach (Unit unit in units)
                     {
                         Player.player.CheckSlash(unit);
-                    }*/ } }
+                    } } }
 
             else if (oldState.IsKeyUp(Keys.I) && newState.IsKeyDown(Keys.I)) {
                 if (invOpen == true) {
@@ -808,15 +892,17 @@ namespace Game1
                         }
                     }
                 }
-
-                Land land = landArray[unit.X + MovementXY[unit.LastMove, 0], unit.Y + MovementXY[unit.LastMove, 1]];
-
+                
                 // Changing Map Tiles can cause units to get stuck in a loop where they cannot reach their destination
                 // A timeout of 20 seconds or longer should be implemented to allow for large object pathing before resetting LeftOrRight to 0
                 // Additionally, a single array of x and y can store the last x & y of the unit at direction 1 * (unit.LeftOrRight / Math.Abs(unit.LeftOrRight))
                 // Then store a tracker which stores absolute spin, which can track absolute right of 4 and then loop to back to 1 and check against last LastMove(1)
                 // This protects further against false trigger loops where there may be a left before returning to spin of 1
                 // Furthermore, some implementation of absolute spin for further pathing cutt-off points may be beneficial
+
+                int x = unit.X + MovementXY[unit.LastMove, 0];
+                int y = unit.Y + MovementXY[unit.LastMove, 1];
+                Land land = landArray[x, y];
 
                 if (unit.ActionID == 3 && land.land > 2 && land.land < 100)
                 {
@@ -839,7 +925,12 @@ namespace Game1
                 }
                 else if (land.land < 1)
                 {
-                    Movement(unit);
+                    if (!Player.LocalEnemies.ContainsKey(new GPS(x, y, 0)))
+                    {
+                        Player.LocalEnemies.Remove(new GPS(unit.X, unit.Y, 0));
+                        Movement(unit);
+                        Player.LocalEnemies.Add(new GPS(unit.X, unit.Y, 0), unit);
+                    }
                     unit.ActionTime.Start();
                     unit.ActionDuration = 1000;
                     if (unit.LeftOrRight != 0)

@@ -35,6 +35,7 @@ namespace Game1
     {
         public static bool CursorOutline = false;
         public static bool ActiveDialogue = false;
+        public static int CursorBuilding = 0;
         public static Land CursorLand { get; set; }
         public static Object[] Objects = new Object[1000];
         public static Object[] InterfaceObjects = new Object[100];
@@ -75,6 +76,16 @@ namespace Game1
             Objects[201] = new Object("Kame House", 100, 150, 2, 2);
             Objects[202] = new Object("Mine", 100, 100, 2, 2);
             Objects[300] = new Object("OrbPurple", 50, 50, 1, 1);
+            Objects[301] = new Object("Fire Tower", 50, 50, 1, 1);
+            Objects[302] = new Object("Ice Tower", 50, 50, 1, 1);
+            Objects[303] = new Object("Wind Tower", 50, 50, 1, 1);
+            Objects[304] = new Object("Earth Tower", 50, 50, 1, 1);
+            Objects[305] = new Object("Lightning Tower", 50, 50, 1, 1);
+            Objects[306] = new Object("Water Tower", 50, 50, 1, 1);
+            Objects[307] = new Object("Light Tower", 50, 50, 1, 1);
+            Objects[308] = new Object("Dark Tower", 50, 50, 1, 1);
+            Objects[398] = new Object("Spawner", 50, 50, 1, 1);
+            Objects[399] = new Object("Goal", 50, 50, 1, 1);
         }
 
         public static void Interface()
@@ -390,6 +401,14 @@ namespace Game1
             DrawingBoard.DrawObjects(cabin1, new Vector2(1150, 650), 1, 0, new Rectangle(0, 0, 100, 100));
             spriteBatch.Draw(DrawingBoard.Tiles[100, 1, 5], new Vector2(1250, 600), Color.White);
             spriteBatch.Draw(DrawingBoard.Tiles[300, 1, 5], new Vector2(600, 850), Color.White);
+            spriteBatch.Draw(player, new Vector2(700, 850), Color.Red);
+            spriteBatch.Draw(player, new Vector2(800, 850), Color.Teal);
+            spriteBatch.Draw(player, new Vector2(900, 850), Color.LightGray);
+            spriteBatch.Draw(player, new Vector2(1000, 850), Color.Brown);
+            spriteBatch.Draw(player, new Vector2(1100, 850), Color.Yellow);
+            spriteBatch.Draw(player, new Vector2(1200, 850), Color.Blue);
+            spriteBatch.Draw(player, new Vector2(1300, 850), Color.White);
+            spriteBatch.Draw(player, new Vector2(1400, 850), Color.Black);
             spriteBatch.DrawString(font, $"Spawn Camp", new Vector2(500, 980), Color.DarkViolet);
             spriteBatch.DrawString(font, $"Spawn Village", new Vector2(700, 980), Color.DarkViolet);
             spriteBatch.DrawString(font, $"Spawn Bonfire", new Vector2(900, 980), Color.DarkViolet);
@@ -430,7 +449,10 @@ namespace Game1
                 {
                     int x = Check.Range((Player.player.DrawX - ((Player.player.X - unit.X) * CurrentTileSize)), CurrentTileSize, (int)(1920 - CurrentTileSize));
                     int y = Check.Range((Player.player.DrawY - ((Player.player.Y - unit.Y) * CurrentTileSize)), CurrentTileSize, (int)(1080 - CurrentTileSize));
-                    DrawingBoard.DrawObjects(DrawingBoard.Enemies[0, unit.LastMove, 0], new Vector2(x, y), tileScale, 0, new Rectangle(0, 0, 50, 50));
+                    int x2 = Check.Range(Player.player.tileX - (Player.player.X - unit.X), 0, (displayWidth / CurrentTileSize));
+                    int y2 = Check.Range(Player.player.tileY - (Player.player.Y - unit.Y), 0, (displayHeight / CurrentTileSize));
+                    spriteBatch.Draw(DrawingBoard.Enemies[0, unit.LastMove, 0], TileFrame[x2, y2], Color.White);
+                    //DrawingBoard.DrawObjects(DrawingBoard.Enemies[0, unit.LastMove, 0], new Vector2(x, y), tileScale, 0, new Rectangle(0, 0, 50, 50));
                     DrawingBoard.DrawObjects(DrawingBoard.HPBar[0], new Vector2(x, y + CurrentTileSize), tileScale, 0, new Rectangle(0, 0, 50, 10));
                     int maxHP = 10 * (2 + unit.Stats[11] + unit.Stats[12]);
                     spriteBatch.Draw(DrawingBoard.HPBar[1], 

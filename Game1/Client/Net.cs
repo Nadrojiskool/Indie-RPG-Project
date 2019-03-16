@@ -94,6 +94,8 @@ namespace Game1.Client
                         LogicClock40.Start();
                         LogicClock100.Start();
                         LogicClock250.Start();
+                        LogicClock500.Start();
+                        LogicClock1000.Start();
 
                         Job j = new Job(job.ID, 2, job.Employee, job.Employer);
                         UserList[0].JobList.Add(j);

@@ -210,6 +210,8 @@ namespace Game1
             LogicClock40.Start();
             LogicClock100.Start();
             LogicClock250.Start();
+            LogicClock500.Start();
+            LogicClock1000.Start();
             UpdateDestination.Start();
 
             /////////////////////

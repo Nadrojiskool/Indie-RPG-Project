@@ -129,14 +129,14 @@ namespace Game1
             return (TileFrame[x, y]);
         }
 
-        public static Unit SurroundingUnits(int x, int y, int range)
+        public static Unit NearestEnemy(int x, int y, int range)
         {
-            x--;
-            y--;
             GPS gps;
 
             for (int count = 1; count <= range; count++)
             {
+                x--;
+                y--;
                 for (int i = 1; i <= 4; i++)
                 {
                     for (int ii = 0; ii < count * 2; ii++)

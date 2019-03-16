@@ -68,6 +68,8 @@ namespace Game1
         public static Dictionary<GPS, int> WorldItems = new Dictionary<GPS, int>();
         public static Dictionary<GPS, Tower> Towers = new Dictionary<GPS, Tower>();
         public static HashSet<Land> Domain = new HashSet<Land>();
+        public static GPS Spawner = new GPS(0, 0, 0);
+        public static GPS Goal = new GPS(0, 0, 0);
 
         public Player (int x, int y, int[] array) : base(x, y, 0, array)
         {

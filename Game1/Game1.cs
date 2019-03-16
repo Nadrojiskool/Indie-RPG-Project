@@ -50,7 +50,14 @@ namespace Game1
         protected static Texture2D WallWoodCornerRight;
         protected static Texture2D WallWoodBackLeft;
         protected static Texture2D WallWoodBackRight;
+        private Texture2D red;
+        private Texture2D teal;
+        private Texture2D gray;
+        private Texture2D brown;
+        private Texture2D yellow;
+        private Texture2D blue;
         private Texture2D white;
+        private Texture2D black;
         private Texture2D land;
         private Texture2D water;
         private Texture2D bush;
@@ -119,6 +126,8 @@ namespace Game1
         public static Stopwatch LogicClock40 = new Stopwatch();
         public static Stopwatch LogicClock100 = new Stopwatch();
         public static Stopwatch LogicClock250 = new Stopwatch();
+        public static Stopwatch LogicClock500 = new Stopwatch();
+        public static Stopwatch LogicClock1000 = new Stopwatch();
         public static Stopwatch UpdateDestination = new Stopwatch();
 
         #region Build Menu Static Rectangle Grid Test Variables
@@ -135,7 +144,17 @@ namespace Game1
         public static Rectangle buildRect11 = new Rectangle(700, 980, 200, 80);
         public static Rectangle buildRect12 = new Rectangle(1250, 600, 50, 50);
         public static Rectangle buildRect13 = new Rectangle(900, 980, 200, 80);
-        public static Rectangle buildRect14 = new Rectangle(600, 850, 200, 80);
+        public static Rectangle buildRect14 = new Rectangle(600, 850, 50, 50);
+        public static Rectangle buildRect15 = new Rectangle(700, 850, 50, 50);
+        public static Rectangle buildRect16 = new Rectangle(800, 850, 50, 50);
+        public static Rectangle buildRect17 = new Rectangle(900, 850, 50, 80);
+        public static Rectangle buildRect18 = new Rectangle(1000, 850, 50, 50);
+        public static Rectangle buildRect19 = new Rectangle(1100, 850, 50, 50);
+        public static Rectangle buildRect20 = new Rectangle(1200, 850, 50, 50);
+        public static Rectangle buildRect21 = new Rectangle(1300, 850, 50, 50);
+        public static Rectangle buildRect22 = new Rectangle(1400, 850, 50, 50);
+        public static Rectangle buildRect23 = new Rectangle(600, 950, 50, 50);
+        public static Rectangle buildRect24 = new Rectangle(700, 950, 50, 50);
         #endregion
 
         public static string Username = "King Charles I";
@@ -231,8 +250,22 @@ namespace Game1
             #endregion
 
             #region Sprite Base
+            red = new Texture2D(GraphicsDevice, 1, 1);
+            teal = new Texture2D(GraphicsDevice, 1, 1);
+            gray = new Texture2D(GraphicsDevice, 1, 1);
+            brown = new Texture2D(GraphicsDevice, 1, 1);
+            yellow = new Texture2D(GraphicsDevice, 1, 1);
+            blue = new Texture2D(GraphicsDevice, 1, 1);
             white = new Texture2D(GraphicsDevice, 1, 1);
+            black = new Texture2D(GraphicsDevice, 1, 1);
+            red.SetData(new[] { Color.Red });
+            teal.SetData(new[] { Color.Teal });
+            gray.SetData(new[] { Color.Gray });
+            brown.SetData(new[] { Color.Brown });
+            yellow.SetData(new[] { Color.Yellow });
+            blue.SetData(new[] { Color.Blue });
             white.SetData(new[] { Color.White });
+            black.SetData(new[] { Color.Black });
             outline = Content.Load<Texture2D>("Outline");
             boxPink = Content.Load<Texture2D>("pink_box");
             land = Content.Load<Texture2D>("Land");
@@ -386,6 +419,36 @@ namespace Game1
             DrawingBoard.Tiles[300, 1, 5] = orbPurple;
             DrawingBoard.Tiles[300, 2, 5] = orbPurple;
             DrawingBoard.Tiles[300, 3, 5] = orbPurple;
+            DrawingBoard.Tiles[301, 1, 5] = red;
+            DrawingBoard.Tiles[301, 2, 5] = red;
+            DrawingBoard.Tiles[301, 3, 5] = red;
+            DrawingBoard.Tiles[302, 1, 5] = teal;
+            DrawingBoard.Tiles[302, 2, 5] = teal;
+            DrawingBoard.Tiles[302, 3, 5] = teal;
+            DrawingBoard.Tiles[303, 1, 5] = gray;
+            DrawingBoard.Tiles[303, 2, 5] = gray;
+            DrawingBoard.Tiles[303, 3, 5] = gray;
+            DrawingBoard.Tiles[304, 1, 5] = brown;
+            DrawingBoard.Tiles[304, 2, 5] = brown;
+            DrawingBoard.Tiles[304, 3, 5] = brown;
+            DrawingBoard.Tiles[305, 1, 5] = yellow;
+            DrawingBoard.Tiles[305, 2, 5] = yellow;
+            DrawingBoard.Tiles[305, 3, 5] = yellow;
+            DrawingBoard.Tiles[306, 1, 5] = blue;
+            DrawingBoard.Tiles[306, 2, 5] = blue;
+            DrawingBoard.Tiles[306, 3, 5] = blue;
+            DrawingBoard.Tiles[307, 1, 5] = white;
+            DrawingBoard.Tiles[307, 2, 5] = white;
+            DrawingBoard.Tiles[307, 3, 5] = white;
+            DrawingBoard.Tiles[308, 1, 5] = black;
+            DrawingBoard.Tiles[308, 2, 5] = black;
+            DrawingBoard.Tiles[308, 3, 5] = black;
+            DrawingBoard.Tiles[398, 1, 5] = enemy;
+            DrawingBoard.Tiles[398, 2, 5] = enemy;
+            DrawingBoard.Tiles[398, 3, 5] = enemy;
+            DrawingBoard.Tiles[399, 1, 5] = player;
+            DrawingBoard.Tiles[399, 2, 5] = player;
+            DrawingBoard.Tiles[399, 3, 5] = player;
 
             // Load the 600 tile Desert background
             int count = 0;
@@ -730,9 +793,9 @@ namespace Game1
                 {
                     foreach (KeyValuePair<GPS, Tower> tower in Player.Towers)
                     {
-                        if (tower.Value.TimeIdle.ElapsedMilliseconds > tower.Value.Speed)
+                        if (tower.Value.TimeIdle.ElapsedMilliseconds > (5000 - (tower.Value.Speed * 100)))
                         {
-                            Unit unit = Check.SurroundingUnits(tower.Key.X, tower.Key.Y, tower.Value.Range);
+                            Unit unit = Check.NearestEnemy(tower.Key.X, tower.Key.Y, tower.Value.Range);
                             if (unit != Player.player)
                             {
                                 Check.Attack(unit);
@@ -750,25 +813,13 @@ namespace Game1
 
                 if (Player.LocalEnemies.Count > 0)
                 {
-                    foreach (Unit unit in Player.LocalEnemies.Values)
+                    List<Unit> units = Player.LocalEnemies.Values.ToList();
+                    for (int i = 0; i < units.Count(); i++)
                     {
-                        Control.UnitManager(unit);
-                    }
-
-                    List<GPS> keys = Player.LocalEnemies.Keys.ToList();
-                    List<Unit> values = Player.LocalEnemies.Values.ToList();
-                    //int count = 0;
-                    for (int i = 0; i < Player.LocalEnemies.Count(); i++)
-                    {
-                        GPS gps = keys[i];
-                        Unit unit = values[i];
-                        if (gps.X != unit.X || gps.Y != unit.Y)
-                        {
-                            Player.LocalEnemies.Remove(gps);
-                            Player.LocalEnemies.Add(new GPS(unit.X, unit.Y, 0), unit);
-                        }
+                        Control.UnitManager(units[i]);
                     }
                 }
+
 
                 if (Player.Enemies.Count > 0)
                 {
@@ -796,7 +847,7 @@ namespace Game1
                         if (land.IsResident)
                         {
                             // who will emerge from their Residence and attack if player is closer than 20 tiles
-                            if (Math.Abs(Player.player.X - x2) < 20 && Math.Abs(Player.player.Y - y2) < 20 && land.Resident.ActionID == 9)
+                            /*if (Math.Abs(Player.player.X - x2) < 20 && Math.Abs(Player.player.Y - y2) < 20 && land.Resident.ActionID == 9)
                             {
                                 land.Resident.Y += 1;
                                 land.Resident.LastMove = 2;
@@ -807,26 +858,42 @@ namespace Game1
                                 //Player.LocalEnemies[Player.LocalEnemies.Count - 1].LastMove = 2;
                                 //Player.LocalEnemies[Player.LocalEnemies.Count - 1].ActionID = 4;
                                 // landArray[x2, y2].Resident.ActionID = 0; // WHEN ENABLED ALSO CHANGED VALUE IN LOCALENEMIES, ARE VARIABLES LINKED?? //
-                            }
+                            }*/
                         }
-                        else if (land.land == 100)
+                        else if (land.land == 100) // Update Fire Animation Frame
                         {
                             land.frame = Check.LoopInt(land.frame + 1, 4, 6);
                         }
                         else if (land.land > 199)
                         {
+                            /* Auto Spawn Enemies for Testing
                             Unit resident = new Unit(x2, y2, Player.Enemies.Count, Generate.Worker());
                             Set.CoreStats(resident);
                             resident.ActionID = 9;
                             landArray[x2, y2].Resident = resident;
                             landArray[x2, y2].IsResident = true;
                             Player.Enemies.Add(landArray[x2, y2].Resident);
+                            */
                         }
                     }
                 }
 
                 Player.player.AnimationFrame = Check.LoopInt(Player.player.AnimationFrame + 1, 0, 2);
                 LogicClock250.Restart();
+            }
+            else if (LogicClock1000.ElapsedMilliseconds > 3000)
+            {
+                GPS gps = new GPS(Player.Spawner.X, Player.Spawner.Y, 0);
+                if (Player.Spawner.X != 0 && Player.Goal.X != 0 && !Player.LocalEnemies.ContainsKey(gps))
+                {
+                    Unit unit = new Unit(gps.X, gps.Y, Player.Enemies.Count, Generate.Worker());
+                    Set.CoreStats(unit);
+                    unit.ActionID = 1;
+                    unit.LastMove = 1;
+                    Player.Enemies.Add(unit);
+                    Player.LocalEnemies.Add(gps, unit);
+                }
+                LogicClock1000.Restart();
             }
 
             if (cantBuild.ElapsedMilliseconds > 2000) {
