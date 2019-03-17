@@ -52,7 +52,7 @@ namespace Game1
         protected static Texture2D WallWoodBackRight;
         private Texture2D red;
         private Texture2D teal;
-        private Texture2D gray;
+        public static Texture2D gray;
         private Texture2D brown;
         private Texture2D yellow;
         private Texture2D blue;
@@ -700,7 +700,7 @@ namespace Game1
                         Control.MovementTouch(); }}
 
                 newMouseState = Mouse.GetState();
-                if (/*oldMouseState.LeftButton == ButtonState.Released && */newMouseState.LeftButton == ButtonState.Pressed) {
+                if (oldMouseState.LeftButton == ButtonState.Released && newMouseState.LeftButton == ButtonState.Pressed) {
                     Control.Click(); }
                 if (oldMouseState.RightButton == ButtonState.Released && newMouseState.RightButton == ButtonState.Pressed) {
                     Control.ClickRight(); }
@@ -793,7 +793,7 @@ namespace Game1
                 {
                     foreach (KeyValuePair<GPS, Tower> tower in Player.Towers)
                     {
-                        if (tower.Value.TimeIdle.ElapsedMilliseconds > (5000 - (tower.Value.Speed * 100)))
+                        if (tower.Value.TimeIdle.ElapsedMilliseconds > (3000 - (tower.Value.Speed * 100)))
                         {
                             Unit unit = Check.NearestEnemy(tower.Key.X, tower.Key.Y, tower.Value.Range);
                             if (unit != Player.player)

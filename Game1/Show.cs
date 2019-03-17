@@ -37,6 +37,7 @@ namespace Game1
         public static bool ActiveDialogue = false;
         public static int CursorBuilding = 0;
         public static Land CursorLand { get; set; }
+        public static Tower CursorTower { get; set; }
         public static Object[] Objects = new Object[1000];
         public static Object[] InterfaceObjects = new Object[100];
         static Random Random = new Random();
@@ -98,7 +99,7 @@ namespace Game1
             // This means that each tile needs to store the hash of a unit in the local unit HashSet
             // Then we can simply draw that unit from its cached data
 
-            spriteBatch.Draw(DrawingBoard.Allies[0, Player.player.LastMove, Player.player.AnimationFrame], 
+            spriteBatch.Draw(DrawingBoard.Allies[0, Player.player.LastMove, Player.player.AnimationFrame],
                 new Rectangle((Player.player.X - cameraLocationX) * CurrentTileSize, (Player.player.Y - cameraLocationY) * CurrentTileSize, CurrentTileSize, CurrentTileSize),
                 Color.White);
 
@@ -112,6 +113,17 @@ namespace Game1
 
             if (buildMenuOpen) {
                 Blueprints(); }
+            else if (CursorBuilding != 0)
+            {
+                int x = (int)Math.Ceiling((double)(newMouseState.X - Player.player.TileOffsetXY[0]));
+                int y = (int)Math.Ceiling((double)(newMouseState.Y - Player.player.TileOffsetXY[1]));
+                Rectangle rect = new Rectangle(
+                    x + ((1 - Objects[CursorBuilding].Width) * CurrentTileSize), 
+                    y + ((1 - Objects[CursorBuilding].Height) * CurrentTileSize), 
+                    CurrentTileSize * (Objects[CursorBuilding].X / 50), 
+                    CurrentTileSize * (Objects[CursorBuilding].Y / 50));
+                spriteBatch.Draw(DrawingBoard.Tiles[CursorBuilding, 1, 5], rect, Color.White);
+            }
 
             if (workerListOpen) {
                 WorkerList(); }
@@ -141,6 +153,12 @@ namespace Game1
             spriteBatch.Draw(BGFinalFantasy,
                 new Rectangle(0, 0, 1920, 1080),
                 Color.White);
+            spriteBatch.Draw(gray,
+                 new Rectangle(860, 440, 200, 50),
+                 Color.White);
+            spriteBatch.Draw(gray,
+                 new Rectangle(860, 640, 200, 50),
+                 Color.White);
         }
 
         /* DrawTiles;
@@ -409,6 +427,8 @@ namespace Game1
             spriteBatch.Draw(player, new Vector2(1200, 850), Color.Blue);
             spriteBatch.Draw(player, new Vector2(1300, 850), Color.White);
             spriteBatch.Draw(player, new Vector2(1400, 850), Color.Black);
+            spriteBatch.Draw(enemy, new Vector2(600, 950), Color.White);
+            spriteBatch.Draw(player, new Vector2(700, 950), Color.Black);
             spriteBatch.DrawString(font, $"Spawn Camp", new Vector2(500, 980), Color.DarkViolet);
             spriteBatch.DrawString(font, $"Spawn Village", new Vector2(700, 980), Color.DarkViolet);
             spriteBatch.DrawString(font, $"Spawn Bonfire", new Vector2(900, 980), Color.DarkViolet);

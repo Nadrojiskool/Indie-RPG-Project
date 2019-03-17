@@ -24,7 +24,7 @@ namespace Game1
          * Ice: 7/5/3
          * Wind: 10/3/5
          * Earth: 5/5/5
-         * Lightning: 7/3/5
+         * Lightning: 2/3/10
          * Water: 3/5/7
          * Light: 15/2/8
          * Dark: 5/18/2

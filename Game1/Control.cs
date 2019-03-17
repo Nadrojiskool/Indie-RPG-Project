@@ -31,7 +31,7 @@ namespace Game1
         
         public static void Click()
         {
-            if (!MainMenuOpen && !invOpen && !buildMenuOpen && !workerListOpen) {
+            if (!MainMenuOpen && !invOpen && !buildMenuOpen && !workerListOpen && Show.CursorBuilding == 0) {
                 if (Player.player.ToolBelt[1] != 0)
                 {
                     Set.LandAtCursor(oldMouseState, 7);
@@ -44,6 +44,21 @@ namespace Game1
                     Manipulator(spellX, spellY, 5, 5, 0, false);
                 }}
 
+            if (MainMenuOpen)
+            {
+                if (newMouseState.X > 860 && newMouseState.X < 1060)
+                {
+                    if (newMouseState.Y > 440 && newMouseState.Y < 490)
+                    {
+
+                    }
+                    else if (newMouseState.Y > 640 && newMouseState.Y < 690)
+                    {
+                        var t = Task.Run(() => Generate.All());
+                    }
+                }
+            }
+
             /*if (MainMenuOpen) {
                 Client.Job job = new Client.Job((byte)Client.Net.UserList[0].JobList.Count(), 5, Client.Net.UserList[0].Endpoint, Client.Net.Endpoint);
                 Console.WriteLine($"Starting Job ID {Client.Net.UserList[0].JobList.Count()}");
@@ -55,53 +70,57 @@ namespace Game1
 
             if (invOpen) {
                 invOpen = false; }
+            
+            if (buildMenuOpen)
+            {
+                int x = Player.player.X + MovementXY[Player.player.LastMove, 0];
+                int y = Player.player.Y + MovementXY[Player.player.LastMove, 1];
 
-            if (buildMenuOpen) {
-                // This build menu seriously needs standardized and refactored
+                // This build menu seriously needs standardized and refactored // Eventual Integration into Rectangle Grid
                 if (buildRect1.Contains(newMouseState.X, newMouseState.Y) && Player.player.resources[5] >= 0)
                 {
                     //Player.player.resources[5] = Player.player.resources[5] - 200;
-                    Build.DoubleWithSpace(Player.player.X + MovementXY[Player.player.LastMove, 0], Player.player.Y + MovementXY[Player.player.LastMove, 1], 201);
+                    Show.CursorBuilding = 201;
                 }
                 else if (buildRect2.Contains(newMouseState.X, newMouseState.Y) && Player.player.resources[5] >= 0)
                 {
                     //Player.player.resources[5] = Player.player.resources[5] - 50;
-                    Build.Single(Player.player.X + MovementXY[Player.player.LastMove, 0], Player.player.Y + MovementXY[Player.player.LastMove, 1], 101);
+                    Show.CursorBuilding = 101;
                 }
                 else if (buildRect3.Contains(newMouseState.X, newMouseState.Y) && Player.player.resources[5] >= 0)
                 {
                     //Player.player.resources[5] = Player.player.resources[5] - 50;
-                    Build.Single(Player.player.X + MovementXY[Player.player.LastMove, 0], Player.player.Y + MovementXY[Player.player.LastMove, 1], 102);
+                    Show.CursorBuilding = 102;
                 }
                 else if (buildRect4.Contains(newMouseState.X, newMouseState.Y) && Player.player.resources[5] >= 0)
                 {
                     //Player.player.resources[5] = Player.player.resources[5] - 50;
-                    Build.Single(Player.player.X + MovementXY[Player.player.LastMove, 0], Player.player.Y + MovementXY[Player.player.LastMove, 1], 103);
+                    Show.CursorBuilding = 103;
                 }
                 else if (buildRect5.Contains(newMouseState.X, newMouseState.Y) && Player.player.resources[5] >= 0)
                 {
                     //Player.player.resources[5] = Player.player.resources[5] - 50;
-                    Build.Single(Player.player.X + MovementXY[Player.player.LastMove, 0], Player.player.Y + MovementXY[Player.player.LastMove, 1], 104);
+                    Show.CursorBuilding = 104;
                 }
                 else if (buildRect6.Contains(newMouseState.X, newMouseState.Y) && Player.player.resources[5] >= 0)
                 {
                     //Player.player.resources[5] = Player.player.resources[5] - 50;
-                    Build.Single(Player.player.X + MovementXY[Player.player.LastMove, 0], Player.player.Y + MovementXY[Player.player.LastMove, 1], 105);
+                    Show.CursorBuilding = 105;
                 }
                 else if (buildRect7.Contains(newMouseState.X, newMouseState.Y) && Player.player.resources[5] >= 0)
                 {
                     //Player.player.resources[5] = Player.player.resources[5] - 50;
-                    Build.Single(Player.player.X + MovementXY[Player.player.LastMove, 0], Player.player.Y + MovementXY[Player.player.LastMove, 1], 106);
+                    Show.CursorBuilding = 106;
                 }
                 else if (buildRect8.Contains(newMouseState.X, newMouseState.Y) && Player.player.resources[6] >= 0)
                 {
                     //Player.player.resources[6] = Player.player.resources[6] - 200;
-                    Build.DoubleWithSpace(Player.player.X + MovementXY[Player.player.LastMove, 0], Player.player.Y + MovementXY[Player.player.LastMove, 1], 202);
+                    Show.CursorBuilding = 202;
                 }
                 else if (buildRect9.Contains(newMouseState.X, newMouseState.Y) && Player.player.resources[5] >= 0)
                 {
                     //Player.player.resources[6] = Player.player.resources[6] - 200;
-                    Build.DoubleWithSpace(Player.player.X + MovementXY[Player.player.LastMove, 0], Player.player.Y + MovementXY[Player.player.LastMove, 1], 200);
+                    Show.CursorBuilding = 200;
                 }
                 else if (buildRect10.Contains(newMouseState.X, newMouseState.Y) && Player.player.resources[5] >= 0)
                 {
@@ -116,97 +135,92 @@ namespace Game1
                 else if (buildRect12.Contains(newMouseState.X, newMouseState.Y) && Player.player.resources[5] >= 0)
                 {
                     //Player.player.resources[6] = Player.player.resources[6] - 200;
-                    landArray[Player.player.X + MovementXY[Player.player.LastMove, 0], Player.player.Y + MovementXY[Player.player.LastMove, 1]].land = 100;
-                    landArray[Player.player.X + MovementXY[Player.player.LastMove, 0], Player.player.Y + MovementXY[Player.player.LastMove, 1]].frame = 5;
+                    Show.CursorBuilding = 100;
                 }
                 else if (buildRect13.Contains(newMouseState.X, newMouseState.Y) && Player.player.resources[5] >= 0)
                 {
                     Generate.Bonfire(100, Player.player.X + MovementXY[Player.player.LastMove, 0], Player.player.Y + MovementXY[Player.player.LastMove, 1]);
                 }
-                else if (buildRect14.Contains(newMouseState.X, newMouseState.Y) && Player.player.resources[5] >= 0)
+                else if (buildRect14.Contains(newMouseState.X, newMouseState.Y) && Player.player.resources[5] >= 0 && !Player.Towers.ContainsKey(new GPS(x, y, 0)))
                 {
-                    int x = Player.player.X + MovementXY[Player.player.LastMove, 0];
-                    int y = Player.player.Y + MovementXY[Player.player.LastMove, 1];
-                    Build.Single(x, y, 300);
-                    if (!Player.Towers.ContainsKey(new GPS(x, y, 0)))
-                        Player.Towers.Add(new GPS(x, y, 0), new Tower(5, 10, 3000));
+                    //Build.Single(x, y, 300);
+                    //if (!Player.Towers.ContainsKey(new GPS(x, y, 0)))
+                    //    Player.Towers.Add(new GPS(x, y, 0), new Tower(5, 10, 3000));
+                    Show.CursorBuilding = 300;
+                    Show.CursorTower = new Tower(5, 10, 3000);
                 }
-                else if (buildRect15.Contains(newMouseState.X, newMouseState.Y) && Player.player.resources[5] >= 0)
+                else if (buildRect15.Contains(newMouseState.X, newMouseState.Y) && Player.player.resources[5] >= 0 && !Player.Towers.ContainsKey(new GPS(x, y, 0)))
                 {
-                    int x = Player.player.X + MovementXY[Player.player.LastMove, 0];
-                    int y = Player.player.Y + MovementXY[Player.player.LastMove, 1];
-                    Build.Single(x, y, 301);
-                    if (!Player.Towers.ContainsKey(new GPS(x, y, 0)))
-                        Player.Towers.Add(new GPS(x, y, 0), new Tower(3, 10, 2));
+                    //Build.Single(x, y, 301);
+                    //if (!Player.Towers.ContainsKey(new GPS(x, y, 0)))
+                    //    Player.Towers.Add(new GPS(x, y, 0), new Tower(3, 10, 2));
+                    Show.CursorBuilding = 301;
+                    Show.CursorTower = new Tower(3, 10, 2);
                 }
-                else if (buildRect16.Contains(newMouseState.X, newMouseState.Y) && Player.player.resources[5] >= 0)
+                else if (buildRect16.Contains(newMouseState.X, newMouseState.Y) && Player.player.resources[5] >= 0 && !Player.Towers.ContainsKey(new GPS(x, y, 0)))
                 {
-                    int x = Player.player.X + MovementXY[Player.player.LastMove, 0];
-                    int y = Player.player.Y + MovementXY[Player.player.LastMove, 1];
-                    Build.Single(x, y, 302);
-                    if (!Player.Towers.ContainsKey(new GPS(x, y, 0)))
-                        Player.Towers.Add(new GPS(x, y, 0), new Tower(7, 5, 3));
+                    //Build.Single(x, y, 302);
+                    //if (!Player.Towers.ContainsKey(new GPS(x, y, 0)))
+                    //    Player.Towers.Add(new GPS(x, y, 0), new Tower(7, 5, 3));
+                    Show.CursorBuilding = 302;
+                    Show.CursorTower = new Tower(7, 5, 3);
                 }
-                else if (buildRect17.Contains(newMouseState.X, newMouseState.Y) && Player.player.resources[5] >= 0)
+                else if (buildRect17.Contains(newMouseState.X, newMouseState.Y) && Player.player.resources[5] >= 0 && !Player.Towers.ContainsKey(new GPS(x, y, 0)))
                 {
-                    int x = Player.player.X + MovementXY[Player.player.LastMove, 0];
-                    int y = Player.player.Y + MovementXY[Player.player.LastMove, 1];
-                    Build.Single(x, y, 303);
-                    if (!Player.Towers.ContainsKey(new GPS(x, y, 0)))
-                        Player.Towers.Add(new GPS(x, y, 0), new Tower(10, 3, 5));
+                    //Build.Single(x, y, 303);
+                    //if (!Player.Towers.ContainsKey(new GPS(x, y, 0)))
+                    //    Player.Towers.Add(new GPS(x, y, 0), new Tower(10, 3, 5));
+                    Show.CursorBuilding = 303;
+                    Show.CursorTower = new Tower(10, 3, 5);
                 }
-                else if (buildRect18.Contains(newMouseState.X, newMouseState.Y) && Player.player.resources[5] >= 0)
+                else if (buildRect18.Contains(newMouseState.X, newMouseState.Y) && Player.player.resources[5] >= 0 && !Player.Towers.ContainsKey(new GPS(x, y, 0)))
                 {
-                    int x = Player.player.X + MovementXY[Player.player.LastMove, 0];
-                    int y = Player.player.Y + MovementXY[Player.player.LastMove, 1];
-                    Build.Single(x, y, 304);
-                    if (!Player.Towers.ContainsKey(new GPS(x, y, 0)))
-                        Player.Towers.Add(new GPS(x, y, 0), new Tower(5, 5, 5));
+                    //Build.Single(x, y, 304);
+                    //if (!Player.Towers.ContainsKey(new GPS(x, y, 0)))
+                    //    Player.Towers.Add(new GPS(x, y, 0), new Tower(5, 5, 5));
+                    Show.CursorBuilding = 304;
+                    Show.CursorTower = new Tower(5, 5, 5);
                 }
-                else if (buildRect19.Contains(newMouseState.X, newMouseState.Y) && Player.player.resources[5] >= 0)
+                else if (buildRect19.Contains(newMouseState.X, newMouseState.Y) && Player.player.resources[5] >= 0 && !Player.Towers.ContainsKey(new GPS(x, y, 0)))
                 {
-                    int x = Player.player.X + MovementXY[Player.player.LastMove, 0];
-                    int y = Player.player.Y + MovementXY[Player.player.LastMove, 1];
-                    Build.Single(x, y, 305);
-                    if (!Player.Towers.ContainsKey(new GPS(x, y, 0)))
-                        Player.Towers.Add(new GPS(x, y, 0), new Tower(7, 3, 5));
+                    //Build.Single(x, y, 305);
+                    //if (!Player.Towers.ContainsKey(new GPS(x, y, 0)))
+                    //    Player.Towers.Add(new GPS(x, y, 0), new Tower(2, 3, 10));
+                    Show.CursorBuilding = 305;
+                    Show.CursorTower = new Tower(2, 3, 10);
                 }
-                else if (buildRect20.Contains(newMouseState.X, newMouseState.Y) && Player.player.resources[5] >= 0)
+                else if (buildRect20.Contains(newMouseState.X, newMouseState.Y) && Player.player.resources[5] >= 0 && !Player.Towers.ContainsKey(new GPS(x, y, 0)))
                 {
-                    int x = Player.player.X + MovementXY[Player.player.LastMove, 0];
-                    int y = Player.player.Y + MovementXY[Player.player.LastMove, 1];
-                    Build.Single(x, y, 306);
-                    if (!Player.Towers.ContainsKey(new GPS(x, y, 0)))
-                        Player.Towers.Add(new GPS(x, y, 0), new Tower(3, 5, 7));
+                    //Build.Single(x, y, 306);
+                    //if (!Player.Towers.ContainsKey(new GPS(x, y, 0)))
+                    //    Player.Towers.Add(new GPS(x, y, 0), new Tower(3, 5, 7));
+                    Show.CursorBuilding = 306;
+                    Show.CursorTower = new Tower(3, 5, 7);
                 }
-                else if (buildRect21.Contains(newMouseState.X, newMouseState.Y) && Player.player.resources[5] >= 0)
+                else if (buildRect21.Contains(newMouseState.X, newMouseState.Y) && Player.player.resources[5] >= 0 && !Player.Towers.ContainsKey(new GPS(x, y, 0)))
                 {
-                    int x = Player.player.X + MovementXY[Player.player.LastMove, 0];
-                    int y = Player.player.Y + MovementXY[Player.player.LastMove, 1];
-                    Build.Single(x, y, 307);
-                    if (!Player.Towers.ContainsKey(new GPS(x, y, 0)))
-                        Player.Towers.Add(new GPS(x, y, 0), new Tower(15, 2, 8));
+                    //Build.Single(x, y, 307);
+                    //if (!Player.Towers.ContainsKey(new GPS(x, y, 0)))
+                    //    Player.Towers.Add(new GPS(x, y, 0), new Tower(15, 2, 8));
+                    Show.CursorBuilding = 307;
+                    Show.CursorTower = new Tower(15, 2, 8);
                 }
-                else if (buildRect22.Contains(newMouseState.X, newMouseState.Y) && Player.player.resources[5] >= 0)
+                else if (buildRect22.Contains(newMouseState.X, newMouseState.Y) && Player.player.resources[5] >= 0 && !Player.Towers.ContainsKey(new GPS(x, y, 0)))
                 {
-                    int x = Player.player.X + MovementXY[Player.player.LastMove, 0];
-                    int y = Player.player.Y + MovementXY[Player.player.LastMove, 1];
-                    Build.Single(x, y, 308);
-                    if (!Player.Towers.ContainsKey(new GPS(x, y, 0)))
-                        Player.Towers.Add(new GPS(x, y, 0), new Tower(5, 18, 2));
+                    //Build.Single(x, y, 308);
+                    //if (!Player.Towers.ContainsKey(new GPS(x, y, 0)))
+                    //    Player.Towers.Add(new GPS(x, y, 0), new Tower(5, 18, 2));
+                    Show.CursorBuilding = 308;
+                    Show.CursorTower = new Tower(5, 18, 2);
                 }
                 else if (buildRect23.Contains(newMouseState.X, newMouseState.Y) && Player.player.resources[5] >= 0)
                 {
-                    int x = Player.player.X + MovementXY[Player.player.LastMove, 0];
-                    int y = Player.player.Y + MovementXY[Player.player.LastMove, 1];
                     Build.Single(Player.Spawner.X, Player.Spawner.Y, 0);
                     Build.Single(x, y, 398);
                     Player.Spawner = new GPS(x, y, 0);
                 }
                 else if (buildRect24.Contains(newMouseState.X, newMouseState.Y) && Player.player.resources[5] >= 0)
                 {
-                    int x = Player.player.X + MovementXY[Player.player.LastMove, 0];
-                    int y = Player.player.Y + MovementXY[Player.player.LastMove, 1];
                     Build.Single(Player.Goal.X, Player.Goal.Y, 0);
                     Build.Single(x, y, 399);
                     Player.Goal = new GPS(x, y, 0);
@@ -217,6 +231,18 @@ namespace Game1
                 }
 
                 buildMenuOpen = false;
+            }
+            else if (Show.CursorBuilding != 0)
+            {
+                int x = (int)Math.Ceiling((double)((newMouseState.X - Player.player.TileOffsetXY[0]) / CurrentTileSize));
+                int y = (int)Math.Ceiling((double)((newMouseState.Y - Player.player.TileOffsetXY[1]) / CurrentTileSize));
+                // i needs refactored to add streamlined support for non-buildable (Tile Index 01) padding //
+                int[,] i = new int[1, 1] { { Show.CursorBuilding } };
+                Set.Land(i, x, y);
+                landArray[x + cameraLocationX, y + cameraLocationY].frame = 5;
+                if (Show.CursorBuilding >= 300 && Show.CursorBuilding < 398)
+                    Player.Towers.Add(new GPS(x, y, 0), Show.CursorTower);
+                Show.CursorBuilding = 0;
             }
 
             if (workerListOpen)
@@ -247,8 +273,8 @@ namespace Game1
                 Manipulator(spellX, spellY, 5, 5, 5, false);*/
             }
 
-            if (MainMenuOpen) {
-                var t = Task.Run(() => Generate.All()); }
+            /*if (MainMenuOpen) {
+                var t = Task.Run(() => Generate.All()); }*/
             
             if (Show.ActiveDialogue) {
                 Show.ActiveDialogue = false; }
@@ -257,14 +283,6 @@ namespace Game1
                 /*invOpen = false;*/ }
 
             if (buildMenuOpen) {
-                /*if (buildRect1.Contains(newMouseState.X, newMouseState.Y))
-                {
-                    Mine(201);
-                }
-                else if (buildRect2.Contains(newMouseState.X, newMouseState.Y))
-                {
-                    Mine(101);
-                }*/
                 buildMenuOpen = false; }
 
             if (workerListOpen) {
