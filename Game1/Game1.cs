@@ -798,7 +798,7 @@ namespace Game1
                             Unit unit = Check.NearestEnemy(tower.Key.X, tower.Key.Y, tower.Value.Range);
                             if (unit != Player.player)
                             {
-                                Check.Attack(unit);
+                                Check.Attack(unit, tower.Value.Damage);
                             }
                             tower.Value.TimeIdle.Restart();
                         }

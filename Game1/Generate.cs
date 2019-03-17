@@ -521,14 +521,14 @@ namespace Game1
 
         }
 
-        public static int[] Worker()
+        public static int[] Worker(int level = 1)
         {
             int[] array = new int[200];
             double rnd;
             array[0] = 0;
             for (int i = 0; i < 10; i++)
             {
-                rnd = Random.Next(0, 4);
+                rnd = Random.Next(0, 1 * level);
                 array[i + 10] = (int)rnd;
             }
             return (array);

@@ -143,73 +143,46 @@ namespace Game1
                 }
                 else if (buildRect14.Contains(newMouseState.X, newMouseState.Y) && Player.player.resources[5] >= 0 && !Player.Towers.ContainsKey(new GPS(x, y, 0)))
                 {
-                    //Build.Single(x, y, 300);
-                    //if (!Player.Towers.ContainsKey(new GPS(x, y, 0)))
-                    //    Player.Towers.Add(new GPS(x, y, 0), new Tower(5, 10, 3000));
                     Show.CursorBuilding = 300;
-                    Show.CursorTower = new Tower(5, 10, 3000);
+                    Show.CursorTower = new Tower(10, 10, 3000);
                 }
                 else if (buildRect15.Contains(newMouseState.X, newMouseState.Y) && Player.player.resources[5] >= 0 && !Player.Towers.ContainsKey(new GPS(x, y, 0)))
                 {
-                    //Build.Single(x, y, 301);
-                    //if (!Player.Towers.ContainsKey(new GPS(x, y, 0)))
-                    //    Player.Towers.Add(new GPS(x, y, 0), new Tower(3, 10, 2));
                     Show.CursorBuilding = 301;
                     Show.CursorTower = new Tower(3, 10, 2);
                 }
                 else if (buildRect16.Contains(newMouseState.X, newMouseState.Y) && Player.player.resources[5] >= 0 && !Player.Towers.ContainsKey(new GPS(x, y, 0)))
                 {
-                    //Build.Single(x, y, 302);
-                    //if (!Player.Towers.ContainsKey(new GPS(x, y, 0)))
-                    //    Player.Towers.Add(new GPS(x, y, 0), new Tower(7, 5, 3));
                     Show.CursorBuilding = 302;
                     Show.CursorTower = new Tower(7, 5, 3);
                 }
                 else if (buildRect17.Contains(newMouseState.X, newMouseState.Y) && Player.player.resources[5] >= 0 && !Player.Towers.ContainsKey(new GPS(x, y, 0)))
                 {
-                    //Build.Single(x, y, 303);
-                    //if (!Player.Towers.ContainsKey(new GPS(x, y, 0)))
-                    //    Player.Towers.Add(new GPS(x, y, 0), new Tower(10, 3, 5));
                     Show.CursorBuilding = 303;
                     Show.CursorTower = new Tower(10, 3, 5);
                 }
                 else if (buildRect18.Contains(newMouseState.X, newMouseState.Y) && Player.player.resources[5] >= 0 && !Player.Towers.ContainsKey(new GPS(x, y, 0)))
                 {
-                    //Build.Single(x, y, 304);
-                    //if (!Player.Towers.ContainsKey(new GPS(x, y, 0)))
-                    //    Player.Towers.Add(new GPS(x, y, 0), new Tower(5, 5, 5));
                     Show.CursorBuilding = 304;
                     Show.CursorTower = new Tower(5, 5, 5);
                 }
                 else if (buildRect19.Contains(newMouseState.X, newMouseState.Y) && Player.player.resources[5] >= 0 && !Player.Towers.ContainsKey(new GPS(x, y, 0)))
                 {
-                    //Build.Single(x, y, 305);
-                    //if (!Player.Towers.ContainsKey(new GPS(x, y, 0)))
-                    //    Player.Towers.Add(new GPS(x, y, 0), new Tower(2, 3, 10));
                     Show.CursorBuilding = 305;
                     Show.CursorTower = new Tower(2, 3, 10);
                 }
                 else if (buildRect20.Contains(newMouseState.X, newMouseState.Y) && Player.player.resources[5] >= 0 && !Player.Towers.ContainsKey(new GPS(x, y, 0)))
                 {
-                    //Build.Single(x, y, 306);
-                    //if (!Player.Towers.ContainsKey(new GPS(x, y, 0)))
-                    //    Player.Towers.Add(new GPS(x, y, 0), new Tower(3, 5, 7));
                     Show.CursorBuilding = 306;
                     Show.CursorTower = new Tower(3, 5, 7);
                 }
                 else if (buildRect21.Contains(newMouseState.X, newMouseState.Y) && Player.player.resources[5] >= 0 && !Player.Towers.ContainsKey(new GPS(x, y, 0)))
                 {
-                    //Build.Single(x, y, 307);
-                    //if (!Player.Towers.ContainsKey(new GPS(x, y, 0)))
-                    //    Player.Towers.Add(new GPS(x, y, 0), new Tower(15, 2, 8));
                     Show.CursorBuilding = 307;
                     Show.CursorTower = new Tower(15, 2, 8);
                 }
                 else if (buildRect22.Contains(newMouseState.X, newMouseState.Y) && Player.player.resources[5] >= 0 && !Player.Towers.ContainsKey(new GPS(x, y, 0)))
                 {
-                    //Build.Single(x, y, 308);
-                    //if (!Player.Towers.ContainsKey(new GPS(x, y, 0)))
-                    //    Player.Towers.Add(new GPS(x, y, 0), new Tower(5, 18, 2));
                     Show.CursorBuilding = 308;
                     Show.CursorTower = new Tower(5, 18, 2);
                 }
@@ -234,12 +207,12 @@ namespace Game1
             }
             else if (Show.CursorBuilding != 0)
             {
-                int x = (int)Math.Ceiling((double)((newMouseState.X - Player.player.TileOffsetXY[0]) / CurrentTileSize));
-                int y = (int)Math.Ceiling((double)((newMouseState.Y - Player.player.TileOffsetXY[1]) / CurrentTileSize));
+                int x = cameraLocationX + (int)Math.Ceiling((double)((newMouseState.X - Player.player.TileOffsetXY[0]) / CurrentTileSize));
+                int y = cameraLocationY + (int)Math.Ceiling((double)((newMouseState.Y - Player.player.TileOffsetXY[1]) / CurrentTileSize));
                 // i needs refactored to add streamlined support for non-buildable (Tile Index 01) padding //
                 int[,] i = new int[1, 1] { { Show.CursorBuilding } };
                 Set.Land(i, x, y);
-                landArray[x + cameraLocationX, y + cameraLocationY].frame = 5;
+                landArray[x, y].frame = 5;
                 if (Show.CursorBuilding >= 300 && Show.CursorBuilding < 398)
                     Player.Towers.Add(new GPS(x, y, 0), Show.CursorTower);
                 Show.CursorBuilding = 0;

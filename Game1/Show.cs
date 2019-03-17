@@ -474,7 +474,7 @@ namespace Game1
                     spriteBatch.Draw(DrawingBoard.Enemies[0, unit.LastMove, 0], TileFrame[x2, y2], Color.White);
                     //DrawingBoard.DrawObjects(DrawingBoard.Enemies[0, unit.LastMove, 0], new Vector2(x, y), tileScale, 0, new Rectangle(0, 0, 50, 50));
                     DrawingBoard.DrawObjects(DrawingBoard.HPBar[0], new Vector2(x, y + CurrentTileSize), tileScale, 0, new Rectangle(0, 0, 50, 10));
-                    int maxHP = 10 * (2 + unit.Stats[11] + unit.Stats[12]);
+                    int maxHP = (2 + unit.Stats[11] + unit.Stats[12]);
                     spriteBatch.Draw(DrawingBoard.HPBar[1], 
                             new Rectangle(x - (CurrentTileSize / 2), y - (CurrentTileSize / 2) + CurrentTileSize, 
                             (int)((48 * ((double)unit.Stats[1] / maxHP)) * tileScale), (int)(6 * tileScale)), 

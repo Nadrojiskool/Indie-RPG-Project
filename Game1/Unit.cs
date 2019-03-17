@@ -436,9 +436,9 @@ namespace Game1
             this.TileOffsetXY = new int[2] { 0, 0 };
         }
 
-        public void Attack(Unit unit)
+        public void Attack(Unit unit, int damage = 0)
         {
-            unit.Stats[1] -= Check.Min(this.Stats[2] - unit.Stats[3], 1);
+            unit.Stats[1] -= Check.Min(this.Stats[2] - unit.Stats[3] + damage, 1);
         }
 
         public void CheckSlash(Unit unit)

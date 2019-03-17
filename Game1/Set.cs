@@ -46,7 +46,7 @@ namespace Game1
             }
             unit.Stats[0] = level;
             // Health (HP) = 10 * (2 + Vitality(11) + Physique(12))
-            unit.Stats[1] = 10 * (2 + unit.Stats[11] + unit.Stats[12]);
+            unit.Stats[1] = (2 + unit.Stats[11] + unit.Stats[12]);
             // Attack (ATK) = 1 + Combat(14) * (Agility(13) + Physique(12))
             unit.Stats[2] = 1 + unit.Stats[14] * (unit.Stats[13] + unit.Stats[12]);
             // Defense (DEF) = 1 + Combat(14) * (Agility(13) + Physique(12) + Vitality(11))
