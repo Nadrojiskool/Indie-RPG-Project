@@ -102,6 +102,8 @@ namespace Game1
         protected static Land[,] tileArray = new Land[400, 250];
         protected static int cameraLocationX = 0;
         protected static int cameraLocationY = 0;
+        public static int MapWidth = 1000;
+        public static int MapHeight = 1000;
         //protected static int[] cameraOffsetXY = { 0, 0 };
         private int tilePointerX = 0;
         private int tilePointerY = 0;
@@ -839,8 +841,8 @@ namespace Game1
                 {
                     for (int x = 0; x < 100; x++)
                     {
-                        int x2 = Check.Range((cameraLocationX + x - 30), 0, 1000);
-                        int y2 = Check.Range((cameraLocationY + y - 40), 0, 1000);
+                        int x2 = Check.Range((cameraLocationX + x - 30), 0, 999);
+                        int y2 = Check.Range((cameraLocationY + y - 40), 0, 999);
                         Land land = landArray[x2, y2];
 
                         // currently Residents are expected to be an enemy
@@ -886,7 +888,7 @@ namespace Game1
                 GPS gps = new GPS(Player.Spawner.X, Player.Spawner.Y, 0);
                 if (Player.Spawner.X != 0 && Player.Goal.X != 0 && !Player.LocalEnemies.ContainsKey(gps))
                 {
-                    Unit unit = new Unit(gps.X, gps.Y, Player.Enemies.Count, Generate.Worker());
+                    Unit unit = new Unit(gps.X, gps.Y, Player.Enemies.Count, Generate.Worker(1 + Player.Enemies.Count() / 10));
                     Set.CoreStats(unit);
                     unit.ActionID = 1;
                     unit.LastMove = 1;
@@ -902,7 +904,7 @@ namespace Game1
             if (UpdateDestination.ElapsedMilliseconds > 250)
                 UpdateDestination.Restart();
 
-                base.Update(gameTime);
+            base.Update(gameTime);
         }
         
         /// <summary>

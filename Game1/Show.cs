@@ -214,7 +214,7 @@ namespace Game1
                     // We then need to call these in order, likely in different spriteBatch.End() calls
                     // The biome layer and maybe object (building) layer could then be pre-packed (or rendered)
                     
-                    Land land = landArray[cameraLocationX + x, cameraLocationY + y];
+                    Land land = landArray[Check.Range(cameraLocationX + x, 0, MapWidth - 1), Check.Range(cameraLocationY + y, 0, MapHeight - 1)];
                     Texture2D texture = DrawingBoard.Tiles[land.land, land.biome, land.frame];
                     Object obj = Objects[land.land];
                     Rectangle tile = TileFrame[x, y];
@@ -343,7 +343,7 @@ namespace Game1
             }*/
 
             spriteBatch.DrawString(font, $"{ Player.player.X }", new Vector2(50, 10), Color.DarkViolet);
-            spriteBatch.DrawString(font, $"{ Player.player.Y }", new Vector2(100, 10), Color.DarkViolet);
+            spriteBatch.DrawString(font, $"{ Player.player.Y }", new Vector2(150, 10), Color.DarkViolet);
 
             spriteBatch.DrawString(font, $"Total Enemies: { Player.Enemies.Count() }", new Vector2(50, 900), Color.Red);
             spriteBatch.DrawString(font, $"Total Active Enemies: { Player.LocalEnemies.Count() }", new Vector2(50, 950), Color.Red);

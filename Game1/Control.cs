@@ -209,12 +209,17 @@ namespace Game1
             {
                 int x = cameraLocationX + (int)Math.Ceiling((double)((newMouseState.X - Player.player.TileOffsetXY[0]) / CurrentTileSize));
                 int y = cameraLocationY + (int)Math.Ceiling((double)((newMouseState.Y - Player.player.TileOffsetXY[1]) / CurrentTileSize));
-                // i needs refactored to add streamlined support for non-buildable (Tile Index 01) padding //
-                int[,] i = new int[1, 1] { { Show.CursorBuilding } };
-                Set.Land(i, x, y);
-                landArray[x, y].frame = 5;
-                if (Show.CursorBuilding >= 300 && Show.CursorBuilding < 398)
-                    Player.Towers.Add(new GPS(x, y, 0), Show.CursorTower);
+
+                if (!Player.Towers.Keys.Contains(new GPS(x, y, 0)))
+                {
+                    // i needs refactored to add streamlined support for non-buildable (Tile Index 01) padding //
+                    int[,] i = new int[1, 1] { { Show.CursorBuilding } };
+                    Set.Land(i, x, y);
+                    landArray[x, y].frame = 5;
+                    if (Show.CursorBuilding >= 300 && Show.CursorBuilding < 398)
+                        Player.Towers.Add(new GPS(x, y, 0), Show.CursorTower);
+                }
+
                 Show.CursorBuilding = 0;
             }
 
@@ -410,11 +415,16 @@ namespace Game1
         public static void PlayerMovement(Unit unit)
         {
             if (cameraLocationX + MovementXY[unit.LastMove, 0] < 0 ||
-                cameraLocationX + MovementXY[unit.LastMove, 0] > 1000 ||
+                cameraLocationX + MovementXY[unit.LastMove, 0] >= MapWidth - (int)(40 / tileScale) ||
                 cameraLocationY + MovementXY[unit.LastMove, 1] < 0 ||
-                cameraLocationY + MovementXY[unit.LastMove, 1] > 1000)
+                cameraLocationY + MovementXY[unit.LastMove, 1] >= MapHeight - (int)(20 / tileScale) ||
+                (Player.player.X < (20 / tileScale) && Player.player.LastMove % 2 == 1) ||
+                (Player.player.Y < (10 / tileScale) && Player.player.LastMove % 2 == 0) ||
+                (Player.player.X > MapWidth - (20 / tileScale) - 1 && Player.player.LastMove % 2 == 1) ||
+                (Player.player.Y > MapHeight - (10 / tileScale) - 1 && Player.player.LastMove % 2 == 0))
             {
-
+                Player.player.X = Player.player.X + MovementXY[unit.LastMove, 0];
+                Player.player.Y = Player.player.Y + MovementXY[unit.LastMove, 1];
             }
             else
             {
@@ -431,10 +441,16 @@ namespace Game1
             if (unit == Player.player)
             {
                 if (cameraLocationX + MovementXY[unit.LastMove, 0] < 0 ||
-                    cameraLocationX + MovementXY[unit.LastMove, 0] > 1000 ||
+                    cameraLocationX + MovementXY[unit.LastMove, 0] > MapWidth - (int)(20 / tileScale) ||
                     cameraLocationY + MovementXY[unit.LastMove, 1] < 0 ||
-                    cameraLocationY + MovementXY[unit.LastMove, 1] > 1000)
+                    cameraLocationY + MovementXY[unit.LastMove, 1] > MapHeight - (int)(10 / tileScale) ||
+                    (Player.player.X < (20 / tileScale) && Player.player.LastMove % 2 == 1) ||
+                    (Player.player.Y < (10 / tileScale) && Player.player.LastMove % 2 == 0 ||
+                    (Player.player.X > MapWidth - (20 / tileScale) - 1 && Player.player.LastMove % 2 == 1) ||
+                    (Player.player.Y > MapHeight - (10 / tileScale) - 1 && Player.player.LastMove % 2 == 0)))
                 {
+                    Player.player.X = Player.player.X + MovementXY[unit.LastMove, 0];
+                    Player.player.Y = Player.player.Y + MovementXY[unit.LastMove, 1];
 
                 }
                 else
@@ -447,9 +463,10 @@ namespace Game1
             }
             else
             {
-                unit.X = Check.Range(unit.X + MovementXY[unit.LastMove, 0], 0, 1000);
-                unit.Y = Check.Range(unit.Y + MovementXY[unit.LastMove, 1], 0, 1000);
+                unit.X = Check.Range(unit.X + MovementXY[unit.LastMove, 0], 0, MapWidth - (int)(20 / tileScale) - 1);
+                unit.Y = Check.Range(unit.Y + MovementXY[unit.LastMove, 1], 0, MapHeight - (int)(10 / tileScale) - 1);
 
+                // note: values don't check map boundary range
                 unit.DestinationOffset[0] += MovementXY[unit.LastMove, 0];
                 unit.DestinationOffset[1] += MovementXY[unit.LastMove, 1];
 
