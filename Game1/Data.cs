@@ -66,12 +66,21 @@ namespace Game1
             File.WriteAllLines("C:/Users/2/Desktop/test1resources.txt", informationToWritePlayerResources);
             File.WriteAllLines("C:/Users/2/Desktop/test1stats.txt", informationToWritePlayerStats);
             File.WriteAllLines("C:/Users/2/Desktop/test1workers.txt", informationToWritePlayerWorkers);
-
+            
             GC.Collect();
         }
 
         public static void Load()
         {
+            Player.Spawner = new GPS(0, 0, 0);
+            Player.Goal = new GPS(0, 0, 0);
+            Player.Towers.Clear();
+            Player.Workers.Clear();
+            Player.LocalWorkers.Clear();
+            Player.Enemies.Clear();
+            Player.LocalEnemies.Clear();
+
+
             String[] informationToWriteBiome = new String[1000000];
             String[] informationToWriteMod = new String[1000000];
             String[] informationToWritePlayerResources = new String[1000];
@@ -91,11 +100,15 @@ namespace Game1
                     landArray[x, y].biome = Int32.Parse(informationToWriteBiome[counter + x]);
                     landArray[x, y].land = Int32.Parse(informationToWriteMod[counter + x]);
                     landArray[x, y].IsActive = false;
+                    landArray[x, y].IsBorder = false;
+                    landArray[x, y].frame = 5;
 
-                    if (landArray[x, y].land == 5)
-                    {
-                        landArray[x, y].frame = 5;
-                    }
+                    if (landArray[x, y].land >= 300 && landArray[x, y].land < 398)
+                        Player.Towers.Add(new GPS(x, y, 0), Show.CursorTower);
+                    else if (landArray[x, y].land == 398)
+                        Player.Spawner = new GPS(x, y, 0);
+                    else if (landArray[x, y].land == 399)
+                        Player.Goal = new GPS(x, y, 0);
 
                     if (counter == 0)
                     {
@@ -106,9 +119,8 @@ namespace Game1
                 counter = counter + 1000;
             }
             counter = 0;
+            Generate.Edges();
 
-            Player.Workers.Clear();
-            Player.LocalWorkers.Clear();
             String[] informationToWritePlayerWorkers = File.ReadAllLines("C:/Users/2/Desktop/test1workers.txt");
             for (int y = 0; y < informationToWritePlayerWorkers.Length / 200; y++)
             {

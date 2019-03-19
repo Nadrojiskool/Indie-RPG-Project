@@ -25,6 +25,10 @@ namespace Game1
         public int tileY { get; set; }
         public int DrawX { get; set; }
         public int DrawY { get; set; }
+        public Keys LastMovePressed { get; set; }
+        // I need to create methods to control and manipulate/animate units over time
+        // I also need to add and refine methods around unit actions (and queues)
+        // public Stopwatch LastRolled = new Stopwatch();
         public int[] resources = new int[1000];
         /* (Old resources pending removal)
          * 0: Experience
@@ -52,16 +56,20 @@ namespace Game1
          * 101: Gold
          * 102: Workers
          */
-        public int gold { get; set; }
         // I'm concerned with the way I implemented these lists
         // I would also like them to just be pointers to the unit at their residence to prevent additional syncing
-        public static List<Animation> Animations = new List<Animation>();
         public static List<Unit> Workers = new List<Unit>();
-        public static List<Unit> Enemies = new List<Unit>();
         public static List<Unit> LocalWorkers = new List<Unit>();
-        public static List<Unit> LocalEnemies = new List<Unit>();
-        public static List<Asset> Assets = new List<Asset>();
-        public int xp { get; set; }
+        public static List<Unit> Enemies = new List<Unit>();
+        public static Dictionary<GPS, Unit> LocalEnemies = new Dictionary<GPS, Unit>();
+        //public static List<Asset> Assets = new List<Asset>();
+        public static List<Animation> Animations = new List<Animation>();
+        public static List<Item> ItemIndex = new List<Item>();
+        public static Dictionary<GPS, int> WorldItems = new Dictionary<GPS, int>();
+        public static Dictionary<GPS, Tower> Towers = new Dictionary<GPS, Tower>();
+        public static HashSet<Land> Domain = new HashSet<Land>();
+        public static GPS Spawner = new GPS(0, 0, 0);
+        public static GPS Goal = new GPS(0, 0, 0);
 
         public Player (int x, int y, int[] array) : base(x, y, 0, array)
         {

@@ -9,14 +9,14 @@ namespace Game1.Region
 {
     public class Manor
     {
-        List<Asset> Assets = new List<Asset>();
-        Player Lord { get; set; }
-        County Domain { get; set; }
-        sbyte[] Capitol { get; set; }
+        public List<Asset> Assets = new List<Asset>();
+        public Player Lord { get; set; }
+        public County County { get; set; }
+        public int[] Capitol { get; set; }
 
-        public void SetCapitol(sbyte x, sbyte y)
+        public void SetCapitol(int x, int y)
         {
-            Capitol = new sbyte[2] { x, y };
+            Capitol = new int[2] { x, y };
         }
     }
 }

@@ -13,12 +13,47 @@ namespace Game1
 
     public class DrawingBoard
     {
-        public List<int> Tree = new List<int>();
-        public List<int> Deer = new List<int>();
         public static Texture2D[,,] Tiles = new Texture2D[1000, 5, 10]; // Tile ID, Tile Biome, Tile Frame
-        public static Texture2D[,,] Enemies = new Texture2D[1, 5, 1]; // Enemy ID, Enemy Direction (Frame), Enemy Frame
+        public static Texture2D[,] Borders = new Texture2D[4, 16];
+        public static Texture2D[,,] Biomes = new Texture2D[4, 30, 20]; // Biome, Image Tile X, Image Tile Y
+        /*
+         * 1: Occupied, Unrendered
+         * 2: Water
+         * 3: Bush
+         * 4: Deer
+         * 5: Tree
+         * 6: Stone
+         * 7:
+         * 9:
+         * 10: Ore 1
+         * 11: Ore 2
+         * 12: Ore 3
+         * 13: Ore 4
+         * 14: Ore 5
+         * 15: Ore 6
+         * 16: Ore 7
+         * 17: Ore 8
+         * 18: Ore 9
+         * 19: Ore 10
+         * 20:
+         * 99:
+         * 100: Campfire
+         * 101: Wall
+         * 102: Wall
+         * 103: Wall
+         * 104: Wall
+         * 105:
+         * 199:
+         * 200: Cabin1
+         * 201: Kame House
+         * 202: Mine
+         */
+        public static Texture2D[,,] Enemies = new Texture2D[2, 5, 3]; // Enemy ID, Enemy Direction (LastMove), Enemy Frame
+        public static Texture2D[,,] Allies = new Texture2D[3, 5, 3]; // Ally ID, Ally Direction (LastMove), Ally Frame
         public static Texture2D[] HPBar = new Texture2D[2];
-        public static Texture2D[] Blast = new Texture2D[74];
+        public static List<Texture2D[]> Animations = new List<Texture2D[]>();
+        public static Texture2D[] Items = new Texture2D[10];
+        public static List<string> Text = new List<string>();
 
         public static void DrawObjects(Texture2D spr, Vector2 location, double scale, float rotate, Rectangle sourceRectangle)
         {

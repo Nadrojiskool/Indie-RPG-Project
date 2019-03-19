@@ -8,12 +8,40 @@ namespace Game1
 {
     public static class Build
     {
-        static public void Cabin(int x, int y)
+        static public void Single(int x, int y, int tile)
+        {
+            int[,] array = new int[1, 1]
+            {
+                { tile }
+            };
+            Set.Land(array, x, y);
+        }
+        static public void Double(int x, int y, int tile)
+        {
+            int[,] array = new int[2, 2]
+            {
+                { 001, 001 },
+                { 001, tile },
+            };
+            Set.Land(array, x, y);
+        }
+        static public void DoubleWithSpace(int x, int y, int tile)
         {
             int[,] array = new int[3, 2]
             {
                 { 001, 001 },
-                { 001, 200 },
+                { 001, tile },
+                { 000, 000 }
+            };
+            Set.Land(array, x, y);
+        }
+
+        static public void Mine(int x, int y)
+        {
+            int[,] array = new int[3, 2]
+            {
+                { 001, 001 },
+                { 001, 202 },
                 { 000, 000 }
             };
             Set.Land(array, x, y);

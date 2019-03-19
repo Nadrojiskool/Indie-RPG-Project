@@ -49,6 +49,25 @@ namespace Game1
          * 767.7254TB Per Layer (based on 2.86mb 1000x1000 tileMap)
          */
 
+         /* LAND UPKEEP CONCEPT:
+          * 
+          * Information can be calculated and stored into land tiles
+          * I've layed out elsewhere about naturally dynamic land-use pathing
+          * The goal is to store in tiles contextual information which is relevant to traveling units
+          * Things like the upkeep of roads and their node-network are an example of this
+          * Another example of contextual information would be calculating embedded tiles
+          * If a tree tile is surrounded on four sides by trees, it becomes a dense tree tile (forest)
+          * If an empty tile has nothing around it, it is a plains tile
+          * Units could weight their pathing with tile Path Level while seeking Plains tiles and avoiding Dense tiles
+          * The interesting thing about this is the idea of sharing computing power on the network
+          * If certain routine maintenance is desired by the network, then there's a trade-off
+          * Even if I come to the decision that a feature isn't desirable, it could still be provided
+          * A Lord of his Manor could tweak a setting and trade-off performance for having the feature
+          * He could also have this task performed by his Kingdom on his behalf which would imply tax dues
+          * If his Kingdom doesn't already perform this maintenance, he could push seek social support in the Kingdom
+          * He could also pay for the task to be performed on his behalf, or just move to another Kingdom
+          */
+
 
 
         //public int X;
@@ -62,9 +81,16 @@ namespace Game1
         public bool IsActive = false;
         //public bool IsOccupied = false;
         public DateTime LastUpdate = new DateTime();
+
+        public bool IsOwned = false;
         public sbyte[] Manor { get; set; }
-        public Unit Resident { get; set; }
+
         public bool IsResident { get; set; }
+        public Unit Resident { get; set; }
+
+        public bool IsBorder = false;
+        public int Border { get; set; }
+        public int BorderBiome { get; set; }
 
         public Land()//int x, int y, int m)
         {
