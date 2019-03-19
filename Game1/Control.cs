@@ -215,7 +215,6 @@ namespace Game1
                     // i needs refactored to add streamlined support for non-buildable (Tile Index 01) padding //
                     int[,] i = new int[1, 1] { { Show.CursorBuilding } };
                     Set.Land(i, x, y);
-                    landArray[x, y].frame = 5;
                     if (Show.CursorBuilding >= 300 && Show.CursorBuilding < 398)
                         Player.Towers.Add(new GPS(x, y, 0), Show.CursorTower);
                 }

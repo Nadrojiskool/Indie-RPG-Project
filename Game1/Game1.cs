@@ -914,12 +914,22 @@ namespace Game1
         protected override void Draw(GameTime gameTime)
         {
             // Setting SpriteSortMode to Texture massively improves performance
-            spriteBatch.Begin(SpriteSortMode.Immediate);
-            if (MainMenuOpen) {
-                Show.MainMenu(); }
-            else {
-                Show.Interface(); }
-            spriteBatch.End();
+            if (MainMenuOpen)
+            {
+                spriteBatch.Begin(SpriteSortMode.Immediate);
+                Show.MainMenu();
+                spriteBatch.End();
+            }
+            else
+            {
+                spriteBatch.Begin(SpriteSortMode.Texture);
+                Show.Lands();
+                spriteBatch.End();
+                spriteBatch.Begin(SpriteSortMode.Immediate);
+                Show.Tiles();
+                Show.Interface();
+                spriteBatch.End();
+            }
 
             base.Draw(gameTime);
         }

@@ -91,7 +91,6 @@ namespace Game1
 
         public static void Interface()
         {
-            Tiles();
 
             // Note that the order dictates that entities are currently always drawn over any tile
             // While this may be a desirable tool, it's not ideal for the default setting
@@ -161,20 +160,57 @@ namespace Game1
                  Color.White);
         }
 
-        /* DrawTiles;
-         * Input Values: cameraLocationX, cameraLocation Y;
-         * This function will run a number of times that is less than
-         * the display height divided by default tile rendering dimension 50
-         * divided by the scale of tile drawings to get number of tiles on screen
-         * then add overflow number of 2 divided by tile scale to draw past screen broders (+2)
-         * Steps: Determine global tile at current position camera x & y plus
-         * the point at which in this function (int x or y) it has already drawn to
-         * then check for biome before using tile scale and location data to draw tile
-         * 
-         * --Pending 60x60 Optimization
-         */
 
-        static void Tiles()
+        public static void Lands()
+        {
+
+            for (int y = 0; y < (displayHeight / CurrentTileSize) + 2; y++)
+            {
+                for (int x = 0; x < (displayWidth / CurrentTileSize) + 2; x++)
+                {
+                    Land land = landArray[Check.Range(cameraLocationX + x, 0, MapWidth - 1), Check.Range(cameraLocationY + y, 0, MapHeight - 1)];
+                    Rectangle tile = TileFrame[x, y];
+
+                    if (land.biome == 1)
+                    {
+                        int grass = Check.LoopIntPos((cameraLocationX + x) + (cameraLocationY + y), 0, 3);
+                        spriteBatch.Draw(DrawingBoard.Tiles[0, land.biome, grass], tile, Color.White);
+                        if (land.IsBorder)
+                            spriteBatch.Draw(DrawingBoard.Borders[land.BorderBiome, land.Border], tile, Color.White);
+                    }
+                    else if (land.biome == 2)
+                    {
+                        int snow = Check.LoopIntPos((cameraLocationX + x) + (cameraLocationY + y), 0, 2);
+                        spriteBatch.Draw(DrawingBoard.Tiles[0, land.biome, snow], tile, Color.White);
+                    }
+                    else if (land.biome == 3)
+                    {
+                        int sandX = Check.LoopIntPos((cameraLocationX + x), 0, 29);
+                        int sandY = Check.LoopIntPos((cameraLocationY + y), 0, 19);
+                        spriteBatch.Draw(DrawingBoard.Biomes[3, sandX, sandY], tile, Color.White);
+                    }
+                    else
+                    {
+                        spriteBatch.Draw(DrawingBoard.Tiles[0, land.biome, 5], tile, Color.White);
+                    }
+                }
+            }
+        }
+
+        /* DrawTiles;
+        * Input Values: cameraLocationX, cameraLocation Y;
+        * This function will run a number of times that is less than
+        * the display height divided by default tile rendering dimension 50
+        * divided by the scale of tile drawings to get number of tiles on screen
+        * then add overflow number of 2 divided by tile scale to draw past screen broders (+2)
+        * Steps: Determine global tile at current position camera x & y plus
+        * the point at which in this function (int x or y) it has already drawn to
+        * then check for biome before using tile scale and location data to draw tile
+        * 
+        * --Pending 60x60 Optimization
+        */
+
+        public static void Tiles()
         {
             double rnd;
             Color color = new Color(Color.Black, 0.2f);
@@ -219,32 +255,9 @@ namespace Game1
                     Object obj = Objects[land.land];
                     Rectangle tile = TileFrame[x, y];
                     int[] adjustLand = { 0, 0 };
-                    
+
                     if (land.land != 0)
                     {
-                        if (land.biome == 1)
-                        {
-                            int grass = Check.LoopIntPos((cameraLocationX + x) + (cameraLocationY + y), 0, 3);
-                            spriteBatch.Draw(DrawingBoard.Tiles[0, land.biome, grass], tile, Color.White);
-                            if (land.IsBorder)
-                                spriteBatch.Draw(DrawingBoard.Borders[land.BorderBiome, land.Border], tile, Color.White);
-                        }
-                        else if (land.biome == 2)
-                        {
-                            int snow = Check.LoopIntPos((cameraLocationX + x) + (cameraLocationY + y), 0, 2);
-                            spriteBatch.Draw(DrawingBoard.Tiles[0, land.biome, snow], tile, Color.White);
-                        }
-                        else if (land.biome == 3)
-                        {
-                            int sandX = Check.LoopIntPos((cameraLocationX + x), 0, 29);
-                            int sandY = Check.LoopIntPos((cameraLocationY + y), 0, 19);
-                            spriteBatch.Draw(DrawingBoard.Biomes[3, sandX, sandY], tile, Color.White);
-                        }
-                        else
-                        {
-                            spriteBatch.Draw(DrawingBoard.Tiles[0, land.biome, 5], tile, Color.White);
-                        }
-
                         if (land.land == 5)
                         {
                             int halfTileSize = CurrentTileSize / 2;
@@ -255,7 +268,7 @@ namespace Game1
                                 tile.Y - (int)((obj.Y - 50) * tileScale) + adjustLand[1],
                                 (int)(obj.X * tileScale), (int)(obj.Y * tileScale));
 
-                        if (Math.Abs(Player.player.tileX - x) < 5 && Math.Abs(Player.player.tileY - y) < 5 
+                        if (Math.Abs(Player.player.tileX - x) < 5 && Math.Abs(Player.player.tileY - y) < 5
                             && rectangle.Contains(Player.player.DrawX, Player.player.DrawY))
                         {
                             spriteBatch.Draw(texture, rectangle, color);
@@ -263,31 +276,7 @@ namespace Game1
                         else
                             spriteBatch.Draw(texture, rectangle, Color.White);
                     }
-                    else
-                    {
-                        if (land.biome == 1)
-                        {
-                            int grass = Check.LoopIntPos((cameraLocationX + x) + (cameraLocationY + y), 0, 3);
-                            spriteBatch.Draw(DrawingBoard.Tiles[0, land.biome, grass], tile, Color.White);
-                            if (land.IsBorder)
-                                spriteBatch.Draw(DrawingBoard.Borders[land.BorderBiome, land.Border], tile, Color.White);
-                        }
-                        else if (land.biome == 2)
-                        {
-                            int snow = Check.LoopIntPos((cameraLocationX + x) + (cameraLocationY + y), 0, 2);
-                            spriteBatch.Draw(DrawingBoard.Tiles[0, land.biome, snow], tile, Color.White);
-                        }
-                        else if (land.biome == 3)
-                        {
-                            int sandX = Check.LoopIntPos((cameraLocationX + x), 0, 29);
-                            int sandY = Check.LoopIntPos((cameraLocationY + y), 0, 19);
-                            spriteBatch.Draw(DrawingBoard.Biomes[3, sandX, sandY], tile, Color.White);
-                        }
-                        else
-                        {
-                            spriteBatch.Draw(DrawingBoard.Tiles[0, land.biome, 5], tile, Color.White);
-                        }
-                    }
+                }
 
 
                     /*if (land.IsOwned) {
@@ -308,7 +297,7 @@ namespace Game1
                         fl * (float)tileScale, SpriteEffects.None, 1);*/
 
                     //spriteBatch.DrawString(TileInfoFont, Objects[land.land].Name, new Vector2(x * modifiedTileScale, y * modifiedTileScale), Color.Black);
-                }
+                
             }
         }
 
