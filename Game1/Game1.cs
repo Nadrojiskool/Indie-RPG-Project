@@ -122,6 +122,7 @@ namespace Game1
         public const double tileScaleConst = .5;
         public static double tileScale = tileScaleConst;
         public static int CurrentTileSize = (int)(50 * tileScale);
+        public static int HalfTileSize = CurrentTileSize / 2;
         public static Rectangle[,] TileFrame;
         public static Rectangle OverflowRectangle = new Rectangle(3, 3, 100, 100);
 
@@ -451,6 +452,16 @@ namespace Game1
             DrawingBoard.Tiles[399, 1, 5] = player;
             DrawingBoard.Tiles[399, 2, 5] = player;
             DrawingBoard.Tiles[399, 3, 5] = player;
+
+
+            DrawingBoard.Biomes[1, 0, 0] = Content.Load<Texture2D>("grass1");
+            DrawingBoard.Biomes[1, 0, 1] = Content.Load<Texture2D>("grass2");
+            DrawingBoard.Biomes[1, 0, 2] = Content.Load<Texture2D>("grass3");
+            DrawingBoard.Biomes[1, 0, 3] = Content.Load<Texture2D>("grass4");
+            
+            DrawingBoard.Biomes[2, 0, 0] = Content.Load<Texture2D>("Snow1");
+            DrawingBoard.Biomes[2, 0, 1] = Content.Load<Texture2D>("Snow2");
+            DrawingBoard.Biomes[2, 0, 2] = Content.Load<Texture2D>("Snow3");
 
             // Load the 600 tile Desert background
             int count = 0;

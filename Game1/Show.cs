@@ -174,14 +174,14 @@ namespace Game1
                     if (land.biome == 1)
                     {
                         int grass = Check.LoopIntPos((cameraLocationX + x) + (cameraLocationY + y), 0, 3);
-                        spriteBatch.Draw(DrawingBoard.Tiles[0, land.biome, grass], tile, Color.White);
+                        spriteBatch.Draw(DrawingBoard.Biomes[1, 0, grass], tile, Color.White);
                         if (land.IsBorder)
                             spriteBatch.Draw(DrawingBoard.Borders[land.BorderBiome, land.Border], tile, Color.White);
                     }
                     else if (land.biome == 2)
                     {
                         int snow = Check.LoopIntPos((cameraLocationX + x) + (cameraLocationY + y), 0, 2);
-                        spriteBatch.Draw(DrawingBoard.Tiles[0, land.biome, snow], tile, Color.White);
+                        spriteBatch.Draw(DrawingBoard.Biomes[2, 0, snow], tile, Color.White);
                     }
                     else if (land.biome == 3)
                     {
@@ -299,11 +299,6 @@ namespace Game1
                     //spriteBatch.DrawString(TileInfoFont, Objects[land.land].Name, new Vector2(x * modifiedTileScale, y * modifiedTileScale), Color.Black);
                 
             }
-        }
-
-        static void Land()
-        {
-
         }
 
         static void Text(/*string text, int width, int height*/)

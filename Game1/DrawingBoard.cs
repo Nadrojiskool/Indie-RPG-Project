@@ -14,8 +14,8 @@ namespace Game1
     public class DrawingBoard
     {
         public static Texture2D[,,] Tiles = new Texture2D[1000, 5, 10]; // Tile ID, Tile Biome, Tile Frame
-        public static Texture2D[,] Borders = new Texture2D[4, 16]; // Tile ID, Tile Biome, Tile Frame
-        public static Texture2D[,,] Biomes = new Texture2D[4, 30, 20]; // Tile ID, Tile Biome, Tile Frame
+        public static Texture2D[,] Borders = new Texture2D[4, 16];
+        public static Texture2D[,,] Biomes = new Texture2D[4, 30, 20]; // Biome, Image Tile X, Image Tile Y
         /*
          * 1: Occupied, Unrendered
          * 2: Water

@@ -218,8 +218,6 @@ namespace Game1
                     if (Show.CursorBuilding >= 300 && Show.CursorBuilding < 398)
                         Player.Towers.Add(new GPS(x, y, 0), Show.CursorTower);
                 }
-
-                Show.CursorBuilding = 0;
             }
 
             if (workerListOpen)

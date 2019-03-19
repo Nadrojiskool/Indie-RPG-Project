@@ -389,6 +389,18 @@ namespace Game1
                 }
             }
 
+            Edges();
+
+            Player.WorldItems.Add(new GPS(50, 50, 0), 0);
+        }
+
+        public static void ExpandBiome(int d)
+        {
+
+        }
+
+        public static void Edges()
+        {
             // Draw Edges Around Snow
             for (int definition = 0; definition < 2; definition++)
             {
@@ -450,7 +462,7 @@ namespace Game1
                     }
                 }
             }
-            
+
             // Draw Edges Around Sand
             for (int definition = 0; definition < 2; definition++)
             {
@@ -512,13 +524,6 @@ namespace Game1
                     }
                 }
             }
-
-            Player.WorldItems.Add(new GPS(50, 50, 0), 0);
-        }
-
-        public void ExpandBiome(int d)
-        {
-
         }
 
         public static int[] Worker(int level = 1)
