@@ -675,8 +675,8 @@ namespace Game1
                 Exit();
 
             // TODO: Add your update logic here
-
             
+
             //graphics.IsFullScreen = false;
             //graphics.ApplyChanges();
             
@@ -961,10 +961,11 @@ namespace Game1
             }
             else
             {
+                GraphicsDevice.Clear(Color.Black);
                 spriteBatch.Begin(SpriteSortMode.Texture);
                 Show.Lands();
                 spriteBatch.End();
-                spriteBatch.Begin(SpriteSortMode.Immediate);
+                spriteBatch.Begin(SpriteSortMode.Deferred);
                 Show.Tiles();
                 Show.Interface();
                 spriteBatch.End();
