@@ -466,7 +466,7 @@ namespace Game1
                 }
             }
 
-            if (Player.Animations.Count > 0)
+            /*if (Player.Animations.Count > 0)
             {
                 int count = 0;
                 for (int i = 0; i < Player.Animations.Count(); i++)
@@ -486,7 +486,7 @@ namespace Game1
                         animation.Frame += 1;
                     }
                 }
-            }
+            }*/
 
             if (Player.WorldItems.Count > 0)
             {

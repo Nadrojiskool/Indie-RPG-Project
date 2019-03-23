@@ -785,14 +785,6 @@ namespace Game1
             // Quarter Second Interval Recurring Logic
             else if (LogicClock250.ElapsedMilliseconds > 250)
             {
-                if (Player.Animations.Count > 0)
-                {
-                    foreach (Animation animation in Player.Animations)
-                    {
-
-                    }
-                }
-
                 if (Player.LocalWorkers.Count > 0)
                 {
                     foreach (Unit unit in Player.LocalWorkers)
@@ -812,6 +804,15 @@ namespace Game1
                             if (unit != Player.player)
                             {
                                 Check.Attack(unit, tower.Value.Damage);
+                                int x = (unit.X - tower.Key.X) * CurrentTileSize;
+                                int y = (unit.Y - tower.Key.Y) * CurrentTileSize;
+                                int hypotenuse = (int)Math.Sqrt(Math.Pow(x, 2) + Math.Pow(y, 2));
+                                Player.Animations.Add(new Animation(new Rectangle(
+                                    (tower.Key.X - cameraLocationX) * CurrentTileSize,
+                                    (tower.Key.Y - cameraLocationY) * CurrentTileSize,
+                                    hypotenuse, 3),
+                                    0, 50, 1, 1,
+                                    (float)Math.Atan2(y, x)));
                             }
                             tower.Value.TimeIdle.Restart();
                         }
@@ -915,6 +916,33 @@ namespace Game1
             if (UpdateDestination.ElapsedMilliseconds > 250)
                 UpdateDestination.Restart();
 
+
+            if (Player.Animations.Count > 0)
+            {
+                List<Animation> animations = Player.Animations;
+                int count = 0;
+
+                for (int i = 0; i < animations.Count; i++)
+                {
+                    if (animations[i].Interval <= animations[i].Clock.ElapsedMilliseconds)
+                    {
+                        if (animations[i].Frame == 0)
+                        {
+
+                        }
+                        else if (animations[i].Frame < animations[i].Frames)
+                        {
+                            animations[i].Frame++;
+                        }
+                        else
+                        {
+                            Player.Animations.RemoveAt(i - count);
+                            count++;
+                        }
+                    }
+                }
+            }
+
             base.Update(gameTime);
         }
         
@@ -939,6 +967,13 @@ namespace Game1
                 spriteBatch.Begin(SpriteSortMode.Immediate);
                 Show.Tiles();
                 Show.Interface();
+                spriteBatch.End();
+
+                spriteBatch.Begin(SpriteSortMode.Texture);
+                foreach (Animation animation in Player.Animations)
+                {
+                    spriteBatch.Draw(black, animation.Box, null, Color.White, animation.Angle, new Vector2(0, 0), SpriteEffects.None, 0);
+                }
                 spriteBatch.End();
             }
 
