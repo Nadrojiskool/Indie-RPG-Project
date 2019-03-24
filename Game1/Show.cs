@@ -251,13 +251,14 @@ namespace Game1
                     // The biome layer and maybe object (building) layer could then be pre-packed (or rendered)
                     
                     Land land = landArray[Check.Range(cameraLocationX + x, 0, MapWidth - 1), Check.Range(cameraLocationY + y, 0, MapHeight - 1)];
-                    Texture2D texture = DrawingBoard.Tiles[land.land, land.biome, land.frame];
-                    Object obj = Objects[land.land];
-                    Rectangle tile = TileFrame[x, y];
-                    int[] adjustLand = { 0, 0 };
 
                     if (land.land != 0)
                     {
+                        Texture2D texture = DrawingBoard.Tiles[land.land, land.biome, land.frame];
+                        Object obj = Objects[land.land];
+                        Rectangle tile = TileFrame[x, y];
+                        int[] adjustLand = { 0, 0 };
+
                         if (land.land == 5)
                         {
                             int halfTileSize = CurrentTileSize / 2;
@@ -466,7 +467,7 @@ namespace Game1
                 }
             }
 
-            if (Player.Animations.Count > 0)
+            /*if (Player.Animations.Count > 0)
             {
                 int count = 0;
                 for (int i = 0; i < Player.Animations.Count(); i++)
@@ -486,7 +487,7 @@ namespace Game1
                         animation.Frame += 1;
                     }
                 }
-            }
+            }*/
 
             if (Player.WorldItems.Count > 0)
             {
